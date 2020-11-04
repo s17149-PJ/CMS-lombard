@@ -28,11 +28,16 @@ namespace Lombard_00.Data.Db
         public bool RemoveTUser(TUser user);
         public bool ModifyTUser(TUser toBeModified, TUser newData);
 
-        /*each service user can be associated with multiple roles*/
+        /*many to many implementation*/
         public List<TUserRole> TUserRoles { get; }
         public bool AddTUserRole(TUserRole role);
         public bool RemoveTUserRole(TUserRole role);
-        public bool ModifyTUserRole(TUserRole toBeModified, TUserRole newData);
+
+        /*each service user can be associated with multiple roles*/
+        public List<TRole> TRoles { get; }
+        public bool AddTRole(TRole role);
+        public bool RemoveTRole(TRole role);
+        public bool ModifyTRole(TRole toBeModified, TRole newData);
 
         /*
          * IMPORTANT:

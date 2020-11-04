@@ -35,9 +35,10 @@ namespace Lombard_00.Data.Db
             if (newData.Name     != null) value.Name     = newData.Name;
             if (newData.Surname  != null) value.Surname  = newData.Surname;
             if (newData.Password != null) value.Password = newData.Password;
+            SaveChanges();
 
             return true;
-        } //todo check for dependecies
+        }
         public bool RemoveTUser(TUser user)
         {
             CTUsers.Remove(user);
@@ -53,32 +54,62 @@ namespace Lombard_00.Data.Db
                 return CTUserRoles.ToList();
             }
         }
-        public bool AddTUserRole(TUserRole role)
+        public bool AddTUserRole(TUserRole asoc)
         {
-            CTUserRoles.Add(role);
+            var value = (from chk in CTUserRoles where chk.User == asoc.User && chk.Role == asoc.Role select "").FirstOrDefault();
+            if (value == null)
+            {
+
+                return false;
+            }
+
+            CTUserRoles.Add(asoc);
             SaveChanges();
 
             return true;
         }
-        public bool ModifyTUserRole(TUserRole toBeModified, TUserRole newData)
+        public bool RemoveTUserRole(TUserRole asoc)
         {
-            var value = CTUserRoles.FirstOrDefault(value => value.Id == toBeModified.Id);
+            CTUserRoles.Remove(asoc);
+            SaveChanges();
+
+            return true;
+        }//todo check for dependecies
+
+        public List<TRole> TRoles
+        {
+            get
+            {
+                return CTRoles.ToList();
+            }
+        }
+        public bool AddTRole(TRole role)
+        {
+            CTRoles.Add(role);
+            SaveChanges();
+
+            return true;
+        }
+        public bool ModifyTRole(TRole toBeModified, TRole newData)
+        {
+            var value = CTRoles.FirstOrDefault(value => value.Id == toBeModified.Id);
             if (value == null)
             {
 
                 return false;
             }
             if (newData.Name != null) value.Name = newData.Name;
-
-            return true;
-        }
-        public bool RemoveTUserRole(TUserRole role)
-        {
-            CTUserRoles.Remove(role);
             SaveChanges();
 
             return true;
         }
+        public bool RemoveTRole(TRole role)
+        {
+            CTRoles.Remove(role);
+            SaveChanges();
+
+            return true;
+        }//todo check for dependecies
 
         public List<TItem> TItems
         {
@@ -98,7 +129,7 @@ namespace Lombard_00.Data.Db
         public bool RemoveTItem(TItem item)
         {
             throw new NotImplementedException();
-        }
+        }//todo check for dependecies
 
         public List<TItemComment> TItemComments
         {
@@ -118,7 +149,7 @@ namespace Lombard_00.Data.Db
         public bool RemoveTItemComment(TItemComment comment)
         {
             throw new NotImplementedException();
-        }
+        }//todo check for dependecies
         /*end of interface stuff*/
 
         /*start of EF stuff*/
@@ -129,6 +160,7 @@ namespace Lombard_00.Data.Db
 
         public DbSet<TUser> CTUsers { get; set; }
         public DbSet<TUserRole> CTUserRoles { get; set; }
+        public DbSet<TRole> CTRoles { get; set; }
         public DbSet<TItem> CTItems { get; set; }
         public DbSet<TItemComment> CTItemComments { get; set; }
     }

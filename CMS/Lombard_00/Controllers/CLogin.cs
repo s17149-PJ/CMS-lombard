@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +50,7 @@ namespace Lombard_00.Controllers
                 Nick = usr.Nick,
                 Name = usr.Name,
                 Surname = usr.Surname,
-                Roles = from role in usr.Roles select role.Name
+                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role.Name
             };
         }
     }

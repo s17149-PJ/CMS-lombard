@@ -1,3 +1,5 @@
+using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -5,14 +7,49 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 
 namespace Lombard_00
 {
     public class Startup
     {
+        private void TestingStuff() {
+            if (IDb.DbInstance.TUsers.Count == 0) {
+                IDb.DbInstance.AddTUserRole(new TUserRole() { 
+                    Id = 0,
+                    Name = "Admin"
+                });
+                IDb.DbInstance.AddTUserRole(new TUserRole()
+                {
+                    Id = 1,
+                    Name = "User"
+                });
+
+                IDb.DbInstance.AddTUser(new TUser() { 
+                    Nick = "totaly admin",
+                    Name = "Totaly",
+                    Surname = "Admin",
+                    Password = "AdminGodDamit",
+                    Roles = new List<TUserRole>() { IDb.DbInstance.TUserRoles[0] }
+                });
+                IDb.DbInstance.AddTUser(new TUser()
+                {
+                    Nick = "user",
+                    Name = "Not",
+                    Surname = "Hacker",
+                    Password = "12345",
+                    Roles = new List<TUserRole>() { IDb.DbInstance.TUserRoles[1] }
+                });
+            }
+            var value = IDb.DbInstance.TUsers;
+
+            int x = 2 + 3;
+        }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            TestingStuff();
         }
 
         public IConfiguration Configuration { get; }

@@ -22,7 +22,7 @@ namespace Lombard_00.Controllers
             public IEnumerable<string> Roles { get; set; }
         }
 
-        [Route("api/userLogin/login")]
+        [Route("api/user/login")]
         [HttpPost]
         public ActionLogin Auth(string nick, string password)
         {
@@ -48,6 +48,27 @@ namespace Lombard_00.Controllers
                 Surname = usr.Surname,
                 Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role.Name
             };
+        }
+
+        [Route("api/user/keepAlive")]
+        [HttpPost]
+        public ActionLogin RenewToken(string token)
+        {
+            return null;
+        }
+
+        [Route("api/user/register")]
+        [HttpPost]
+        public ActionLogin Register()
+        {
+            return null;
+        }
+
+        [Route("api/user/edit")]
+        [HttpPost]
+        public ActionLogin Edit()
+        {
+            return null;
         }
     }
 }

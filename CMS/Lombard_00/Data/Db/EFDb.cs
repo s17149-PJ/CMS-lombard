@@ -56,8 +56,8 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTUserRole(TUserRole asoc)
         {
-            var value = (from chk in CTUserRoles where chk.User == asoc.User && chk.Role == asoc.Role select "").FirstOrDefault();
-            if (value == null || asoc.User == null || asoc.Role == null)
+            var value = from chk in CTUserRoles where chk.User == asoc.User && chk.Role == asoc.Role select chk;
+            if (value == null)
             {
 
                 return false;

@@ -13,8 +13,6 @@ namespace Lombard_00.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
-
     public class CLogin : ControllerBase
     {
         public class ActionLogin {

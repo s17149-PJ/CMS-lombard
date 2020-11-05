@@ -11,7 +11,7 @@ namespace Lombard_00.Data.Db
 {
     public class EFDb : DbContext ,IDb
     {
-        /*all of this in interface stuff*/
+        /*all of this is interface stuff*/
         public List<TUser> TUsers { 
             get {
                 return CTUsers.ToList();

@@ -1,0 +1,55 @@
+<div class="col-md-6 offset-md-3 mt-5">
+  <mat-card color="warning">
+    Username: test<br />
+    Password: test
+  </mat-card>
+  <mat-card class="card">
+    <h4 class="card-header">Login</h4>
+    <div class="card-body">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Username</mat-label>
+            <input
+              matInput
+              placeholder="pat@example.com"
+              formControlName="username"
+              required
+            />
+          </mat-form-field>
+          <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+            <div *ngIf="f.username.errors.required">Username is required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              placeholder="***"
+              formControlName="password"
+              required
+            />
+          </mat-form-field>
+          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+          </div>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="loading || loginForm.invalid"
+        >
+          <span
+            *ngIf="loading"
+            class="spinner-border spinner-border-sm mr-1"
+          ></span>
+          Login
+        </button>
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+          {{ error }}
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

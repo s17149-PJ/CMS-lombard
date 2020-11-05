@@ -20,12 +20,12 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  login(username: string, password: string): Observable<User> {
+  login(nick: string, password: string): Observable<User> {
     return this.http
-      .post<any>('/users/authenticate', { username, password })
+      .post<any>('api/userLogin/login', { nick, password })
       .pipe(
         rx.map((user) => {
-          user.authdata = window.btoa(username + ':' + password);
+          user.authdata = window.btoa(nick + ':' + password);
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
           return user;

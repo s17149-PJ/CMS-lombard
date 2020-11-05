@@ -27,7 +27,6 @@ import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorInterceptor } from './auth/auth-error.interceptor';
 import { AuthInterceptor } from './auth/auth.interceptor';
-import { fakeBackendProvider } from './auth/fake-backend.interceptor';
 import { AuthorizationComponent } from './auth/authorization/authorization.component';
 import { AuthGuard } from './auth/auth.guard';
 import { routes } from './app.routes';
@@ -68,7 +67,6 @@ import { routes } from './app.routes';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     AuthGuard,
-    fakeBackendProvider,
   ],
   bootstrap: [AppComponent],
 })

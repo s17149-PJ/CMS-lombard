@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class CUser : ControllerBase
     {
@@ -23,8 +22,7 @@ namespace Lombard_00.Controllers
             public IEnumerable<string> Roles { get; set; }
         }
 
-        [Route("api/[controller]/UserLogin/{nick,password}")] 
-        [RequireHttps]
+        [Route("api/userLogin/login")]
         [HttpPost]
         public ActionLogin Auth(string nick, string password)
         {

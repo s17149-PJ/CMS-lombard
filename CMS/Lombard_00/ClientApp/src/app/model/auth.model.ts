@@ -1,11 +1,12 @@
 export interface User {
-  username: string;
+  nick: string;
   password?: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  roles: string[];
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  roles?: string[];
   authdata?: string;
+  success: boolean;
 }
 
 export interface RoleDefinition {

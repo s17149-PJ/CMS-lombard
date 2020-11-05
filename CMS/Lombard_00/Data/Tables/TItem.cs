@@ -10,5 +10,15 @@ namespace Lombard_00.Data.Tables
     {
         [Key]
         public int Id { get; set; }
-    }
+        [MaxLength(100)]
+        public string Name { get; set; }
+        [MaxLength(2048)]
+        public string Description { get; set; }
+
+        public string ImageMetaData { get; set; }// format & size and stuff
+        public byte[] Image { get; set; } // preview od product; other images (gallery will be in seprate class)
+
+        public TUserItemBid StartingBid { get; set; }//also holds ref to prev owner
+        public TUserItemBid WinningBid { get; set; }//holds ref to current owner
+    }//done somethings. dunno how much do we want really
 }

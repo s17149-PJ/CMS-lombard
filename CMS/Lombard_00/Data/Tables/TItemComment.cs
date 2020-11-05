@@ -10,5 +10,9 @@ namespace Lombard_00.Data.Tables
     {
         [Key]
         public int Id { get; set; }
-    }
+        public TItem Item { get; set; }
+        public TUser User { get; set; }
+        [MaxLength(512)]
+        public string Comment { get; set; }
+    }//done
 }

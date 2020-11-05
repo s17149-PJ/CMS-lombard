@@ -14,6 +14,8 @@ namespace Lombard_00.Data.Tables
         public int Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; }
-
-    }
+        //optionally:
+        //[MaxLength(255)]
+        //public string Params { get; set; }
+    }//done
 }

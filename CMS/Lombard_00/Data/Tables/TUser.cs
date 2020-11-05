@@ -25,5 +25,5 @@ namespace Lombard_00.Data.Tables
         [MaxLength(256)]
         public string Token { get; set; }
         public DateTime ValidUnitl { get; set; }
-    }
+    }//done
 }

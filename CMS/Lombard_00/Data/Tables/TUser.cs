@@ -20,7 +20,8 @@ namespace Lombard_00.Data.Tables
         public string Surname { get; set; }
         [MaxLength(100)]
         public string Password { get; set; }
-
+        
+        // this is session part.
         [MaxLength(256)]
         public string Token { get; set; }
         public DateTime ValidUnitl { get; set; }

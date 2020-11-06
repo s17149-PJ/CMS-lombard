@@ -142,8 +142,16 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTItem(TItem item)
         {
-            throw new NotImplementedException();
-        }//todo check for dependecies
+            var itemComments = TItemComments.Where(comment => comment.Item == item);
+            var userItemBids = CTUserItemBids.Where(bid => bid.Item == item);
+
+            itemComments.ToList().ForEach(comment => RemoveTItem(item));
+            userItemBids.ToList().ForEach(bid => RemoveTUserItemBid(bid));
+            CTItems.Remove(item);
+            SaveChanges();
+
+            return true;
+        }//done
 
         public List<TItemComment> TItemComments
         {
@@ -187,14 +195,14 @@ namespace Lombard_00.Data.Db
                 return CTUserItemBids.ToList();
             }
         }
-        public bool AddTItemComment(TUserItemBid bid) 
+        public bool AddTUserItemBid(TUserItemBid bid) 
         {
             CTUserItemBids.Add(bid);
             SaveChanges();
 
             return true;
         }//done
-        public bool RemoveTItemComment(TUserItemBid bid) 
+        public bool RemoveTUserItemBid(TUserItemBid bid) 
         {
             CTUserItemBids.Remove(bid);
             SaveChanges();
@@ -241,6 +249,8 @@ namespace Lombard_00.Data.Db
         /*
          * ma poważne wątpliwości co do autonumeracji EF. co więcej sporo rzeczy wymaga JOIN po stronie kontrollerów.
          * można by to zoptymalizować. kiedyś. na razie jako POC wystarczy.
+         * 
+         * ==> dodać tranzakcję przy dziwniejszych operacjach (usuwanie TItem)
          */
     }
 }

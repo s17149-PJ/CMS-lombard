@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,11 +20,15 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTUser(TUser user)
         {
+            //nick must be unique
+            if (CTUsers.Where(usr =>usr.Nick == user.Nick).Any())
+                return false;
+
             CTUsers.Add(user);
             SaveChanges();
 
             return true;
-        }
+        }//done
         public bool ModifyTUser(TUser toBeModified, TUser newData)
         {
             var value = CTUsers.FirstOrDefault(value => value.Id == toBeModified.Id);
@@ -31,21 +36,16 @@ namespace Lombard_00.Data.Db
 
                 return false;
             }
-            if (newData.Nick     != null) value.Nick     = newData.Nick;
-            if (newData.Name     != null) value.Name     = newData.Name;
-            if (newData.Surname  != null) value.Surname  = newData.Surname;
-            if (newData.Password != null) value.Password = newData.Password;
+            if (newData.Nick     != null)   value.Nick       = newData.Nick;
+            if (newData.Name     != null)   value.Name       = newData.Name;
+            if (newData.Surname  != null)   value.Surname    = newData.Surname;
+            if (newData.Password != null)   value.Password   = newData.Password;
+            if (newData.Token != null)      value.Token      = newData.Token;
+            if (newData.ValidUnitl != null) value.ValidUnitl = newData.ValidUnitl;
             SaveChanges();
 
             return true;
-        }
-        public bool RemoveTUser(TUser user)
-        {
-            CTUsers.Remove(user);
-            SaveChanges();
-
-            return true;
-        } //todo check for dependecies
+        }//done
 
         public List<TUserRole> TUserRoles
         {
@@ -67,14 +67,14 @@ namespace Lombard_00.Data.Db
             SaveChanges();
 
             return true;
-        }
+        }//done
         public bool RemoveTUserRole(TUserRole asoc)
         {
             CTUserRoles.Remove(asoc);
             SaveChanges();
 
             return true;
-        }//todo check for dependecies
+        }//done (i think, haven't found any outer refs)
 
         public List<TRole> TRoles
         {
@@ -85,11 +85,15 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTRole(TRole role)
         {
+            //name must be unique
+            if (CTRoles.Where(rol => rol.Name == role.Name).Any())
+                return false;
+
             CTRoles.Add(role);
             SaveChanges();
 
             return true;
-        }
+        }//done
         public bool ModifyTRole(TRole toBeModified, TRole newData)
         {
             var value = CTRoles.FirstOrDefault(value => value.Id == toBeModified.Id);
@@ -102,14 +106,7 @@ namespace Lombard_00.Data.Db
             SaveChanges();
 
             return true;
-        }
-        public bool RemoveTRole(TRole role)
-        {
-            CTRoles.Remove(role);
-            SaveChanges();
-
-            return true;
-        }//todo check for dependecies
+        }//done
 
         public List<TItem> TItems
         {
@@ -120,12 +117,15 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTItem(TItem item)
         {
-            throw new NotImplementedException();
-        }
+            CTItems.Add(item);
+            SaveChanges();
+
+            return true;
+        }//done
         public bool ModifyTItem(TItem toBeModified, TItem newData)
         {
             throw new NotImplementedException();
-        }
+        }//todo
         public bool RemoveTItem(TItem item)
         {
             throw new NotImplementedException();
@@ -140,16 +140,60 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTItemComment(TItemComment comment)
         {
-            throw new NotImplementedException();
-        }
+            CTItemComments.Add(comment);
+            SaveChanges();
+
+            return true;
+        }//done
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData)
         {
             throw new NotImplementedException();
-        }
+        }//todo
         public bool RemoveTItemComment(TItemComment comment)
         {
             throw new NotImplementedException();
         }//todo check for dependecies
+
+        public List<TUserItemBid> TUserItemBids
+        {
+            get
+            {
+                return CTUserItemBids.ToList();
+            }
+        }
+        public bool AddTItemComment(TUserItemBid bid) 
+        {
+            CTUserItemBids.Add(bid);
+            SaveChanges();
+
+            return true;
+        }//done
+        public bool RemoveTItemComment(TUserItemBid bid) 
+        {
+            throw new NotImplementedException();
+        }//todo
+
+        private DateTime LastChek = DateTime.Now;//start class with default value now
+        public void CleanUp() 
+        {
+            if (DateTime.Compare(LastChek, DateTime.Now) > 0)
+                return;
+            //delay next check untill tomorow
+            LastChek = DateTime.Now.AddDays(1);
+            //keep list of items to remove
+            List<TItem> toRemove = new List<TItem>();
+            //async serach for items that are to  be removed
+            //dunno if deleting during iteration will break it so I don't
+            CTItems
+                .Where(item => item.WinningBid != null)
+                .ForEachAsync(item=> 
+                {
+                    if (DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
+                        toRemove.Add(item);
+                });
+            //now having all refs del each item
+            toRemove.ForEach(item => RemoveTItem(item));
+        }// this method SHOULD be async. done
         /*end of interface stuff*/
 
         /*start of EF stuff*/
@@ -163,5 +207,11 @@ namespace Lombard_00.Data.Db
         public DbSet<TRole> CTRoles { get; set; }
         public DbSet<TItem> CTItems { get; set; }
         public DbSet<TItemComment> CTItemComments { get; set; }
+        public DbSet<TUserItemBid> CTUserItemBids { get; set; }
+
+        /*
+         * ma poważne wątpliwości co do autonumeracji EF. co więcej sporo rzeczy wymaga JOIN po stronie kontrollerów.
+         * można by to zoptymalizować. kiedyś. na razie jako POC wystarczy.
+         */
     }
 }

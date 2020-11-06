@@ -113,7 +113,28 @@ namespace Lombard_00.Controllers
             var token = GetNewToken();
             usr.Token = token;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
-            db.AddTUser(usr);
+
+            if(db.AddTUser(usr))
+            {
+
+                return new ActionLogin()
+                {
+                    Success = false,
+                    Id = -1,
+                    Nick = null,
+                    Name = null,
+                    Surname = null,
+                    Roles = null,
+                    Token = null
+                };
+            }// db MAY refuse to create user. for now db demands Nick to be unique.
+
+            usr = db.TUsers.Find(usr => usr.Nick == Nick);
+            db.AddTUserRole(new TUserRole()
+            {
+                User = usr,
+                Role = db.TRoles[1]
+            });// auto add user role
 
             return new ActionLogin()
             {

@@ -23,6 +23,8 @@ namespace Lombard_00.Controllers
             if (IsUsrStillValid(usr))
                 return false;
 
+            db.CleanUp();//daily cleanup of old items
+
             return true;
         }
         [Route("api/item/edit")]

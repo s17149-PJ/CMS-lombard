@@ -10,6 +10,7 @@ namespace Lombard_00.Data.Tables
     [Table("TUser")]
     public class TUser
     {
+        //DON'T set Id. it should happen automatically. if no the it will be overwritten by EFDb anyway.
         [Key]
         public int Id { get; set; }
         [MaxLength(100)]

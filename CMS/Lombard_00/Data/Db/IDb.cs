@@ -72,8 +72,8 @@ namespace Lombard_00.Data.Db
          * they are there for purpose.if item is to be sold again create NEW offer (TItem)
          */
         public List<TUserItemBid> TUserItemBids { get; }
-        public bool AddTItemComment(TUserItemBid bid);
-        public bool RemoveTItemComment(TUserItemBid bid);
+        public bool AddTUserItemBid(TUserItemBid bid);
+        public bool RemoveTUserItemBid(TUserItemBid bid);
 
         public void CleanUp();
     }

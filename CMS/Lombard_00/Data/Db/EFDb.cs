@@ -124,8 +124,22 @@ namespace Lombard_00.Data.Db
         }//done
         public bool ModifyTItem(TItem toBeModified, TItem newData)
         {
-            throw new NotImplementedException();
-        }//todo
+            var value = CTItems.FirstOrDefault(value => value.Id == toBeModified.Id);
+            if (value == null)
+            {
+
+                return false;
+            }
+            if (newData.Name          != null) value.Name          = newData.Name;
+            if (newData.Description   != null) value.Description   = newData.Description;
+            if (newData.ImageMetaData != null) value.ImageMetaData = newData.ImageMetaData;
+            if (newData.Image         != null) value.Image         = newData.Image;
+            if (newData.StartingBid   != null) value.StartingBid   = newData.StartingBid;
+            if (newData.WinningBid    != null) value.WinningBid    = newData.WinningBid;
+            SaveChanges();
+
+            return true;
+        }//done
         public bool RemoveTItem(TItem item)
         {
             throw new NotImplementedException();
@@ -147,12 +161,24 @@ namespace Lombard_00.Data.Db
         }//done
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData)
         {
-            throw new NotImplementedException();
-        }//todo
+            var value = CTItemComments.FirstOrDefault(value => value.Id == toBeModified.Id);
+            if (value == null)
+            {
+
+                return false;
+            }
+            if (newData.Comment != null) value.Comment = newData.Comment;
+            SaveChanges();
+
+            return true;
+        }//done
         public bool RemoveTItemComment(TItemComment comment)
         {
-            throw new NotImplementedException();
-        }//todo check for dependecies
+            CTItemComments.Remove(comment);
+            SaveChanges();
+
+            return true;
+        }//done
 
         public List<TUserItemBid> TUserItemBids
         {
@@ -170,8 +196,11 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTItemComment(TUserItemBid bid) 
         {
-            throw new NotImplementedException();
-        }//todo
+            CTUserItemBids.Remove(bid);
+            SaveChanges();
+
+            return true;
+        }//done
 
         private DateTime LastChek = DateTime.Now;//start class with default value now
         public void CleanUp() 

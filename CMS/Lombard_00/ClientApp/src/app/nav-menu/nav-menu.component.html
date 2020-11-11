@@ -20,22 +20,26 @@
         [ngClass]="{ show: isExpanded }"
       >
         <ul *ngIf="isLogged | async" class="navbar-nav flex-grow">
-          <li
-            class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/counter']"
-              >Counter</a
-            >
-          </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/fetch-data']"
               >Fetch data</a
             >
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/lombard']"
+              >Lombard</a
+            >
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [matMenuTriggerFor]="menu">Admin</a>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item [routerLink]="['admin/panel']">
+                Panel
+              </button>
+              <button mat-menu-item [routerLink]="['admin/users']">
+                Users
+              </button>
+            </mat-menu>
           </li>
           <li class="nav-item">
             <a class="nav-link text-dark" (click)="logout()"> Logout </a>

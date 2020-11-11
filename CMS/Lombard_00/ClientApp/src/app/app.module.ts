@@ -17,6 +17,7 @@ import {
   MatPaginatorModule,
   MatSidenavModule,
   MatSortModule,
+  MatTableModule,
   MatToolbarModule,
 } from '@angular/material';
 import { AppComponent } from './app.component';
@@ -30,6 +31,9 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { AuthorizationComponent } from './auth/authorization/authorization.component';
 import { AuthGuard } from './auth/auth.guard';
 import { routes } from './app.routes';
+import { AdminPanelComponent } from './admin/admin-panel.component';
+import { AdminPanelUsersComponent } from './admin/admin-panel-users/admin-panel-users.component';
+import { LombardComponent } from './lombard/lombard.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +43,9 @@ import { routes } from './app.routes';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
+    AdminPanelComponent,
+    AdminPanelUsersComponent,
+    LombardComponent,
   ],
   imports: [
     ReactiveFormsModule,
@@ -60,6 +67,7 @@ import { routes } from './app.routes';
     MatSidenavModule,
     MatSortModule,
     MatToolbarModule,
+    MatTableModule,
     RouterModule.forRoot(routes),
     NoopAnimationsModule,
   ],

@@ -22,21 +22,28 @@ namespace Lombard_00.Data.Db
             }
         }
 
-        /*users - root of all things around here*/
+        /*
+         * users - root of all things around here
+         */
         public List<TUser> TUsers { get; }
         public bool AddTUser(TUser user);
-        public bool RemoveTUser(TUser user);
         public bool ModifyTUser(TUser toBeModified, TUser newData);
 
-        /*many to many implementation*/
+        /*
+         * many to many implementation
+         */
         public List<TUserRole> TUserRoles { get; }
         public bool AddTUserRole(TUserRole role);
         public bool RemoveTUserRole(TUserRole role);
 
-        /*each service user can be associated with multiple roles*/
+        /*
+         * each service user can be associated with multiple roles
+         * IMPORTANT:
+         * role [0] is ALWAYS admin role [1] is ALWAYS user. any custom follow AFTER those.
+         * DO *NOT* modify role [0] & [1] as it will break frontend. best don't touch it at all.
+         */
         public List<TRole> TRoles { get; }
         public bool AddTRole(TRole role);
-        public bool RemoveTRole(TRole role);
         public bool ModifyTRole(TRole toBeModified, TRole newData);
 
         /*
@@ -59,5 +66,15 @@ namespace Lombard_00.Data.Db
         public bool AddTItemComment(TItemComment comment);
         public bool RemoveTItemComment(TItemComment comment);
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData);
+
+        /*
+         * IMPORTANT: don'ty remove bids that you can reach DIRECTLY from TItem.
+         * they are there for purpose.if item is to be sold again create NEW offer (TItem)
+         */
+        public List<TUserItemBid> TUserItemBids { get; }
+        public bool AddTUserItemBid(TUserItemBid bid);
+        public bool RemoveTUserItemBid(TUserItemBid bid);
+
+        public void CleanUp();
     }
 }

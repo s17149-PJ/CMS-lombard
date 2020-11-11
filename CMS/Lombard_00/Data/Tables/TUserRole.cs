@@ -9,9 +9,10 @@ namespace Lombard_00.Data.Tables
 {
     public class TUserRole
     {
+        //stupid but works. 
         [Key]
         public int Id { get; set; }
         public TUser User { get; set; }
         public TRole Role { get; set; }
-    }
+    }//done
 }

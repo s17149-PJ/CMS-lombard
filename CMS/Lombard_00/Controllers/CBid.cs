@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +24,19 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
+            var value = db.AddTUserItemBid(new TUserItemBid()
+            { 
+                Item = new TItem() { Id = Bid.Item.Id },
+                User = new TUser() { Id = Bid.User.Id },
+                CreatedOn = DateTime.Now,
+                Money = Bid.Money
+            });
+
+            if (value == null)
+                return false;
+
             return true;
-        }
+        }//done
         [Route("api/bid/delete")]
         [HttpPost]
         public bool BidDelete(int Id, string Token, TokenBid Bid)

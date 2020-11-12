@@ -17,12 +17,6 @@ namespace Lombard_00.Controllers.Tranzit
             Comment = comment.Comment;
         }//done
 
-
-        public static TokenComment CallByTokenItem(TItemComment comment) 
-        {
-            return null;
-        }
-
         public int Id { get; set; }
         public TokenItem Item { get; set; }
         public TokenUser User { get; set; }

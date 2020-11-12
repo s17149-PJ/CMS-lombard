@@ -115,12 +115,12 @@ namespace Lombard_00.Data.Db
                 return CTItems.ToList();
             }
         }
-        public bool AddTItem(TItem item)
+        public TItem AddTItem(TItem item)
         {
-            CTItems.Add(item);
+            var value = CTItems.Add(item);
             SaveChanges();
 
-            return true;
+            return value;
         }//done
         public bool ModifyTItem(TItem toBeModified, TItem newData)
         {
@@ -195,12 +195,12 @@ namespace Lombard_00.Data.Db
                 return CTUserItemBids.Include(e => e.Item).Include(e => e.User).ToList();
             }
         }
-        public bool AddTUserItemBid(TUserItemBid bid) 
+        public TUserItemBid AddTUserItemBid(TUserItemBid bid) 
         {
-            CTUserItemBids.Add(bid);
+            var value = CTUserItemBids.Add(bid);
             SaveChanges();
 
-            return true;
+            return value;
         }//done
         public bool RemoveTUserItemBid(TUserItemBid bid) 
         {

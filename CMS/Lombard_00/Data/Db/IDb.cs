@@ -53,7 +53,7 @@ namespace Lombard_00.Data.Db
          * <tbd> jestem zbyt leniwy żeby to dodać jeszcze dziś.
          */
         public List<TItem> TItems{ get; }
-        public bool AddTItem(TItem item);
+        public TItem AddTItem(TItem item);
         public bool RemoveTItem(TItem item);
         public bool ModifyTItem(TItem toBeModified, TItem newData);
 
@@ -72,7 +72,7 @@ namespace Lombard_00.Data.Db
          * they are there for purpose.if item is to be sold again create NEW offer (TItem)
          */
         public List<TUserItemBid> TUserItemBids { get; }
-        public bool AddTUserItemBid(TUserItemBid bid);
+        public TUserItemBid AddTUserItemBid(TUserItemBid bid);
         public bool RemoveTUserItemBid(TUserItemBid bid);
 
         public void CleanUp();

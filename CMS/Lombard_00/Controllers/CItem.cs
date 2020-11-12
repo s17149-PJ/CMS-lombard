@@ -25,11 +25,33 @@ namespace Lombard_00.Controllers
                 return false;
 
             db.CleanUp();//daily cleanup of old items
+            
+            var addedItem = db.AddTItem(
+                new TItem() { 
+                    Name = Item.Name,
+                    Description = Item.Description,
+                    ImageMetaData = Item.ImageMetaData,
+                    Image = Item.Image,
+                });
+            
+            if (addedItem == null)
+                return false;
 
+            var addedBid = db.AddTUserItemBid(
+                new TUserItemBid() { 
+                    Item = addedItem,
+                    User = usr,
+                    CreatedOn = DateTime.Now,
+                    Money = Item.StartingBid.Money
+                });
 
+            if (addedBid == null)
+                return false;
 
-            return true;
-        }
+            addedItem.StartingBid = addedBid;
+
+            return db.ModifyTItem(addedItem,addedItem);
+        }//done
         [Route("api/item/delete")]
         [HttpPost]
         public bool ItemDelete(int Id, string Token, TokenItem Item)

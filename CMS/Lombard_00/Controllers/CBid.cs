@@ -35,8 +35,15 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            return true;
-        }
+            var toDel = db.TUserItemBids.Find(ite => ite.Id == Bid.Id);
+
+            if (toDel == null)
+                return false;//must exist
+            if (toDel.User.Id != usr.Id)
+                return false;//must be owner
+
+            return db.RemoveTUserItemBid(toDel);
+        }//done
         [Route("api/bid/list")]
         [HttpPost]
         public List<TokenBid> BidList(int Id, string Token)

@@ -30,9 +30,9 @@ namespace Lombard_00.Controllers
 
             return true;
         }
-        [Route("api/item/edit")]
+        [Route("api/item/delete")]
         [HttpPost]
-        public bool ItemEdit(int Id, string Token, TokenItem Item)
+        public bool ItemDelete(int Id, string Token, TokenItem Item)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -40,11 +40,18 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            return true;
-        }
-        [Route("api/item/delete")]
+            var toDel = db.TItems.Find(ite => ite.Id == Item.Id);
+            
+            if (toDel == null)
+                return false;//must exist
+            if (toDel.StartingBid.User.Id != usr.Id)
+                return false;//must be owner
+
+            return db.RemoveTItem(toDel);
+        }//done
+        [Route("api/item/edit")]
         [HttpPost]
-        public bool ItemDelete(int Id, string Token, TokenItem Item)
+        public bool ItemEdit(int Id, string Token, TokenItem Item)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);

@@ -18,7 +18,6 @@ namespace Lombard_00.Controllers.Tranzit
             CreatedOn = bid.CreatedOn;
             Money = bid.Money;
         }//done
-
         public static TokenBid CallByTokenItem(TUserItemBid bid)
         {
             return new TokenBid()

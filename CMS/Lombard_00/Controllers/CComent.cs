@@ -35,8 +35,15 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            return true;
-        }
+            var toDel = db.TItemComments.Find(ite => ite.Id == Comment.Id);
+
+            if (toDel == null)
+                return false;//must exist
+            if (toDel.User.Id != usr.Id)
+                return false;//must be owner
+
+            return db.RemoveTItemComment(toDel);
+        }//done
         [Route("api/comment/edit")]
         [HttpPost]
         public bool CommentEdit(int Id, string Token, TokenComment Comment)

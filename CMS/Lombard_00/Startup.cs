@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,12 +33,6 @@ namespace Lombard_00
                         Id = 0,
                         Name = "Admin"
                     });
-                    IDb.DbInstance.AddTRole(new TRole()
-                    {
-                        Id = 1,
-                        Name = "User"
-                    });
-
                     IDb.DbInstance.AddTUser(new TUser()
                     {
                         Id = 0,
@@ -46,6 +41,18 @@ namespace Lombard_00
                         Surname = "Admin",
                         Password = "AdminGodDamit"
                     });
+                    IDb.DbInstance.AddTUserRole(new TUserRole()
+                    {
+                        User = IDb.DbInstance.TUsers[0],//admin
+                        Role = IDb.DbInstance.TRoles[0]//admin
+                    });
+
+                    IDb.DbInstance.AddTRole(new TRole()
+                    {
+                        Id = 1,
+                        Name = "User"
+                    });
+
                     IDb.DbInstance.AddTUser(new TUser()
                     {
                         Id = 1,
@@ -54,52 +61,44 @@ namespace Lombard_00
                         Surname = "Hacker",
                         Password = "12345"
                     });
-
-                    IDb.DbInstance.AddTUserRole(new TUserRole()
-                    {
-                        User = IDb.DbInstance.TUsers[0],//admin
-                        Role = IDb.DbInstance.TRoles[0]//admin
-                    });
                     IDb.DbInstance.AddTUserRole(new TUserRole()
                     {
                         User = IDb.DbInstance.TUsers[1],//user
                         Role = IDb.DbInstance.TRoles[1]//user
                     });
+
+                    for (int i = 2; i < 20; i++) {
+                        IDb.DbInstance.AddTUser(new TUser()
+                        {
+                            Id = i,
+                            Nick = GetNewToken(),
+                            Name = GetNewToken(),
+                            Surname = GetNewToken(),
+                            Password = GetNewToken()
+                        });
+                        IDb.DbInstance.AddTUserRole(new TUserRole()
+                        {
+                            User = IDb.DbInstance.TUsers[i],//user
+                            Role = IDb.DbInstance.TRoles[1]//user
+                        });
+                    }
                 }
                 var value = IDb.DbInstance.TUsers;
 
                 int x = 2 + 3;
             }
-            {
-                IDb db = IDb.DbInstance;
-                string nick = "user", password = "12345";
-                var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == password);
-                ActionLogin value = null;
-                if (usr == null)
-                {
-
-                    value = new ActionLogin()
-                    {
-                        Success = false,
-                        Nick = null,
-                        Name = null,
-                        Surname = null,
-                        Roles = null
-                    };
-                }
-                else
-                    value = new ActionLogin()
-                    {
-                        Success = true,
-                        Nick = usr.Nick,
-                        Name = usr.Name,
-                        Surname = usr.Surname,
-                        Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role.Name
-                    };
-
-                int x = 2 + 3;
-            }
         }
+        private string GetNewToken()
+        {
+            var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            var resultToken = new string(
+               Enumerable.Repeat(allChar, 32)
+               .Select(token => token[random.Next(token.Length)]).ToArray());
+
+            return resultToken.ToString();
+        }//done
+
 
         public Startup(IConfiguration configuration)
         {

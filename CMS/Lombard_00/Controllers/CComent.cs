@@ -60,8 +60,14 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            return true;
-        }
+            var com = new TItemComment()
+            {
+                Id = Comment.Id,
+                Comment = Comment.Comment
+            };
+
+            return db.ModifyTItemComment(com,com);
+        }//done
         [Route("api/comment/list")]
         [HttpPost]
         public List<TokenComment> CommentList(int Id, string Token, TokenComment Comment)

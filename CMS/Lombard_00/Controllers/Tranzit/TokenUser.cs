@@ -1,4 +1,5 @@
-﻿using Lombard_00.Data.Tables;
+﻿using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,31 @@ namespace Lombard_00.Controllers
 {
     public class TokenUser
     {
+        public TokenUser() { }
+        public TokenUser(TUser user,bool success) 
+        {
+            Success = success;
+            Id = user.Id;
+            Nick = user.Nick;
+            Name = user.Name;
+            Surname = user.Surname;
+            Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == user select asoc.Role;
+            Token = user.Token;
+        }//done
+        public static TokenUser CallByTokenBid(TUser user)
+        {
+            return new TokenUser()
+            {
+                Success = false,
+                Id = user.Id,
+                Nick = user.Nick,
+                Name = user.Name,
+                Surname = user.Surname,
+                Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == user select asoc.Role,
+                Token = null//NO leak!
+            };
+        }//done
+
         public bool Success { get; set; }
         public int Id { get; set; }
         public string Nick { get; set; }

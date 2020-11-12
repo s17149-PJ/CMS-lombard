@@ -26,6 +26,8 @@ namespace Lombard_00.Controllers
 
             db.CleanUp();//daily cleanup of old items
 
+
+
             return true;
         }
         [Route("api/item/edit")]
@@ -62,8 +64,9 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return null;
 
-            return null;
-        }
-        
+            return (from item in db.TItems
+                    select
+                        new TokenItem(item)).ToList();
+        }//done
     }
 }

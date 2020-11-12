@@ -166,6 +166,23 @@ namespace Lombard_00.Controllers
             return db.ModifyTUser(usr, usr);
         }//done
 
+        [Route("api/user/list")]
+        [HttpPost]
+        public IEnumerable<ActionLogin> List()
+        {
+            return from TUser in IDb.DbInstance.TUsers select 
+                   new ActionLogin()
+                {
+                    Success = false,
+                    Id = TUser.Id,
+                    Nick = TUser.Nick,
+                    Name = TUser.Name,
+                    Surname = TUser.Surname,
+                    Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role.Name,
+                    Token = null
+                };
+        }//done
+
         private string GetNewToken() {
             var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();

@@ -10,6 +10,15 @@ namespace Lombard_00.Controllers.Tranzit
     public class TokenBid
     {
         public TokenBid() { }
+        public TokenBid(TUserItemBid bid) 
+        {
+            Id = bid.Id;
+            Item = new TokenItem(bid.Item);
+            User = TokenUser.CallByTokenBid(bid.User),;
+            CreatedOn = bid.CreatedOn;
+            Money = bid.Money;
+        }//done
+
         public static TokenBid CallByTokenItem(TUserItemBid bid)
         {
             return new TokenBid()

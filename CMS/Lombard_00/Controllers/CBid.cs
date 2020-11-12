@@ -39,7 +39,7 @@ namespace Lombard_00.Controllers
         }
         [Route("api/bid/list")]
         [HttpPost]
-        public List<TokenBid> BidList(int Id, string Token, TokenBid Bid)
+        public List<TokenBid> BidList(int Id, string Token)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -47,7 +47,7 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return null;
 
-            return null;
-        }
+            return (from bid in db.TUserItemBids select new TokenBid(bid)).ToList();
+        }//done
     }
 }

@@ -171,7 +171,7 @@ namespace Lombard_00.Controllers
         public IEnumerable<ActionLogin> List()
         {
             return from TUser in IDb.DbInstance.TUsers select 
-                   new ActionLogin()
+                new ActionLogin()
                 {
                     Success = false,
                     Id = TUser.Id,

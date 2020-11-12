@@ -21,10 +21,21 @@ namespace Lombard_00.Data.Tables
         public string Surname { get; set; }
         [MaxLength(100)]
         public string Password { get; set; }
-        
         // this is session part.
         [MaxLength(256)]
         public string Token { get; set; }
+        //private DateTime validUnitl;
+        [Column(TypeName = "datetime2")]
         public DateTime ValidUnitl { get; set; }
+        /*
+         * get 
+             {
+                if (validUnitl == null)
+                    return DateTime.Now.AddMinutes(-1);
+                return validUnitl;
+            } set {
+                validUnitl = value;
+            } }
+        */
     }//done
 }

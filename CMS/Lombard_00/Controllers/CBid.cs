@@ -42,6 +42,9 @@ namespace Lombard_00.Controllers
             if (toDel.User.Id != usr.Id)
                 return false;//must be owner
 
+            if (toDel.Item.WinningBid == toDel || toDel.Item.StartingBid == toDel)
+                return false;//can't delete connection bids
+
             return db.RemoveTUserItemBid(toDel);
         }//done
         [Route("api/bid/list")]

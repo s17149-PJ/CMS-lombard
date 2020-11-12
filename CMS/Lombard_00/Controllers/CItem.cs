@@ -64,9 +64,7 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return null;
 
-            return (from item in db.TItems
-                    select
-                        new TokenItem(item)).ToList();
+            return (from item in db.TItems select new TokenItem(item)).ToList();
         }//done
     }
 }

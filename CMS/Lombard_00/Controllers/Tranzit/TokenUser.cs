@@ -20,7 +20,7 @@ namespace Lombard_00.Controllers
             Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == user select asoc.Role;
             Token = user.Token;
         }//done
-        public static TokenUser CallByTokenBid(TUser user)
+        public static TokenUser CallByToken(TUser user)
         {
             return new TokenUser()
             {

@@ -48,6 +48,6 @@ namespace Lombard_00.Controllers
                 return null;
 
             return (from bid in db.TUserItemBids select new TokenBid(bid)).ToList();
-        }//done
+        }//todo add serach
     }
 }

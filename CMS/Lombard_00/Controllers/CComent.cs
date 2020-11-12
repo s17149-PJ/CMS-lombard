@@ -59,7 +59,7 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return null;
 
-            return null;
-        }
+            return (from comment in db.TItemComments select new TokenComment(comment)).ToList();
+        }//todo add serach
     }
 }

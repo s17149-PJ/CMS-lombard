@@ -9,6 +9,15 @@ namespace Lombard_00.Controllers.Tranzit
     public class TokenComment
     {
         public TokenComment() { }
+        public TokenComment(TItemComment comment)
+        {
+            Id = comment.Id;
+            Item = new TokenItem(comment.Item);
+            User = TokenUser.CallByToken(comment.User);
+            Comment = comment.Comment;
+        }//done
+
+
         public static TokenComment CallByTokenItem(TItemComment comment) 
         {
             return null;

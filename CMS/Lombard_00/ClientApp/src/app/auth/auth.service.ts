@@ -22,7 +22,7 @@ export class AuthService {
 
   login(nick: string, password: string): Observable<User> {
     return this.http
-      .post<any>('api/userLogin/login', { nick, password })
+      .post<any>('api/user/login', { nick, password })
       .pipe(
         rx.map((user) => {
           user.authdata = window.btoa(nick + ':' + password);
@@ -31,6 +31,12 @@ export class AuthService {
           return user;
         })
       );
+  }
+
+  get fetchUsers(): Observable<User[]> {
+    return this.http
+      .get<User[]>('api/user/list')
+      .pipe(rx.map((users) => users));
   }
 
   logout() {

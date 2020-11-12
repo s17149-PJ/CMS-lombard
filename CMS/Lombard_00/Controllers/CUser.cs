@@ -167,10 +167,10 @@ namespace Lombard_00.Controllers
         }//done
 
         [Route("api/user/list")]
-        [HttpPost]
-        public IEnumerable<ActionLogin> List()
+        [HttpGet]
+        public List<ActionLogin> List()
         {
-            return from TUser in IDb.DbInstance.TUsers select 
+            return (from TUser in IDb.DbInstance.TUsers select 
                 new ActionLogin()
                 {
                     Success = false,
@@ -180,7 +180,7 @@ namespace Lombard_00.Controllers
                     Surname = TUser.Surname,
                     Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role.Name,
                     Token = null
-                };
+                }).ToList();
         }//done
 
         private string GetNewToken() {

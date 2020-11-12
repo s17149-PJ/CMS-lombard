@@ -34,6 +34,7 @@ import { routes } from './app.routes';
 import { AdminPanelComponent } from './admin/admin-panel.component';
 import { AdminPanelUsersComponent } from './admin/admin-panel-users/admin-panel-users.component';
 import { LombardComponent } from './lombard/lombard.component';
+import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admin-panel-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { LombardComponent } from './lombard/lombard.component';
     FetchDataComponent,
     AdminPanelComponent,
     AdminPanelUsersComponent,
+    AdminPanelDashboardComponent,
     LombardComponent,
   ],
   imports: [

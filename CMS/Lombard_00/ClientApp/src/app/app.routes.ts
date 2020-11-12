@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admin-panel-dashboard.component';
 import { AdminPanelUsersComponent } from './admin/admin-panel-users/admin-panel-users.component';
 import { AdminPanelComponent } from './admin/admin-panel.component';
 import { AuthGuard } from './auth/auth.guard';
@@ -28,9 +29,9 @@ export const routes: Route[] = [
   { path: 'login', component: AuthorizationComponent },
   {
     path: 'admin',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     children: [
-      { path: 'panel', component: AdminPanelComponent },
+      { path: 'panel', component: AdminPanelDashboardComponent },
       { path: 'users', component: AdminPanelUsersComponent },
     ],
   },

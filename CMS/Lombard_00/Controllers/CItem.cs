@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ namespace Lombard_00.Controllers
     {
         [Route("api/item/add")]
         [HttpPost]
-        public bool Add(int Id, string Token)
+        public bool Add(int Id, string Token, TokenItem Item)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -29,7 +30,7 @@ namespace Lombard_00.Controllers
         }
         [Route("api/item/edit")]
         [HttpPost]
-        public bool Edit(int Id, string Token)
+        public bool Edit(int Id, string Token, TokenItem Item)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -41,7 +42,7 @@ namespace Lombard_00.Controllers
         }
         [Route("api/item/delete")]
         [HttpPost]
-        public bool Delete(int Id, string Token)
+        public bool Delete(int Id, string Token, TokenItem Item)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -65,7 +66,7 @@ namespace Lombard_00.Controllers
         }
         [Route("api/item/bid")]
         [HttpPost]
-        public bool Bid(int Id, string Token)
+        public bool Bid(int Id, string Token, TokenBid Bid)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -77,7 +78,7 @@ namespace Lombard_00.Controllers
         }
         [Route("api/item/comment")]
         [HttpPost]
-        public bool Comment(int Id, string Token)
+        public bool Comment(int Id, string Token, TokenComment Comment)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);

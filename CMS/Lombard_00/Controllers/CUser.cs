@@ -137,6 +137,7 @@ namespace Lombard_00.Controllers
                 Token = token
             };
         }//done
+        //?redo to obj?
 
         [Route("api/user/edit")]
         [HttpPost]
@@ -155,23 +156,7 @@ namespace Lombard_00.Controllers
             
             return db.ModifyTUser(usr, usr);
         }//done
-
-        [Route("api/user/list")]
-        [HttpGet]
-        public List<TokenUser> List()
-        {
-            return (from TUser in IDb.DbInstance.TUsers select 
-                new TokenUser()
-                {
-                    Success = false,
-                    Id = TUser.Id,
-                    Nick = TUser.Nick,
-                    Name = TUser.Name,
-                    Surname = TUser.Surname,
-                    Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role,
-                    Token = null
-                }).ToList();
-        }//done
+        //?redo to obj?
 
         private string GetNewToken() {
             var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

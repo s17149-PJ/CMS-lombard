@@ -56,7 +56,7 @@ namespace Lombard_00.Controllers
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
-            if (IsUsrStillValid(usr))
+            if (TokenUser.IsUsrStillValid(usr))
             {
 
                 return new TokenUser()
@@ -146,7 +146,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
 
-            if (IsUsrStillValid(usr))
+            if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
             usr.Nick = Nick;
@@ -167,19 +167,5 @@ namespace Lombard_00.Controllers
 
             return resultToken.ToString();
         }//done
-        private bool IsUsrStillValid(TUser usr) {
-            if (usr == null)
-            {
-
-                return false;
-            }
-            if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0)
-            {
-
-                return false;
-            }
-
-            return true;
-        }//done
-    }
+    }//?done
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
-using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,25 +11,11 @@ namespace Lombard_00.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CItem : ControllerBase
+    public class CComent : ControllerBase
     {
-        [Route("api/item/add")]
+        [Route("api/comment/create")]
         [HttpPost]
-        public bool ItemAdd(int Id, string Token, TokenItem Item)
-        {
-            IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
-
-            if (TokenUser.IsUsrStillValid(usr))
-                return false;
-
-            db.CleanUp();//daily cleanup of old items
-
-            return true;
-        }
-        [Route("api/item/edit")]
-        [HttpPost]
-        public bool ItemEdit(int Id, string Token, TokenItem Item)
+        public bool CommentCreate(int Id, string Token, TokenComment Comment)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -40,9 +25,9 @@ namespace Lombard_00.Controllers
 
             return true;
         }
-        [Route("api/item/delete")]
+        [Route("api/comment/delete")]
         [HttpPost]
-        public bool ItemDelete(int Id, string Token, TokenItem Item)
+        public bool CommentDelete(int Id, string Token, TokenComment Comment)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -52,9 +37,21 @@ namespace Lombard_00.Controllers
 
             return true;
         }
-        [Route("api/item/list")]
+        [Route("api/comment/edit")]
         [HttpPost]
-        public List<TokenItem> ItemList(int Id, string Token)
+        public bool CommentEdit(int Id, string Token, TokenComment Comment)
+        {
+            IDb db = IDb.DbInstance;
+            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+
+            if (TokenUser.IsUsrStillValid(usr))
+                return false;
+
+            return true;
+        }
+        [Route("api/comment/list")]
+        [HttpPost]
+        public List<TokenComment> CommentList(int Id, string Token, TokenComment Comment)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
@@ -64,6 +61,5 @@ namespace Lombard_00.Controllers
 
             return null;
         }
-        
     }
 }

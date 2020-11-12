@@ -15,5 +15,21 @@ namespace Lombard_00.Controllers
         public string Surname { get; set; }
         public IEnumerable<TRole> Roles { get; set; }
         public string Token { get; set; }
+
+        public static bool IsUsrStillValid(TUser usr)
+        {
+            if (usr == null)
+            {
+
+                return false;
+            }
+            if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0)
+            {
+
+                return false;
+            }
+
+            return true;
+        }//done
     }
 }

@@ -14,25 +14,15 @@ namespace Lombard_00.Controllers
     [ApiController]
     public class CUser : ControllerBase
     {
-        public class ActionLogin {
-            public bool Success { get; set; }
-            public int Id { get; set; }
-            public string Nick { get; set; }
-            public string Name { get; set; }
-            public string Surname { get; set; }
-            public IEnumerable<string> Roles { get; set; }
-            public string Token { get; set; }
-        }
-
         [Route("api/user/login")]
         [HttpPost]
-        public ActionLogin Auth(string nick, string password)
+        public TokenUser Auth(string nick, string password)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == password);
             if (usr == null) {
 
-                return new ActionLogin()
+                return new TokenUser()
                 {
                     Success = false,
                     Id = -1,
@@ -48,28 +38,28 @@ namespace Lombard_00.Controllers
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
             db.ModifyTUser(usr, usr);
 
-            return new ActionLogin()
+            return new TokenUser()
             {
                 Success = true,
                 Id = usr.Id,
                 Nick = usr.Nick,
                 Name = usr.Name,
                 Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role.Name,
+                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
                 Token = token
             };
         }//done
 
         [Route("api/user/keepAlive")]
         [HttpPost]
-        public ActionLogin RenewToken(int Id, string Token)
+        public TokenUser RenewToken(int Id, string Token)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
             if (IsUsrStillValid(usr))
             {
 
-                return new ActionLogin()
+                return new TokenUser()
                 {
                     Success = false,
                     Id = -1,
@@ -86,21 +76,21 @@ namespace Lombard_00.Controllers
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
             db.ModifyTUser(usr, usr);
 
-            return new ActionLogin()
+            return new TokenUser()
             {
                 Success = true,
                 Id = usr.Id,
                 Nick = usr.Nick,
                 Name = usr.Name,
                 Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role.Name,
+                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
                 Token = token
             };
         }//done
 
         [Route("api/user/register")]
         [HttpPost]
-        public ActionLogin Register(string Nick, string Name, string Surname, string Password)
+        public TokenUser Register(string Nick, string Name, string Surname, string Password)
         {
             IDb db = IDb.DbInstance;
             var usr = new TUser()
@@ -117,7 +107,7 @@ namespace Lombard_00.Controllers
             if(db.AddTUser(usr))
             {
 
-                return new ActionLogin()
+                return new TokenUser()
                 {
                     Success = false,
                     Id = -1,
@@ -136,14 +126,14 @@ namespace Lombard_00.Controllers
                 Role = db.TRoles[1]
             });// auto add user role
 
-            return new ActionLogin()
+            return new TokenUser()
             {
                 Success = true,
                 Id = usr.Id,
                 Nick = usr.Nick,
                 Name = usr.Name,
                 Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role.Name,
+                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
                 Token = token
             };
         }//done
@@ -168,17 +158,17 @@ namespace Lombard_00.Controllers
 
         [Route("api/user/list")]
         [HttpGet]
-        public List<ActionLogin> List()
+        public List<TokenUser> List()
         {
             return (from TUser in IDb.DbInstance.TUsers select 
-                new ActionLogin()
+                new TokenUser()
                 {
                     Success = false,
                     Id = TUser.Id,
                     Nick = TUser.Nick,
                     Name = TUser.Name,
                     Surname = TUser.Surname,
-                    Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role.Name,
+                    Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role,
                     Token = null
                 }).ToList();
         }//done

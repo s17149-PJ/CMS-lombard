@@ -17,5 +17,5 @@ namespace Lombard_00.Data.Tables
 
         public DateTime CreatedOn { get; set; }
         public SqlMoney Money { get; set; }
-    }//done i think. dunno.
+    }//done I think. dunno.
 }

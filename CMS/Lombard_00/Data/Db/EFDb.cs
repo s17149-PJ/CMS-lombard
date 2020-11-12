@@ -51,7 +51,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTUserRoles.ToList();
+                return CTUserRoles.Include(e=>e.Role).Include(e=>e.User).ToList();
             }
         }
         public bool AddTUserRole(TUserRole asoc)
@@ -157,7 +157,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTItemComments.ToList();
+                return CTItemComments.Include(e => e.Item).Include(e => e.User).ToList();
             }
         }
         public bool AddTItemComment(TItemComment comment)
@@ -192,7 +192,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTUserItemBids.ToList();
+                return CTUserItemBids.Include(e => e.Item).Include(e => e.User).ToList();
             }
         }
         public bool AddTUserItemBid(TUserItemBid bid) 

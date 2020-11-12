@@ -13,13 +13,6 @@ namespace Lombard_00.Data.Tables
         [Key]
         public int Id { get; set; }
         public TUser User { get; set; }
-        private TRole role;
-        public TRole Role {
-            get {
-                if (role == null)
-                    return new TRole() { Id = -1, Name = "error" };
-                return role; }
-            set { role = value; } 
-        }
+        public TRole Role { get; set; }
     }//done
 }

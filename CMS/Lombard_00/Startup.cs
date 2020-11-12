@@ -10,21 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace Lombard_00
 {
-    class ActionLogin
-    {
-        public bool Success { get; set; }
-        public int Id { get; set; }
-        public string Nick { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public IEnumerable<string> Roles { get; set; }
-        public string Token { get; set; }
-    }
-
     public class Startup
     {
         private void TestingStuff() {
@@ -89,18 +79,21 @@ namespace Lombard_00
 
                 var value =
                     (from TUser in IDb.DbInstance.TUsers select
-                        new ActionLogin()
+                        new TokenUser()
                         {
                         Success = false,
                         Id = TUser.Id,
                         Nick = TUser.Nick,
                         Name = TUser.Name,
                         Surname = TUser.Surname,
-                        Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role.Name,
+                        Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role,
                         Token = null
                         }).ToList();
 
                 int x = 2 + 3;
+            }
+            {
+
             }
         }
         private string GetNewToken()

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,8 +24,13 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            return true;
-        }
+            return db.AddTItemComment(new TItemComment() 
+            { 
+                Item = new TItem() { Id = Comment.Item.Id },
+                User = new TUser() { Id = Comment.User.Id },
+                Comment = Comment.Comment
+            });
+        }//done
         [Route("api/comment/delete")]
         [HttpPost]
         public bool CommentDelete(int Id, string Token, TokenComment Comment)

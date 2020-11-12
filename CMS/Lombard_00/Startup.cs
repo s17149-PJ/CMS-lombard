@@ -1,3 +1,4 @@
+using Lombard_00.Controllers;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Builder;
@@ -16,10 +17,12 @@ namespace Lombard_00
     class ActionLogin
     {
         public bool Success { get; set; }
+        public int Id { get; set; }
         public string Nick { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public IEnumerable<string> Roles { get; set; }
+        public string Token { get; set; }
     }
 
     public class Startup
@@ -83,7 +86,19 @@ namespace Lombard_00
                         });
                     }
                 }
-                var value = IDb.DbInstance.TUsers;
+
+                var value =
+                    (from TUser in IDb.DbInstance.TUsers select
+                        new ActionLogin()
+                        {
+                        Success = false,
+                        Id = TUser.Id,
+                        Nick = TUser.Nick,
+                        Name = TUser.Name,
+                        Surname = TUser.Surname,
+                        Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role.Name,
+                        Token = null
+                        }).ToList();
 
                 int x = 2 + 3;
             }

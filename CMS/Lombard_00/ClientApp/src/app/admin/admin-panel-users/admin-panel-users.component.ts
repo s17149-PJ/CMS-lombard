@@ -9,7 +9,7 @@ import { User } from 'src/app/model/auth.model';
   styleUrls: ['./admin-panel-users.component.css'],
 })
 export class AdminPanelUsersComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = ['role', 'name', 'surname', 'nick'];
   tableData = new MatTableDataSource<User>();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

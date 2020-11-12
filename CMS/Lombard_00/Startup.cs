@@ -108,7 +108,7 @@ namespace Lombard_00
             var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
             var resultToken = new string(
-               Enumerable.Repeat(allChar, 12)
+               Enumerable.Repeat(allChar, 6)
                .Select(token => token[random.Next(token.Length)]).ToArray());
 
             return resultToken.ToString();

@@ -51,7 +51,7 @@ namespace Lombard_00.Controllers
             addedItem.StartingBid = addedBid;
 
             return db.ModifyTItem(addedItem,addedItem);
-        }//done
+        }//dones
         [Route("api/item/delete")]
         [HttpPost]
         public bool ItemDelete(int Id, string Token, TokenItem Item)
@@ -81,8 +81,18 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            return true;
-        }
+            var ite = new TItem()
+            {
+                Id = Item.Id,
+                Name = Item.Name,
+                Description = Item.Description,
+                ImageMetaData = Item.ImageMetaData,
+                Image = Item.Image
+            };
+
+            return db.ModifyTItem(ite,ite);
+        }//done
+
         [Route("api/item/list")]
         [HttpPost]
         public List<TokenItem> ItemList(int Id, string Token)

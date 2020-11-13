@@ -131,14 +131,10 @@ namespace Lombard_00
                     Item = new TokenItem() { Id = 1 },
                     Money = 20
                 });
-                
             }
             int x = 2;
             //tests
             {
-                var ccoment = new CComent();
-                var cbid = new CBid();
-
 
             }
             x = 2;

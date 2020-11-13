@@ -1,4 +1,5 @@
 using Lombard_00.Controllers;
+using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Builder;
@@ -17,83 +18,93 @@ namespace Lombard_00
 {
     public class Startup
     {
-        private void TestingStuff() {
+        private void TestingStuff()
+        {
+            //restart db if you want / need
+            if (true)
             {
-                if (IDb.DbInstance.TUsers.Count == 0)
+                IDb.DbInstance.VoidOut();
+                IDb.DbInstance.AddTRole(new TRole()
                 {
-                    IDb.DbInstance.AddTRole(new TRole()
-                    {
-                        Id = 0,
-                        Name = "Admin"
-                    });
+                    Id = 1,
+                    Name = "Admin"
+                });
+                IDb.DbInstance.AddTUser(new TUser()
+                {
+                    Id = 1,
+                    Nick = "totaly admin",
+                    Name = "Totaly",
+                    Surname = "Admin",
+                    Password = "AdminGodDamit",
+                    ValidUnitl = DateTime.Now.AddDays(1),
+                    Token = "0"
+                });
+                IDb.DbInstance.AddTUserRole(new TUserRole()
+                {
+                    User = IDb.DbInstance.TUsers[1],//admin
+                    Role = IDb.DbInstance.TRoles[1]//admin
+                });
+
+                IDb.DbInstance.AddTRole(new TRole()
+                {
+                    Id = 2,
+                    Name = "User"
+                });
+
+                IDb.DbInstance.AddTUser(new TUser()
+                {
+                    Id = 2,
+                    Nick = "user",
+                    Name = "Not",
+                    Surname = "Hacker",
+                    Password = "12345"
+                });
+                IDb.DbInstance.AddTUserRole(new TUserRole()
+                {
+                    User = IDb.DbInstance.TUsers[2],//user
+                    Role = IDb.DbInstance.TRoles[2]//user
+                });
+
+                for (int i = 3; i < 20; i++)
+                {
                     IDb.DbInstance.AddTUser(new TUser()
                     {
-                        Id = 0,
-                        Nick = "totaly admin",
-                        Name = "Totaly",
-                        Surname = "Admin",
-                        Password = "AdminGodDamit"
+                        Id = i,
+                        Nick = GetNewToken(),
+                        Name = GetNewToken(),
+                        Surname = GetNewToken(),
+                        Password = GetNewToken()
                     });
                     IDb.DbInstance.AddTUserRole(new TUserRole()
                     {
-                        User = IDb.DbInstance.TUsers[0],//admin
-                        Role = IDb.DbInstance.TRoles[0]//admin
+                        User = IDb.DbInstance.TUsers[i],//user
+                        Role = IDb.DbInstance.TRoles[2]//user
                     });
-
-                    IDb.DbInstance.AddTRole(new TRole()
-                    {
-                        Id = 1,
-                        Name = "User"
-                    });
-
-                    IDb.DbInstance.AddTUser(new TUser()
-                    {
-                        Id = 1,
-                        Nick = "user",
-                        Name = "Not",
-                        Surname = "Hacker",
-                        Password = "12345"
-                    });
-                    IDb.DbInstance.AddTUserRole(new TUserRole()
-                    {
-                        User = IDb.DbInstance.TUsers[1],//user
-                        Role = IDb.DbInstance.TRoles[1]//user
-                    });
-
-                    for (int i = 2; i < 20; i++) {
-                        IDb.DbInstance.AddTUser(new TUser()
-                        {
-                            Id = i,
-                            Nick = GetNewToken(),
-                            Name = GetNewToken(),
-                            Surname = GetNewToken(),
-                            Password = GetNewToken()
-                        });
-                        IDb.DbInstance.AddTUserRole(new TUserRole()
-                        {
-                            User = IDb.DbInstance.TUsers[i],//user
-                            Role = IDb.DbInstance.TRoles[1]//user
-                        });
-                    }
                 }
 
-                var value =
-                    (from TUser in IDb.DbInstance.TUsers select
-                        new TokenUser()
-                        {
-                        Success = false,
-                        Id = TUser.Id,
-                        Nick = TUser.Nick,
-                        Name = TUser.Name,
-                        Surname = TUser.Surname,
-                        Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role,
-                        Token = null
-                        }).ToList();
+                var citem = new CItem();
 
-                int x = 2 + 3;
-            }
-            {
+                citem.ItemAdd(1,"0",new TokenItem() { 
+                    Name = "test item 0",
+                    Description = "yes",
+                });
+                citem.ItemAdd(1, "0", new TokenItem()
+                {
+                    Name = "test item 1",
+                    Description = "yes",
+                });
+                citem.ItemAdd(1, "0", new TokenItem()
+                {
+                    Name = "test item 2",
+                    Description = "yes",
+                });
 
+                //tests
+                {
+                    //citem.ItemDelete(0, "0", new TokenItem() { Id = 0 });
+
+
+                }
             }
         }
         private string GetNewToken()

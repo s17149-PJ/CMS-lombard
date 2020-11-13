@@ -80,5 +80,6 @@ namespace Lombard_00.Data.Db
         public bool RemoveTUserItemBid(TUserItemBid bid);
 
         public void CleanUp();
+        public void VoidOut();
     }
 }

@@ -154,6 +154,7 @@ namespace Lombard_00.Data.Db
         }//done
         public bool TryToFinishDeal(TItem item) 
         {
+
             return false;
         }
 
@@ -235,6 +236,16 @@ namespace Lombard_00.Data.Db
             //now having all refs del each item
             toRemove.ForEach(item => RemoveTItem(item));
         }// this method SHOULD be async. done
+        public void VoidOut() 
+        {
+            CTItems.RemoveRange(CTItems);
+
+            CTRoles.RemoveRange(CTRoles);
+            CTUsers.RemoveRange(CTUsers);
+            CTRoles.RemoveRange(CTRoles);
+
+            SaveChanges();
+        }
         /*end of interface stuff*/
 
         /*start of EF stuff*/

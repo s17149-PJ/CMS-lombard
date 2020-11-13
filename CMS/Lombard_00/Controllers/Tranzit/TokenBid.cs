@@ -14,7 +14,7 @@ namespace Lombard_00.Controllers.Tranzit
         {
             Id = bid.Id;
             Item = new TokenItem(bid.Item);
-            User = TokenUser.CallByToken(bid.User),;
+            User = TokenUser.CallByToken(bid.User);
             CreatedOn = bid.CreatedOn;
             Money = bid.Money;
         }//done

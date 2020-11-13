@@ -51,11 +51,15 @@ namespace Lombard_00.Data.Db
          * DO *NOT* call Modify to add comment OR transaction. it't purpose is to modify local item varables ONLY.
          * for assocaited variables use methods provided:
          * <tbd> jestem zbyt leniwy żeby to dodać jeszcze dziś.
+         * 
+         * IMPORTANT:
+         * TryToFinishDeal zwraca TRUE JEŻELI aukcja się SKOŃCZYŁA i FALSE  jeżeli NIE. to nie świadczy o tym czy operacja zakończyła się sukcesem, z zasady jednak jeżeli nie, zwórcone zostanie FALSE.
          */
         public List<TItem> TItems{ get; }
         public TItem AddTItem(TItem item);
         public bool RemoveTItem(TItem item);
         public bool ModifyTItem(TItem toBeModified, TItem newData);
+        public bool TryToFinishDeal(TItem item);
 
         /*
          * IMPORTANT:

@@ -152,6 +152,10 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
+        public bool TryToFinishDeal(TItem item) 
+        {
+            return false;
+        }
 
         public List<TItemComment> TItemComments
         {

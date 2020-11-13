@@ -24,6 +24,9 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
+            if (db.TryToFinishDeal(new TItem() { Id = Bid.Item.Id }))
+                return false;
+
             var value = db.AddTUserItemBid(new TUserItemBid()
             { 
                 Item = new TItem() { Id = Bid.Item.Id },

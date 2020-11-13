@@ -92,7 +92,18 @@ namespace Lombard_00.Controllers
 
             return db.ModifyTItem(ite,ite);
         }//done
+        [Route("api/item/refresh")]
+        [HttpPost]
+        public TokenItem ItemRefreh(int Id, string Token, TokenItem Item)
+        {
+            IDb db = IDb.DbInstance;
+            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
 
+            if (TokenUser.IsUsrStillValid(usr))
+                return null;
+            db.TryToFinishDeal(new TItem() { Id = Item.Id });
+            return (from item in db.TItems where item.Id==Item.Id select new TokenItem(item)).FirstOrDefault();
+        }//done
         [Route("api/item/list")]
         [HttpPost]
         public List<TokenItem> ItemList(int Id, string Token)

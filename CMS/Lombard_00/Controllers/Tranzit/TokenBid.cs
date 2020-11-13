@@ -34,6 +34,6 @@ namespace Lombard_00.Controllers.Tranzit
         public TokenItem Item { get; set; }
         public TokenUser User { get; set; }
         public DateTime CreatedOn { get; set; }
-        public SqlMoney Money { get; set; }
+        public decimal Money { get; set; }
     }
 }

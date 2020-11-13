@@ -16,6 +16,6 @@ namespace Lombard_00.Data.Tables
         public TUser User { get; set; }
 
         public DateTime CreatedOn { get; set; }
-        public SqlMoney Money { get; set; }
+        public decimal Money { get; set; }
     }//done I think. dunno.
 }

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Data.SqlTypes;
 using System.Linq;
 
 namespace Lombard_00
@@ -100,17 +101,45 @@ namespace Lombard_00
                     Description = "yes",
                     StartingBid = new TokenBid()
                 });
+
+                var ccoment = new CComent();
+                
+                ccoment.CommentCreate(1,"0", new TokenComment() 
+                {
+                    User = new TokenUser() { Id = 1 },
+                    Item = new TokenItem() { Id = 1 },
+                    Comment = "example 0"
+                });
+                ccoment.CommentCreate(1, "0", new TokenComment()
+                {
+                    User = new TokenUser() { Id = 1 },
+                    Item = new TokenItem() { Id = 1 },
+                    Comment = "example 1"
+                });
+
+                var cbid = new CBid();
+
+                cbid.BidCreate(1, "0", new TokenBid()
+                {
+                    User = new TokenUser() { Id = 1 },
+                    Item = new TokenItem() { Id = 1 },
+                    Money = 10
+                });
+                cbid.BidCreate(1, "0", new TokenBid()
+                {
+                    User = new TokenUser() { Id = 1 },
+                    Item = new TokenItem() { Id = 1 },
+                    Money = 20
+                });
+                
             }
             int x = 2;
             //tests
             {
-                var citem = new CItem();
-                citem.ItemEdit(1, "0", new TokenItem()
-                {
-                    Id = 1,
-                    Name = "test test test",
-                    Description = "yes",
-                });
+                var ccoment = new CComent();
+                var cbid = new CBid();
+
+
             }
             x = 2;
         }

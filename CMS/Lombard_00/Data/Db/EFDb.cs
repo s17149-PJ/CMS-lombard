@@ -177,6 +177,15 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTItemComment(TItemComment comment)
         {
+            var usr = TUsers.Where(e => e.Id == comment.User.Id).FirstOrDefault();
+            if (usr == null)
+                return false;
+            comment.User = usr;
+            var ite = TItems.Where(e => e.Id == comment.Item.Id).FirstOrDefault();
+            if (ite == null)
+                return false;
+            comment.Item = ite;
+
             CTItemComments.Add(comment);
             SaveChanges();
 
@@ -185,11 +194,10 @@ namespace Lombard_00.Data.Db
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData)
         {
             var value = CTItemComments.FirstOrDefault(value => value.Id == toBeModified.Id);
-            if (value == null)
-            {
 
+            if (value == null)
                 return false;
-            }
+
             if (newData.Comment != null) value.Comment = newData.Comment;
             SaveChanges();
 
@@ -197,6 +205,15 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTItemComment(TItemComment comment)
         {
+            var usr = TUsers.Where(e => e.Id == comment.User.Id).FirstOrDefault();
+            if (usr == null)
+                return false;
+            comment.User = usr;
+            var ite = TItems.Where(e => e.Id == comment.Item.Id).FirstOrDefault();
+            if (ite == null)
+                return false;
+            comment.Item = ite;
+
             CTItemComments.Remove(comment);
             SaveChanges();
 
@@ -212,6 +229,15 @@ namespace Lombard_00.Data.Db
         }
         public TUserItemBid AddTUserItemBid(TUserItemBid bid) 
         {
+            var usr = TUsers.Where(e => e.Id == bid.User.Id).FirstOrDefault();
+            if (usr == null)
+                return null;
+            bid.User = usr;
+            var ite = TItems.Where(e => e.Id == bid.Item.Id).FirstOrDefault();
+            if (ite == null)
+                return null;
+            bid.Item = ite;
+
             var value = CTUserItemBids.Add(bid);
             SaveChanges();
 
@@ -219,6 +245,15 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTUserItemBid(TUserItemBid bid) 
         {
+            var usr = TUsers.Where(e => e.Id == bid.User.Id).FirstOrDefault();
+            if (usr == null)
+                return false;
+            bid.User = usr;
+            var ite = TItems.Where(e => e.Id == bid.Item.Id).FirstOrDefault();
+            if (ite == null)
+                return false;
+            bid.Item = ite;
+
             CTUserItemBids.Remove(bid);
             SaveChanges();
 

@@ -21,9 +21,8 @@ namespace Lombard_00
         private void TestingStuff()
         {
             //restart db if you want / need
-            if (true)
+            if (IDb.DbInstance.TUsers.Count==0)
             {
-                IDb.DbInstance.VoidOut();
                 IDb.DbInstance.AddTRole(new TRole()
                 {
                     Id = 1,
@@ -41,8 +40,8 @@ namespace Lombard_00
                 });
                 IDb.DbInstance.AddTUserRole(new TUserRole()
                 {
-                    User = IDb.DbInstance.TUsers[1],//admin
-                    Role = IDb.DbInstance.TRoles[1]//admin
+                    User = IDb.DbInstance.TUsers[0],//admin
+                    Role = IDb.DbInstance.TRoles[0]//admin
                 });
 
                 IDb.DbInstance.AddTRole(new TRole()
@@ -61,11 +60,11 @@ namespace Lombard_00
                 });
                 IDb.DbInstance.AddTUserRole(new TUserRole()
                 {
-                    User = IDb.DbInstance.TUsers[2],//user
-                    Role = IDb.DbInstance.TRoles[2]//user
+                    User = IDb.DbInstance.TUsers[1],//user
+                    Role = IDb.DbInstance.TRoles[1]//user
                 });
 
-                for (int i = 3; i < 20; i++)
+                for (int i = 2; i < 20; i++)
                 {
                     IDb.DbInstance.AddTUser(new TUser()
                     {
@@ -78,7 +77,7 @@ namespace Lombard_00
                     IDb.DbInstance.AddTUserRole(new TUserRole()
                     {
                         User = IDb.DbInstance.TUsers[i],//user
-                        Role = IDb.DbInstance.TRoles[2]//user
+                        Role = IDb.DbInstance.TRoles[1]//user
                     });
                 }
 
@@ -87,25 +86,33 @@ namespace Lombard_00
                 citem.ItemAdd(1,"0",new TokenItem() { 
                     Name = "test item 0",
                     Description = "yes",
+                    StartingBid = new TokenBid()
                 });
                 citem.ItemAdd(1, "0", new TokenItem()
                 {
                     Name = "test item 1",
                     Description = "yes",
+                    StartingBid = new TokenBid()
                 });
                 citem.ItemAdd(1, "0", new TokenItem()
                 {
                     Name = "test item 2",
                     Description = "yes",
+                    StartingBid = new TokenBid()
                 });
-
-                //tests
-                {
-                    //citem.ItemDelete(0, "0", new TokenItem() { Id = 0 });
-
-
-                }
             }
+            int x = 2;
+            //tests
+            {
+                var citem = new CItem();
+                citem.ItemEdit(1, "0", new TokenItem()
+                {
+                    Id = 1,
+                    Name = "test test test",
+                    Description = "yes",
+                });
+            }
+            x = 2;
         }
         private string GetNewToken()
         {

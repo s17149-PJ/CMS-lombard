@@ -112,7 +112,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTItems.ToList();
+                return CTItems.Include(e=>e.StartingBid).Include(e=>e.WinningBid).ToList();
             }
         }
         public TItem AddTItem(TItem item)
@@ -126,27 +126,37 @@ namespace Lombard_00.Data.Db
         {
             var value = CTItems.FirstOrDefault(value => value.Id == toBeModified.Id);
             if (value == null)
-            {
-
                 return false;
-            }
-            if (newData.Name          != null) value.Name          = newData.Name;
-            if (newData.Description   != null) value.Description   = newData.Description;
-            if (newData.ImageMetaData != null) value.ImageMetaData = newData.ImageMetaData;
-            if (newData.Image         != null) value.Image         = newData.Image;
-            if (newData.StartingBid   != null) value.StartingBid   = newData.StartingBid;
-            if (newData.WinningBid    != null) value.WinningBid    = newData.WinningBid;
+
+            if (newData.Name          != null) 
+                value.Name          = newData.Name;
+            if (newData.Description   != null) 
+                value.Description   = newData.Description;
+            if (newData.ImageMetaData != null) 
+                value.ImageMetaData = newData.ImageMetaData;
+            if (newData.Image         != null) 
+                value.Image         = newData.Image;
+            if (newData.StartingBid   != null) 
+                value.StartingBid   = newData.StartingBid;
+            if (newData.WinningBid    != null) 
+                value.WinningBid    = newData.WinningBid;
             SaveChanges();
 
             return true;
         }//done
         public bool RemoveTItem(TItem item)
         {
-            var itemComments = TItemComments.Where(comment => comment.Item == item);
-            var userItemBids = CTUserItemBids.Where(bid => bid.Item == item);
+            List<TItemComment> itemComments = TItemComments
+                .Where(comment => comment.Item == item)
+                .ToList();
+            List<TUserItemBid> userItemBids = TUserItemBids
+                .Where(bid => bid.Item == item)
+                .ToList();
 
-            itemComments.ToList().ForEach(comment => RemoveTItem(item));
-            userItemBids.ToList().ForEach(bid => RemoveTUserItemBid(bid));
+            itemComments
+                .ForEach(comment => RemoveTItem(item));
+            userItemBids
+                .ForEach(bid => RemoveTUserItemBid(bid));
             CTItems.Remove(item);
             SaveChanges();
 
@@ -228,7 +238,8 @@ namespace Lombard_00.Data.Db
             //dunno if deleting during iteration will break it so I don't
             CTItems
                 .Where(item => item.WinningBid != null)
-                .ForEachAsync(item=> 
+                .ToList()
+                .ForEach(item=> 
                 {
                     if (DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
                         toRemove.Add(item);
@@ -240,7 +251,7 @@ namespace Lombard_00.Data.Db
         {
             CTItems.RemoveRange(CTItems);
 
-            CTRoles.RemoveRange(CTRoles);
+            CTUserRoles.RemoveRange(CTUserRoles);
             CTUsers.RemoveRange(CTUsers);
             CTRoles.RemoveRange(CTRoles);
 

@@ -24,6 +24,9 @@ namespace Lombard_00.Controllers
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
+            if (Item.StartingBid == null)
+                return false;
+
             db.CleanUp();//daily cleanup of old items
             
             var addedItem = db.AddTItem(

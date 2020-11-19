@@ -15,11 +15,11 @@ namespace Lombard_00.Controllers
     {
         [Route("api/admin/editRoles")]
         [HttpPost]
-        public bool Edit(int Id, string Token, TokenUser NewSettings)
+        public bool Edit(int id, string token, TokenUser newSettings)
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
             if (IsUsrStillValid(usr))
                 return false;
             //check if admin (role Id == 1)
@@ -28,21 +28,21 @@ namespace Lombard_00.Controllers
                 return false;
 
             //actuall func
-            usr = db.TUsers.Find(usr => usr.Id == NewSettings.Id);//user pending edit
+            usr = db.TUsers.Find(usr => usr.Id == newSettings.Id);//user pending edit
 
             List<TUserRole> OldTUserRole = (from asoc in db.TUserRoles where asoc.User == usr select asoc).ToList();//current rolls
 
             //remove exessive rolles
             OldTUserRole
                     .Where(TUR =>
-                        !(from item in NewSettings.Roles select item.Id)//select Id from new roles
+                        !(from item in newSettings.Roles select item.Id)//select Id from new roles
                         .ToList()
                         .Contains(TUR.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
                     .ToList()
                     .ForEach(TUR => db.RemoveTUserRole(TUR));
 
             //add missing ones
-            NewSettings.Roles
+            newSettings.Roles
                 .Where(ROL =>
                     !(from TUR in OldTUserRole select TUR.Role.Id)//select Id from old roles
                     .ToList()
@@ -55,11 +55,11 @@ namespace Lombard_00.Controllers
 
         [Route("api/admin/users")]
         [HttpGet]
-        public List<TokenUser> List(int Id, string Token)
+        public List<TokenUser> List(int id, string token)
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
             if (IsUsrStillValid(usr))
                 return null;
             //check if admin (role Id == 1)

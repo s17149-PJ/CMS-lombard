@@ -16,32 +16,32 @@ namespace Lombard_00.Controllers
     {
         [Route("api/comment/create")]
         [HttpPost]
-        public bool CommentCreate(int Id, string Token, TokenComment Comment)
+        public bool CommentCreate(int id, string token, TokenComment comment)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
             return db.AddTItemComment(new TItemComment() 
             { 
-                Item = new TItem() { Id = Comment.Item.Id },
-                User = new TUser() { Id = Comment.User.Id },
-                Comment = Comment.Comment
+                Item = new TItem() { Id = comment.Item.Id },
+                User = new TUser() { Id = comment.User.Id },
+                Comment = comment.Comment
             });
         }//done
         [Route("api/comment/delete")]
         [HttpPost]
-        public bool CommentDelete(int Id, string Token, TokenComment Comment)
+        public bool CommentDelete(int id, string token, TokenComment comment)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            var toDel = db.TItemComments.Find(ite => ite.Id == Comment.Id);
+            var toDel = db.TItemComments.Find(ite => ite.Id == comment.Id);
 
             if (toDel == null)
                 return false;//must exist
@@ -52,33 +52,33 @@ namespace Lombard_00.Controllers
         }//done
         [Route("api/comment/edit")]
         [HttpPost]
-        public bool CommentEdit(int Id, string Token, TokenComment Comment)
+        public bool CommentEdit(int id, string token, TokenComment comment)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
             var com = new TItemComment()
             {
-                Id = Comment.Id,
-                Comment = Comment.Comment
+                Id = comment.Id,
+                Comment = comment.Comment
             };
 
             return db.ModifyTItemComment(com,com);
         }//done
         [Route("api/comment/list")]
         [HttpPost]
-        public List<TokenComment> CommentList(int Id, string Token, TokenComment Comment)
+        public List<TokenComment> CommentList(int id, string token, TokenComment comment)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return null;
 
-            return (from comment in db.TItemComments select new TokenComment(comment)).ToList();
+            return (from commen in db.TItemComments select new TokenComment(commen)).ToList();
         }//todo add serach
     }
 }

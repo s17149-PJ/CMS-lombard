@@ -136,13 +136,6 @@ namespace Lombard_00.Controllers
                 };
             }// db MAY refuse to create user. for now db demands Nick to be unique.
 
-            usr = db.TUsers.Find(usr => usr.Nick == register.Nick);
-            db.AddTUserRole(new TUserRole()
-            {
-                User = usr,
-                Role = db.TRoles[1]
-            });// auto add user role
-
             return new TokenUser()
             {
                 Success = true,

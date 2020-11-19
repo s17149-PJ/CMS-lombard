@@ -104,7 +104,9 @@ namespace Lombard_00.Controllers
             usr.Token = token;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
 
-            if(db.AddTUser(usr))
+            var value = db.AddTUser(usr);
+            
+            if (value == null)
             {
 
                 return new TokenUser()
@@ -119,21 +121,14 @@ namespace Lombard_00.Controllers
                 };
             }// db MAY refuse to create user. for now db demands Nick to be unique.
 
-            usr = db.TUsers.Find(usr => usr.Nick == Nick);
-            db.AddTUserRole(new TUserRole()
-            {
-                User = usr,
-                Role = db.TRoles[1]
-            });// auto add user role
-
             return new TokenUser()
             {
                 Success = true,
-                Id = usr.Id,
-                Nick = usr.Nick,
-                Name = usr.Name,
-                Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
+                Id = value.Id,
+                Nick = value.Nick,
+                Name = value.Name,
+                Surname = value.Surname,
+                Roles = from asoc in db.TUserRoles where asoc.User == value select asoc.Role,
                 Token = token
             };
         }//done
@@ -141,18 +136,18 @@ namespace Lombard_00.Controllers
 
         [Route("api/user/edit")]
         [HttpPost]
-        public bool Edit(int Id, string Nick, string Name, string Surname, string Password, string Token)
+        public bool Edit(TokenUser tokenUser, string password)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == tokenUser.Id && usr.Token == tokenUser.Token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            usr.Nick = Nick;
-            usr.Name = Name;
-            usr.Surname = Surname;
-            usr.Password = Password;
+            usr.Nick = tokenUser.Nick;
+            usr.Name = tokenUser.Name;
+            usr.Surname = tokenUser.Surname;
+            usr.Password = password;
             
             return db.ModifyTUser(usr, usr);
         }//done

@@ -18,16 +18,22 @@ namespace Lombard_00.Data.Db
                 return CTUsers.ToList();
             } 
         }
-        public bool AddTUser(TUser user)
+        public TUser AddTUser(TUser user)
         {
             //nick must be unique
             if (CTUsers.Where(usr =>usr.Nick == user.Nick).Any())
-                return false;
+                return null;
 
-            CTUsers.Add(user);
+            var value = CTUsers.Add(user);
             SaveChanges();
 
-            return true;
+            AddTUserRole(new TUserRole()
+            {
+                User = value,
+                Role = TRoles[1]
+            });// auto add user role
+
+            return value;
         }//done
         public bool ModifyTUser(TUser toBeModified, TUser newData)
         {

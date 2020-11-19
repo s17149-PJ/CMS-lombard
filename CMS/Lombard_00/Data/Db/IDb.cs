@@ -72,7 +72,7 @@ namespace Lombard_00.Data.Db
          * they are here for code provided WITHIN classes above.
          */
         public List<TItemComment> TItemComments { get; }
-        public bool AddTItemComment(TItemComment comment);
+        public TItemComment AddTItemComment(TItemComment comment);
         public bool RemoveTItemComment(TItemComment comment);
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData);
 
@@ -83,7 +83,12 @@ namespace Lombard_00.Data.Db
         public List<TUserItemBid> TUserItemBids { get; }
         public TUserItemBid AddTUserItemBid(TUserItemBid bid);
         public bool RemoveTUserItemBid(TUserItemBid bid);
+        public TUserItemBid FindTUserItemBid(int Id);
 
+        /*
+         * CleanUp -> archive old offers
+         * VoidOut -> empty db. IMPORTANT: it's broken in EF so do *NOT* use it
+         */
         public void CleanUp();
         public void VoidOut();
     }

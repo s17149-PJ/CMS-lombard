@@ -65,6 +65,7 @@ namespace Lombard_00.Controllers
             //yes
             return new TokenItem(itemToAdd);
         }//done
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/delete")]
         [HttpPost]
         public bool ItemDelete(LocalItemClass pack)
@@ -97,6 +98,7 @@ namespace Lombard_00.Controllers
 
             return db.RemoveTItem(toDel);
         }//done
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/edit")]
         [HttpPost]
         public bool ItemEdit(LocalItemClass pack)
@@ -141,6 +143,7 @@ namespace Lombard_00.Controllers
             //return
             return db.ModifyTItem(ite,ite);
         }//done
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/refresh")]
         [HttpPost]
         public TokenItem ItemRefreh(LocalItemClass pack)
@@ -156,6 +159,7 @@ namespace Lombard_00.Controllers
             db.TryToFinishDeal(new TItem() { Id = pack.Item.Id });
             return new TokenItem(db.FindTItem(pack.Item.Id));
         }//done
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------   
         [Route("api/item/list")]
         [HttpPost]
         public List<TokenItem> ItemList(TokenUser user)

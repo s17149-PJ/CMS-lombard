@@ -18,15 +18,15 @@ namespace Lombard_00.Controllers
         public class LocalEditClass {
             public TokenUser Admin { get; set; }
             public TokenUser Edited { get; set; }
-        }
+        }//done
         [Route("api/admin/editRoles")]
         [HttpPost]
-        public bool Edit(LocalEditClass edit)
+        public bool Edit(LocalEditClass pack)
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(edit.Admin.Id);
-            if (TokenUser.IsUsrStillValid(usr, edit.Admin.Token))
+            var usr = db.FindUser(pack.Admin.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.Admin.Token))
             {
                 Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
@@ -41,7 +41,7 @@ namespace Lombard_00.Controllers
             }
 
             //find edited user
-            usr = db.FindUser(edit.Edited.Id);
+            usr = db.FindUser(pack.Edited.Id);
             //if record exists that is
             if (usr == null)
             {
@@ -54,7 +54,7 @@ namespace Lombard_00.Controllers
             //remove exessive rolles
             OldTUserRole
                     .Where(ToRemove =>
-                        !edit.Edited.Roles
+                        !pack.Edited.Roles
                         .Select(e=>e.Id)//select Id from new roles
                         .ToList()
                         .Contains(ToRemove.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
@@ -62,7 +62,7 @@ namespace Lombard_00.Controllers
                     .ForEach(ToRemove => db.RemoveTUserRole(ToRemove));
 
             //add missing ones
-            edit.Edited.Roles
+            pack.Edited.Roles
                 .Where(ToAdd =>
                     !OldTUserRole
                     .Select(e=>e.Role.Id)//select Id from old roles
@@ -73,7 +73,7 @@ namespace Lombard_00.Controllers
 
             return true;
         }//done
-
+        ////--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/admin/users")]
         [HttpGet]
         public IEnumerable<TokenUser> List(TokenUser admin)

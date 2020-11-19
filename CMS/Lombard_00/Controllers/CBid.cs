@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
@@ -14,65 +15,91 @@ namespace Lombard_00.Controllers
     [ApiController]
     public class CBid : ControllerBase
     {
+        public class LocalBidClass {
+            public TokenUser User { get; set; }
+            public TokenBid Bid { get; set; }
+        }
         [Route("api/bid/create")]
         [HttpPost]
-        public bool BidCreate(int id, string token, TokenBid bid)
+        public TokenBid BidCreate(LocalBidClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
-                return false;
-
-            if (db.TryToFinishDeal(new TItem() { Id = bid.Item.Id }))
-                return false;
-
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+            //check if deal is already done
+            if (db.TryToFinishDeal(new TItem() { Id = pack.Bid.Item.Id }))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return null;
+            }
+            //try to add item
             var value = db.AddTUserItemBid(new TUserItemBid()
             { 
-                Item = new TItem() { Id = bid.Item.Id },
-                User = new TUser() { Id = bid.User.Id },
+                Item = new TItem() { Id = pack.Bid.Item.Id },
+                User = new TUser() { Id = pack.Bid.User.Id },
                 CreatedOn = DateTime.Now,
-                Money = bid.Money
+                Money = pack.Bid.Money
             });
-
+            //sucsess?
             if (value == null)
-                return false;
-
-            return true;
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+            //yes
+            return new TokenBid(value);
         }//done
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/bid/delete")]
         [HttpPost]
-        public bool BidDelete(int id, string token, TokenBid bid)
+        public bool BidDelete(LocalBidClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
+            }
 
-            var toDel = db.TUserItemBids.Find(ite => ite.Id == bid.Id);
+            var toDel = db.FindTUserItemBid(pack.Bid.Id);
 
             if (toDel == null)
-                return false;//must exist
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//must exist
             if (toDel.User.Id != usr.Id)
-                return false;//must be owner
-
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//must be owner
             if (toDel.Item.WinningBid == toDel || toDel.Item.StartingBid == toDel)
-                return false;//can't delete connection bids
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//can't delete connection bids
 
             return db.RemoveTUserItemBid(toDel);
         }//done
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/bid/list")]
         [HttpPost]
-        public List<TokenBid> BidList(int id, string token)
+        public IEnumerable<TokenBid> BidList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
+            var usr = db.FindUser(user.Id);
+            if (TokenUser.IsUsrStillValid(usr, user.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
+            }
 
-            return (from bid in db.TUserItemBids select new TokenBid(bid)).ToList();
+            return db.TUserItemBids.Select(bid=>new TokenBid(bid));
         }//todo add serach
     }
 }

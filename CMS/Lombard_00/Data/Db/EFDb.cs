@@ -215,21 +215,21 @@ namespace Lombard_00.Data.Db
                 return CTItemComments.Include(e => e.Item).Include(e => e.User).ToList();
             }
         }
-        public bool AddTItemComment(TItemComment comment)
+        public TItemComment AddTItemComment(TItemComment comment)
         {
             var usr = TUsers.Where(e => e.Id == comment.User.Id).FirstOrDefault();
             if (usr == null)
-                return false;
+                return null;
             comment.User = usr;
             var ite = TItems.Where(e => e.Id == comment.Item.Id).FirstOrDefault();
             if (ite == null)
-                return false;
+                return null;
             comment.Item = ite;
 
-            CTItemComments.Add(comment);
+            var value = CTItemComments.Add(comment);
             SaveChanges();
 
-            return true;
+            return value;
         }//done
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData)
         {
@@ -299,6 +299,9 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
+        public TUserItemBid FindTUserItemBid(int Id) {
+            return CTUserItemBids.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
+        }
 
         private DateTime LastChek = DateTime.Now;//start class with default value now
         public void CleanUp() 

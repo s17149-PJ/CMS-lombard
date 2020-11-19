@@ -52,10 +52,10 @@ namespace Lombard_00.Controllers
 
         [Route("api/user/keepAlive")]
         [HttpPost]
-        public TokenUser RenewToken(int Id, string Token)
+        public TokenUser RenewToken(int id, string token)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
             if (TokenUser.IsUsrStillValid(usr))
             {
 
@@ -71,8 +71,8 @@ namespace Lombard_00.Controllers
                 };
             }
 
-            var token = GetNewToken();
-            usr.Token = token;
+            var newtoken = GetNewToken();
+            usr.Token = newtoken;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
             db.ModifyTUser(usr, usr);
 
@@ -84,21 +84,21 @@ namespace Lombard_00.Controllers
                 Name = usr.Name,
                 Surname = usr.Surname,
                 Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
-                Token = token
+                Token = newtoken
             };
         }//done
 
         [Route("api/user/register")]
         [HttpPost]
-        public TokenUser Register(string Nick, string Name, string Surname, string Password)
+        public TokenUser Register(string nick, string name, string surname, string password)
         {
             IDb db = IDb.DbInstance;
             var usr = new TUser()
             {
-                Nick = Nick,
-                Name = Name,
-                Surname = Surname,
-                Password = Password
+                Nick = nick,
+                Name = name,
+                Surname = surname,
+                Password = password
             };
             var token = GetNewToken();
             usr.Token = token;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
@@ -14,108 +15,158 @@ namespace Lombard_00.Controllers
     [ApiController]
     public class CItem : ControllerBase
     {
+        public class LocalItemClass {
+            public TokenUser User { get; set; }
+            public TokenItem Item { get; set; }
+        }
         [Route("api/item/add")]
         [HttpPost]
-        public bool ItemAdd(int id, string token, TokenItem item)
+        public TokenItem ItemAdd(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
-                return false;
-
-            if (item.StartingBid == null)
-                return false;
-
-            db.CleanUp();//daily cleanup of old items
-            
-            var addedItem = db.AddTItem(
-                new TItem() { 
-                    Name = item.Name,
-                    Description = item.Description,
-                    ImageMetaData = item.ImageMetaData,
-                    Image = item.Image,
-                });
-            
-            if (addedItem == null)
-                return false;
-
-            var addedBid = db.AddTUserItemBid(
-                new TUserItemBid() { 
-                    Item = addedItem,
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+            //must have starting bid
+            if (pack.Item.StartingBid == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+            //daily cleanup of old items
+            db.CleanUp();
+            //add item
+            var itemToAdd = new TItem() { 
+                    Name = pack.Item.Name,
+                    Description = pack.Item.Description,
+                    ImageMetaData = pack.Item.ImageMetaData,
+                    Image = pack.Item.Image
+            };
+            //!?SHOULD be automatically added to db
+            itemToAdd.StartingBid = 
+                new TUserItemBid()
+                {
+                    Item = itemToAdd,
                     User = usr,
                     CreatedOn = DateTime.Now,
-                    Money = item.StartingBid.Money
-                });
-
-            if (addedBid == null)
-                return false;
-
-            addedItem.StartingBid = addedBid;
-
-            return db.ModifyTItem(addedItem,addedItem);
-        }//dones
+                    Money = pack.Item.StartingBid.Money
+                };
+            //add
+            itemToAdd = db.AddTItem(itemToAdd);
+            //sucsess?
+            if (itemToAdd == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+            //yes
+            return new TokenItem(itemToAdd);
+        }//done
         [Route("api/item/delete")]
         [HttpPost]
-        public bool ItemDelete(int id, string token, TokenItem item)
+        public bool ItemDelete(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
                 return false;
-
-            var toDel = db.TItems.Find(ite => ite.Id == item.Id);
+            //find
+            var toDel = db.FindTItem(pack.Item.Id);
             
             if (toDel == null)
-                return false;//must exist
-            if (toDel.StartingBid.User.Id != usr.Id)
-                return false;//must be owner
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//must exist
+            if (toDel
+                .StartingBid
+                .User
+                .Id != usr.Id &&
+                db
+                .FindTUserRoles(usr.Id)
+                .Select(e => e.Role)
+                .Where(rol => rol.Id == 1)
+                .Any())
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//must be owner or admin
 
             return db.RemoveTItem(toDel);
         }//done
         [Route("api/item/edit")]
         [HttpPost]
-        public bool ItemEdit(int id, string token, TokenItem item)
+        public bool ItemEdit(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
-                return false;
-
-            var ite = new TItem()
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
             {
-                Id = item.Id,
-                Name = item.Name,
-                Description = item.Description,
-                ImageMetaData = item.ImageMetaData,
-                Image = item.Image
-            };
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+            //find
+            var ite = db.FindTItem(pack.Item.Id);
 
+            if (ite == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//must exist
+            if (ite
+                .StartingBid
+                .User
+                .Id != usr.Id &&
+                db
+                .FindTUserRoles(usr.Id)
+                .Select(e => e.Role)
+                .Where(rol => rol.Id == 1)
+                .Any())
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }//must be owner or admin
+            //update
+            if (pack.Item.Name != null)
+                ite.Name = pack.Item.Name;
+            if (pack.Item.Description != null)
+                ite.Description = pack.Item.Description;
+            if (pack.Item.ImageMetaData != null)
+                ite.ImageMetaData = pack.Item.ImageMetaData;
+            if (pack.Item.Image != null)
+                ite.Image = pack.Item.Image;
+            //return
             return db.ModifyTItem(ite,ite);
         }//done
         [Route("api/item/refresh")]
         [HttpPost]
-        public TokenItem ItemRefreh(int id, string token, TokenItem item)
+        public TokenItem ItemRefreh(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
-            db.TryToFinishDeal(new TItem() { Id = item.Id });
-            return (from ite in db.TItems where ite.Id==item.Id select new TokenItem(ite)).FirstOrDefault();
+            }
+            //return
+            db.TryToFinishDeal(new TItem() { Id = pack.Item.Id });
+            return new TokenItem(db.FindTItem(pack.Item.Id));
         }//done
         [Route("api/item/list")]
         [HttpPost]
-        public List<TokenItem> ItemList(int id, string token)
+        public List<TokenItem> ItemList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-
-            if (TokenUser.IsUsrStillValid(usr))
+            var usr = db.FindUser(user.Id);
+            if (TokenUser.IsUsrStillValid(usr, user.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
+            }
 
             return (from item in db.TItems select new TokenItem(item)).ToList();
         }//done

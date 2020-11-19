@@ -63,6 +63,7 @@ namespace Lombard_00.Data.Db
         public TItem AddTItem(TItem item);
         public bool RemoveTItem(TItem item);
         public bool ModifyTItem(TItem toBeModified, TItem newData);
+        public TItem FindTItem(int Id);
         public bool TryToFinishDeal(TItem item);
 
         /*

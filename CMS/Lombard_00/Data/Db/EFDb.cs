@@ -199,6 +199,9 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
+        public TItem FindTItem(int Id) {
+            return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Where(e=>e.Id==Id).FirstOrDefault();
+        }//done
         public bool TryToFinishDeal(TItem item) 
         {
 

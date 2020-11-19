@@ -33,7 +33,7 @@ namespace Lombard_00.Controllers
             if (usr == null||
                 usr.Password!=login.Password)
             {
-                Response.StatusCode = (int)HttpStatusCode.NotFound;
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return new TokenUser()
                 {
                     Success = false,
@@ -72,7 +72,7 @@ namespace Lombard_00.Controllers
             var usr = db.FindUser(token.Id);
             if (TokenUser.IsUsrStillValid(usr,token.Token))
             {
-
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return new TokenUser()
                 {
                     Success = false,
@@ -126,7 +126,7 @@ namespace Lombard_00.Controllers
 
             if (value == null)
             {
-
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return new TokenUser()
                 {
                     Success = false,
@@ -162,9 +162,11 @@ namespace Lombard_00.Controllers
         {
             IDb db = IDb.DbInstance;
             var usr = db.FindUser(edit.TokenUser.Id);
-            if (TokenUser.IsUsrStillValid(usr, edit.Password))
+            if (TokenUser.IsUsrStillValid(usr, edit.Password)) {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
-
+            }
+            //update
             usr.Nick = edit.TokenUser.Nick;
             usr.Name = edit.TokenUser.Name;
             usr.Surname = edit.TokenUser.Surname;

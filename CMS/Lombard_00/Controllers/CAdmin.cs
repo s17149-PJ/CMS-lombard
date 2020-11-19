@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
@@ -26,18 +27,27 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             var usr = db.FindUser(edit.Admin.Id);
             if (TokenUser.IsUsrStillValid(usr, edit.Admin.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
+            }
 
             //check if admin (role Id == 1)
             var rols = db.FindTUserRoles(usr.Id).Select(e=>e.Role);
             if (!rols.Where(rol => rol.Id == 1).Any())
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
+            }
 
             //find edited user
             usr = db.FindUser(edit.Edited.Id);
             //if record exists that is
             if (usr == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
+            }
 
             List<TUserRole> OldTUserRole = db.FindTUserRoles(usr.Id);//current rolls
 
@@ -72,12 +82,18 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             var usr = db.FindUser(admin.Id);
             if (TokenUser.IsUsrStillValid(usr, admin.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
+            }
 
             //check if admin (role Id == 1)
             var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
             if (!rols.Where(rol => rol.Id == 1).Any())
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;
+            }
 
             //actuall func
             return db.TUsers

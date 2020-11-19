@@ -15,21 +15,23 @@ namespace Lombard_00.Controllers
     [ApiController]
     public class CUser : ControllerBase
     {
-        public class Login{
+        public class LocalLoginClass{
             public string Nick { get; set; }
             public string Password { get; set; }
-        }
+        }//done
         [Route("api/user/login")]
         [HttpPost]
-        public TokenUser Auth(Login login)
+        public TokenUser Login(LocalLoginClass login)
         {
-            IDb db = IDb.DbInstance;
+            //fix incoming data
             var nick = login.Nick.Trim();
             var pass = login.Password.Trim();
 
-            var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == pass);
-            var list = db.TUsers;
-            if (usr == null)
+            IDb db = IDb.DbInstance;
+            //find and veryfiy
+            var usr = db.FindUser(login.Nick);
+            if (usr == null||
+                usr.Password!=login.Password)
             {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return new TokenUser()
@@ -43,11 +45,12 @@ namespace Lombard_00.Controllers
                     Token = null
                 };
             }
+            //tokens
             var token = GetNewToken();
             usr.Token = token;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
             db.ModifyTUser(usr, usr);
-
+            //send response
             return new TokenUser()
             {
                 Success = true,
@@ -55,18 +58,19 @@ namespace Lombard_00.Controllers
                 Nick = usr.Nick,
                 Name = usr.Name,
                 Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
+                Roles = db.FindTUserRoles(usr.Id).Select(e=>e.Role),
                 Token = token
             };
         }//done
-
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/user/keepAlive")]
         [HttpPost]
-        public TokenUser RenewToken(int id, string token)
+        public TokenUser RenewToken(TokenUser token)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-            if (TokenUser.IsUsrStillValid(usr))
+            //find and veryfiy
+            var usr = db.FindUser(token.Id);
+            if (TokenUser.IsUsrStillValid(usr,token.Token))
             {
 
                 return new TokenUser()
@@ -80,12 +84,12 @@ namespace Lombard_00.Controllers
                     Token = null
                 };
             }
-
+            //tokens
             var newtoken = GetNewToken();
             usr.Token = newtoken;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
             db.ModifyTUser(usr, usr);
-
+            //send response
             return new TokenUser()
             {
                 Success = true,
@@ -93,19 +97,18 @@ namespace Lombard_00.Controllers
                 Nick = usr.Nick,
                 Name = usr.Name,
                 Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
+                Roles = db.FindTUserRoles(usr.Id).Select(e=>e.Role),
                 Token = newtoken
             };
         }//done
-
-        public class RegisterClass : Login {
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        public class LocalRegisterClass : LocalLoginClass {
             public string Name { get; set; }
             public string Surname { get; set; }
-        }
-
+        }//done
         [Route("api/user/register")]
         [HttpPost]
-        public TokenUser Register(RegisterClass register)
+        public TokenUser Register(LocalRegisterClass register)
         {
             IDb db = IDb.DbInstance;
             var usr = new TUser()
@@ -143,31 +146,34 @@ namespace Lombard_00.Controllers
                 Nick = value.Nick,
                 Name = value.Name,
                 Surname = value.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == value select asoc.Role,
+                Roles = db.FindTUserRoles(usr.Id).Select(e=>e.Role),
                 Token = token
             };
         }//done
         //?redo to obj?
-
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        public class LocalEdiitClass {
+            public TokenUser TokenUser { get; set; }
+            public string Password { get; set; }
+        }//done
         [Route("api/user/edit")]
         [HttpPost]
-        public bool Edit(TokenUser tokenUser, string password)
+        public bool Edit(LocalEdiitClass edit)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == tokenUser.Id && usr.Token == tokenUser.Token);
-
-            if (TokenUser.IsUsrStillValid(usr))
+            var usr = db.FindUser(edit.TokenUser.Id);
+            if (TokenUser.IsUsrStillValid(usr, edit.Password))
                 return false;
 
-            usr.Nick = tokenUser.Nick;
-            usr.Name = tokenUser.Name;
-            usr.Surname = tokenUser.Surname;
-            usr.Password = password;
+            usr.Nick = edit.TokenUser.Nick;
+            usr.Name = edit.TokenUser.Name;
+            usr.Surname = edit.TokenUser.Surname;
+            usr.Password = edit.Password;
 
             return db.ModifyTUser(usr, usr);
         }//done
         //?redo to obj?
-
+        //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         private string GetNewToken()
         {
             var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -27,6 +27,8 @@ namespace Lombard_00.Data.Db
          */
         public List<TUser> TUsers { get; }
         public TUser AddTUser(TUser user);
+        public TUser FindUser(int Id);
+        public TUser FindUser(string UniqueNick);
         public bool ModifyTUser(TUser toBeModified, TUser newData);
 
         /*
@@ -34,6 +36,7 @@ namespace Lombard_00.Data.Db
          */
         public List<TUserRole> TUserRoles { get; }
         public bool AddTUserRole(TUserRole role);
+        public List<TUserRole> FindTUserRoles(int userId);
         public bool RemoveTUserRole(TUserRole role);
 
         /*
@@ -44,6 +47,7 @@ namespace Lombard_00.Data.Db
          */
         public List<TRole> TRoles { get; }
         public bool AddTRole(TRole role);
+        public TRole FindRole(int Id);
         public bool ModifyTRole(TRole toBeModified, TRole newData);
 
         /*

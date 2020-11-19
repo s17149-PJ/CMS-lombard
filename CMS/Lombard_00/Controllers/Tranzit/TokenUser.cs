@@ -42,19 +42,19 @@ namespace Lombard_00.Controllers
         public IEnumerable<TRole> Roles { get; set; }
         public string Token { get; set; }
 
-        public static bool IsUsrStillValid(TUser usr)
+        public static bool IsUsrStillValid(TUser usr,string tokenOrPassword)
         {
             if (usr == null)
             {
 
                 return false;
             }
-            if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0)
+            if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0||
+                (usr.Password != tokenOrPassword && usr.Token != tokenOrPassword))
             {
 
                 return false;
             }
-
             return true;
         }//done
     }

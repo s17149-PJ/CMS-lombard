@@ -35,6 +35,12 @@ namespace Lombard_00.Data.Db
 
             return value;
         }//done
+        public TUser FindUser(int Id) {
+            return CTUsers.Find(Id);
+        }//done
+        public TUser FindUser(string UniqueNick) {
+            return CTUsers.AsQueryable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
+        }//done
         public bool ModifyTUser(TUser toBeModified, TUser newData)
         {
             var value = CTUsers.FirstOrDefault(value => value.Id == toBeModified.Id);
@@ -62,17 +68,39 @@ namespace Lombard_00.Data.Db
         }
         public bool AddTUserRole(TUserRole asoc)
         {
-            var value = from chk in CTUserRoles where chk.User == asoc.User && chk.Role == asoc.Role select chk;
-            if (value == null)
-            {
-
+            //are incoming values nulls?
+            if (asoc.User == null ||
+                asoc.Role == null)
                 return false;
-            }
-
+            //find and replace to avoid duplication
+            var tuserRole = new TUserRole() { User = FindUser(asoc.User.Id), Role = FindRole(asoc.Role.Id) };
+            //are values found?
+            if (tuserRole.User == null ||
+                tuserRole.Role == null)
+                return false;
+            //are there duplicates?
+            if (CTUserRoles
+                .AsQueryable()
+                .Where(e=> e.Role==asoc.Role && asoc.User == asoc.User)
+                .Any())
+                return false;
+            //add and save
             CTUserRoles.Add(asoc);
             SaveChanges();
-
+            //saved
             return true;
+        }//done
+        public List<TUserRole> FindTUserRoles(int UserId)
+        {
+            var User = FindUser(UserId);
+            if (User == null)
+                return new List<TUserRole>();
+            return CTUserRoles
+                .Include(e => e.Role)
+                .Include(e => e.User)
+                .AsQueryable()
+                .Where(e => e.User == User)
+                .ToList();
         }//done
         public bool RemoveTUserRole(TUserRole asoc)
         {
@@ -99,6 +127,9 @@ namespace Lombard_00.Data.Db
             SaveChanges();
 
             return true;
+        }//done
+        public TRole FindRole(int Id) {
+            return CTRoles.Find(Id);
         }//done
         public bool ModifyTRole(TRole toBeModified, TRole newData)
         {

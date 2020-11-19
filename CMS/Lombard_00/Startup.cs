@@ -30,6 +30,12 @@ namespace Lombard_00
                     Id = 1,
                     Name = "Admin"
                 });
+                IDb.DbInstance.AddTRole(new TRole()
+                {
+                    Id = 2,
+                    Name = "User"
+                });
+
                 IDb.DbInstance.AddTUser(new TUser()
                 {
                     Id = 1,
@@ -40,18 +46,6 @@ namespace Lombard_00
                     ValidUnitl = DateTime.Now.AddDays(1),
                     Token = "0"
                 });
-                IDb.DbInstance.AddTUserRole(new TUserRole()
-                {
-                    User = IDb.DbInstance.TUsers[0],//admin
-                    Role = IDb.DbInstance.TRoles[0]//admin
-                });
-
-                IDb.DbInstance.AddTRole(new TRole()
-                {
-                    Id = 2,
-                    Name = "User"
-                });
-
                 IDb.DbInstance.AddTUser(new TUser()
                 {
                     Id = 2,
@@ -59,11 +53,6 @@ namespace Lombard_00
                     Name = "Not",
                     Surname = "Hacker",
                     Password = "12345"
-                });
-                IDb.DbInstance.AddTUserRole(new TUserRole()
-                {
-                    User = IDb.DbInstance.TUsers[1],//user
-                    Role = IDb.DbInstance.TRoles[1]//user
                 });
 
                 for (int i = 2; i < 20; i++)
@@ -75,11 +64,6 @@ namespace Lombard_00
                         Name = GetNewToken(),
                         Surname = GetNewToken(),
                         Password = GetNewToken()
-                    });
-                    IDb.DbInstance.AddTUserRole(new TUserRole()
-                    {
-                        User = IDb.DbInstance.TUsers[i],//user
-                        Role = IDb.DbInstance.TRoles[1]//user
                     });
                 }
 

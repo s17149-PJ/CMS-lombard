@@ -51,7 +51,7 @@ namespace Lombard_00.Controllers
                 return false;
             }
 
-            var toDel = db.TItemComments.Find(ite => ite.Id == comment.Id);
+            var toDel = db.FindTItemComment(pack.Comment.Id);
 
             if (toDel == null)
                 return false;//must exist

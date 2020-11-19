@@ -17,7 +17,7 @@ namespace Lombard_00.Controllers
             Nick = user.Nick;
             Name = user.Name;
             Surname = user.Surname;
-            Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == user select asoc.Role;
+            Roles = IDb.DbInstance.FindTUserRoles(user.Id).Select(e => e.Role);
             Token = user.Token;
         }//done
         public static TokenUser CallByToken(TUser user)
@@ -29,7 +29,7 @@ namespace Lombard_00.Controllers
                 Nick = user.Nick,
                 Name = user.Name,
                 Surname = user.Surname,
-                Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == user select asoc.Role,
+                Roles = IDb.DbInstance.FindTUserRoles(user.Id).Select(e => e.Role),
                 Token = null//NO leak!
             };
         }//done

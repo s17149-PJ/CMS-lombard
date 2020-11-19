@@ -217,11 +217,11 @@ namespace Lombard_00.Data.Db
         }
         public TItemComment AddTItemComment(TItemComment comment)
         {
-            var usr = TUsers.Where(e => e.Id == comment.User.Id).FirstOrDefault();
+            var usr = FindUser(comment.User.Id);
             if (usr == null)
                 return null;
             comment.User = usr;
-            var ite = TItems.Where(e => e.Id == comment.Item.Id).FirstOrDefault();
+            var ite = FindTItem(comment.Item.Id);
             if (ite == null)
                 return null;
             comment.Item = ite;
@@ -245,11 +245,11 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTItemComment(TItemComment comment)
         {
-            var usr = TUsers.Where(e => e.Id == comment.User.Id).FirstOrDefault();
+            var usr = FindUser(comment.User.Id);
             if (usr == null)
                 return false;
             comment.User = usr;
-            var ite = TItems.Where(e => e.Id == comment.Item.Id).FirstOrDefault();
+            var ite = FindTItem(comment.Item.Id);
             if (ite == null)
                 return false;
             comment.Item = ite;
@@ -259,6 +259,9 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
+        public TItemComment FindTItemComment(int Id) {
+            return CTItemComments.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
+        }
 
         public List<TUserItemBid> TUserItemBids
         {
@@ -269,11 +272,11 @@ namespace Lombard_00.Data.Db
         }
         public TUserItemBid AddTUserItemBid(TUserItemBid bid) 
         {
-            var usr = TUsers.Where(e => e.Id == bid.User.Id).FirstOrDefault();
+            var usr = FindUser(bid.User.Id);
             if (usr == null)
                 return null;
             bid.User = usr;
-            var ite = TItems.Where(e => e.Id == bid.Item.Id).FirstOrDefault();
+            var ite = FindTItem(bid.Item.Id);
             if (ite == null)
                 return null;
             bid.Item = ite;
@@ -285,11 +288,11 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTUserItemBid(TUserItemBid bid) 
         {
-            var usr = TUsers.Where(e => e.Id == bid.User.Id).FirstOrDefault();
+            var usr = FindUser(bid.User.Id);
             if (usr == null)
                 return false;
             bid.User = usr;
-            var ite = TItems.Where(e => e.Id == bid.Item.Id).FirstOrDefault();
+            var ite = FindTItem(bid.Item.Id);
             if (ite == null)
                 return false;
             bid.Item = ite;

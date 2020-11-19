@@ -75,6 +75,7 @@ namespace Lombard_00.Data.Db
         public TItemComment AddTItemComment(TItemComment comment);
         public bool RemoveTItemComment(TItemComment comment);
         public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData);
+        public TItemComment FindTItemComment(int Id);
 
         /*
          * IMPORTANT: don'ty remove bids that you can reach DIRECTLY from TItem.

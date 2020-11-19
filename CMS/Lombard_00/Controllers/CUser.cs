@@ -24,7 +24,10 @@ namespace Lombard_00.Controllers
         public TokenUser Auth(Login login)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Nick == login.Nick && usr.Password == login.Password);
+            var nick = login.Nick.Trim();
+            var pass = login.Password.Trim();
+
+            var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == pass);
             var list = db.TUsers;
             if (usr == null)
             {

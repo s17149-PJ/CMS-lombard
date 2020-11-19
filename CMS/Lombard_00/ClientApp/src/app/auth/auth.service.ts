@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../model/auth.model';
 import * as rx from 'rxjs/operators';
+import { trim } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +39,8 @@ export class AuthService {
   }
 
   register(nick: string, name: string, surname: string, password: string): Observable<User> {
-    return this.http.post<any>('api/user/register', { nick, name, surname, password })
+    return this.http.post<any>('api/user/register',
+      { nick: nick.trim(), name: name.trim(), surname: surname.trim(), password: password.trim() })
       .pipe(
         rx.map((user: User) => {
           if (user.success) {

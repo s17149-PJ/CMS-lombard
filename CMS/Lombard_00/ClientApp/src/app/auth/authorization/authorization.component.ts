@@ -97,7 +97,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
 
     this.loading = true;
     const registerUser: { username: string; name: string; surname: string; password: string } = {
-      ...this.loginForm.value,
+      ...this.registerForm.value,
     };
     this._subscription.add(
       this.auth.register(registerUser.username, registerUser.name,

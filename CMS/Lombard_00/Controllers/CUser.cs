@@ -15,12 +15,17 @@ namespace Lombard_00.Controllers
     [ApiController]
     public class CUser : ControllerBase
     {
+        public class Login{
+            public string Nick { get; set; }
+            public string Password { get; set; }
+        }
         [Route("api/user/login")]
         [HttpPost]
-        public TokenUser Auth([FromBody] string nick, string password)
+        public TokenUser Auth(Login login)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == password);
+            var usr = db.TUsers.Find(usr => usr.Nick == login.Nick && usr.Password == login.Password);
+            var list = db.TUsers;
             if (usr == null)
             {
                 Response.StatusCode = (int)HttpStatusCode.NotFound;

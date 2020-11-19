@@ -22,7 +22,7 @@ namespace Lombard_00.Controllers
             var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == password);
             if (usr == null)
             {
-
+                return NotFound();
                 return new TokenUser()
                 {
                     Success = false,

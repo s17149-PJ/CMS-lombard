@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
@@ -16,13 +17,13 @@ namespace Lombard_00.Controllers
     {
         [Route("api/user/login")]
         [HttpPost]
-        public TokenUser Auth(string nick, string password)
+        public TokenUser Auth([FromBody] string nick, string password)
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == password);
             if (usr == null)
             {
-                return NotFound();
+                Response.StatusCode = (int)HttpStatusCode.NotFound;
                 return new TokenUser()
                 {
                     Success = false,

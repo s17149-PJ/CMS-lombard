@@ -22,7 +22,7 @@ export class AuthService {
 
   login(nick: string, password: string): Observable<User> {
     return this.http
-      .post<any>('api/user/login', { nick, password })
+      .post<any>('api/user/login', { nick: nick.trim(), password: password.trim() })
       .pipe(
         rx.map((user: User) => {
           if (user.success) {

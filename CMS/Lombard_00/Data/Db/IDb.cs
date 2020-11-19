@@ -26,7 +26,7 @@ namespace Lombard_00.Data.Db
          * users - root of all things around here
          */
         public List<TUser> TUsers { get; }
-        public bool AddTUser(TUser user);
+        public TUser AddTUser(TUser user);
         public bool ModifyTUser(TUser toBeModified, TUser newData);
 
         /*

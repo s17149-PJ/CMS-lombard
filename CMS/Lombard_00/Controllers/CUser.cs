@@ -20,7 +20,8 @@ namespace Lombard_00.Controllers
         {
             IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Nick == nick && usr.Password == password);
-            if (usr == null) {
+            if (usr == null)
+            {
 
                 return new TokenUser()
                 {
@@ -52,10 +53,10 @@ namespace Lombard_00.Controllers
 
         [Route("api/user/keepAlive")]
         [HttpPost]
-        public TokenUser RenewToken(int Id, string Token)
+        public TokenUser RenewToken(int id, string token)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
             if (TokenUser.IsUsrStillValid(usr))
             {
 
@@ -71,8 +72,8 @@ namespace Lombard_00.Controllers
                 };
             }
 
-            var token = GetNewToken();
-            usr.Token = token;
+            var newtoken = GetNewToken();
+            usr.Token = newtoken;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
             db.ModifyTUser(usr, usr);
 
@@ -84,7 +85,7 @@ namespace Lombard_00.Controllers
                 Name = usr.Name,
                 Surname = usr.Surname,
                 Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
-                Token = token
+                Token = newtoken
             };
         }//done
 
@@ -104,7 +105,9 @@ namespace Lombard_00.Controllers
             usr.Token = token;
             usr.ValidUnitl = DateTime.Now.AddMinutes(11);
 
-            if(db.AddTUser(usr))
+            var value = db.AddTUser(usr);
+
+            if (value == null)
             {
 
                 return new TokenUser()
@@ -129,11 +132,11 @@ namespace Lombard_00.Controllers
             return new TokenUser()
             {
                 Success = true,
-                Id = usr.Id,
-                Nick = usr.Nick,
-                Name = usr.Name,
-                Surname = usr.Surname,
-                Roles = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role,
+                Id = value.Id,
+                Nick = value.Nick,
+                Name = value.Name,
+                Surname = value.Surname,
+                Roles = from asoc in db.TUserRoles where asoc.User == value select asoc.Role,
                 Token = token
             };
         }//done
@@ -141,24 +144,25 @@ namespace Lombard_00.Controllers
 
         [Route("api/user/edit")]
         [HttpPost]
-        public bool Edit(int Id, string Nick, string Name, string Surname, string Password, string Token)
+        public bool Edit(TokenUser tokenUser, string password)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == tokenUser.Id && usr.Token == tokenUser.Token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            usr.Nick = Nick;
-            usr.Name = Name;
-            usr.Surname = Surname;
-            usr.Password = Password;
-            
+            usr.Nick = tokenUser.Nick;
+            usr.Name = tokenUser.Name;
+            usr.Surname = tokenUser.Surname;
+            usr.Password = password;
+
             return db.ModifyTUser(usr, usr);
         }//done
         //?redo to obj?
 
-        private string GetNewToken() {
+        private string GetNewToken()
+        {
             var allChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
             var resultToken = new string(

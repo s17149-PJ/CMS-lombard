@@ -16,25 +16,25 @@ namespace Lombard_00.Controllers
     {
         [Route("api/item/add")]
         [HttpPost]
-        public bool ItemAdd(int Id, string Token, TokenItem Item)
+        public bool ItemAdd(int id, string token, TokenItem item)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            if (Item.StartingBid == null)
+            if (item.StartingBid == null)
                 return false;
 
             db.CleanUp();//daily cleanup of old items
             
             var addedItem = db.AddTItem(
                 new TItem() { 
-                    Name = Item.Name,
-                    Description = Item.Description,
-                    ImageMetaData = Item.ImageMetaData,
-                    Image = Item.Image,
+                    Name = item.Name,
+                    Description = item.Description,
+                    ImageMetaData = item.ImageMetaData,
+                    Image = item.Image,
                 });
             
             if (addedItem == null)
@@ -45,7 +45,7 @@ namespace Lombard_00.Controllers
                     Item = addedItem,
                     User = usr,
                     CreatedOn = DateTime.Now,
-                    Money = Item.StartingBid.Money
+                    Money = item.StartingBid.Money
                 });
 
             if (addedBid == null)
@@ -57,15 +57,15 @@ namespace Lombard_00.Controllers
         }//dones
         [Route("api/item/delete")]
         [HttpPost]
-        public bool ItemDelete(int Id, string Token, TokenItem Item)
+        public bool ItemDelete(int id, string token, TokenItem item)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            var toDel = db.TItems.Find(ite => ite.Id == Item.Id);
+            var toDel = db.TItems.Find(ite => ite.Id == item.Id);
             
             if (toDel == null)
                 return false;//must exist
@@ -76,43 +76,43 @@ namespace Lombard_00.Controllers
         }//done
         [Route("api/item/edit")]
         [HttpPost]
-        public bool ItemEdit(int Id, string Token, TokenItem Item)
+        public bool ItemEdit(int id, string token, TokenItem item)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
             var ite = new TItem()
             {
-                Id = Item.Id,
-                Name = Item.Name,
-                Description = Item.Description,
-                ImageMetaData = Item.ImageMetaData,
-                Image = Item.Image
+                Id = item.Id,
+                Name = item.Name,
+                Description = item.Description,
+                ImageMetaData = item.ImageMetaData,
+                Image = item.Image
             };
 
             return db.ModifyTItem(ite,ite);
         }//done
         [Route("api/item/refresh")]
         [HttpPost]
-        public TokenItem ItemRefreh(int Id, string Token, TokenItem Item)
+        public TokenItem ItemRefreh(int id, string token, TokenItem item)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return null;
-            db.TryToFinishDeal(new TItem() { Id = Item.Id });
-            return (from item in db.TItems where item.Id==Item.Id select new TokenItem(item)).FirstOrDefault();
+            db.TryToFinishDeal(new TItem() { Id = item.Id });
+            return (from ite in db.TItems where ite.Id==item.Id select new TokenItem(ite)).FirstOrDefault();
         }//done
         [Route("api/item/list")]
         [HttpPost]
-        public List<TokenItem> ItemList(int Id, string Token)
+        public List<TokenItem> ItemList(int id, string token)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return null;

@@ -16,23 +16,23 @@ namespace Lombard_00.Controllers
     {
         [Route("api/bid/create")]
         [HttpPost]
-        public bool BidCreate(int Id, string Token, TokenBid Bid)
+        public bool BidCreate(int id, string token, TokenBid bid)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            if (db.TryToFinishDeal(new TItem() { Id = Bid.Item.Id }))
+            if (db.TryToFinishDeal(new TItem() { Id = bid.Item.Id }))
                 return false;
 
             var value = db.AddTUserItemBid(new TUserItemBid()
             { 
-                Item = new TItem() { Id = Bid.Item.Id },
-                User = new TUser() { Id = Bid.User.Id },
+                Item = new TItem() { Id = bid.Item.Id },
+                User = new TUser() { Id = bid.User.Id },
                 CreatedOn = DateTime.Now,
-                Money = Bid.Money
+                Money = bid.Money
             });
 
             if (value == null)
@@ -42,15 +42,15 @@ namespace Lombard_00.Controllers
         }//done
         [Route("api/bid/delete")]
         [HttpPost]
-        public bool BidDelete(int Id, string Token, TokenBid Bid)
+        public bool BidDelete(int id, string token, TokenBid bid)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return false;
 
-            var toDel = db.TUserItemBids.Find(ite => ite.Id == Bid.Id);
+            var toDel = db.TUserItemBids.Find(ite => ite.Id == bid.Id);
 
             if (toDel == null)
                 return false;//must exist
@@ -64,10 +64,10 @@ namespace Lombard_00.Controllers
         }//done
         [Route("api/bid/list")]
         [HttpPost]
-        public List<TokenBid> BidList(int Id, string Token)
+        public List<TokenBid> BidList(int id, string token)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
+            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
 
             if (TokenUser.IsUsrStillValid(usr))
                 return null;

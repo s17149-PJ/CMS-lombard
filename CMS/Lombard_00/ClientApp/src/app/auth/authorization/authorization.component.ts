@@ -80,7 +80,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
           }
         },
         (errors) => {
-          this.error = errors;
+          this.error = 'Login failed!';
           this.loading = false;
         }
       )

@@ -14,89 +14,84 @@ namespace Lombard_00.Controllers
     [ApiController]
     public class CAdmin : ControllerBase
     {
+        public class LocalEditClass {
+            public TokenUser Admin { get; set; }
+            public TokenUser Edited { get; set; }
+        }
         [Route("api/admin/editRoles")]
         [HttpPost]
-        public bool Edit(int id, string token, TokenUser newSettings)
+        public bool Edit(LocalEditClass edit)
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-            if (IsUsrStillValid(usr))
+            var usr = db.FindUser(edit.Admin.Id);
+            if (TokenUser.IsUsrStillValid(usr, edit.Admin.Token))
                 return false;
+
             //check if admin (role Id == 1)
-            var rols = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role;
+            var rols = db.FindTUserRoles(usr.Id).Select(e=>e.Role);
             if (!rols.Where(rol => rol.Id == 1).Any())
                 return false;
 
-            //actuall func
-            usr = db.TUsers.Find(usr => usr.Id == newSettings.Id);//user pending edit
+            //find edited user
+            usr = db.FindUser(edit.Edited.Id);
+            //if record exists that is
+            if (usr == null)
+                return false;
 
-            List<TUserRole> OldTUserRole = (from asoc in db.TUserRoles where asoc.User == usr select asoc).ToList();//current rolls
+            List<TUserRole> OldTUserRole = db.FindTUserRoles(usr.Id);//current rolls
 
             //remove exessive rolles
             OldTUserRole
-                    .Where(TUR =>
-                        !(from item in newSettings.Roles select item.Id)//select Id from new roles
+                    .Where(ToRemove =>
+                        !edit.Edited.Roles
+                        .Select(e=>e.Id)//select Id from new roles
                         .ToList()
-                        .Contains(TUR.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
+                        .Contains(ToRemove.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
                     .ToList()
-                    .ForEach(TUR => db.RemoveTUserRole(TUR));
+                    .ForEach(ToRemove => db.RemoveTUserRole(ToRemove));
 
             //add missing ones
-            newSettings.Roles
-                .Where(ROL =>
-                    !(from TUR in OldTUserRole select TUR.Role.Id)//select Id from old roles
+            edit.Edited.Roles
+                .Where(ToAdd =>
+                    !OldTUserRole
+                    .Select(e=>e.Role.Id)//select Id from old roles
                     .ToList()
-                    .Contains(ROL.Id))//select only ROL's that have Role.Id that is NOT in OldTUserRole
+                    .Contains(ToAdd.Id))//select only ROL's that have Role.Id that is NOT in OldTUserRole
                 .ToList()
-                .ForEach(ROL => db.AddTUserRole(new TUserRole() { User = usr, Role = ROL }));
+                .ForEach(ToAdd => db.AddTUserRole(new TUserRole() { User = usr, Role = ToAdd }));
 
             return true;
         }//done
 
         [Route("api/admin/users")]
         [HttpGet]
-        public List<TokenUser> List(int id, string token)
+        public IEnumerable<TokenUser> List(TokenUser admin)
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.TUsers.Find(usr => usr.Id == id && usr.Token == token);
-            if (IsUsrStillValid(usr))
+            var usr = db.FindUser(admin.Id);
+            if (TokenUser.IsUsrStillValid(usr, admin.Token))
                 return null;
+
             //check if admin (role Id == 1)
-            var rols = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role;
+            var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
             if (!rols.Where(rol => rol.Id == 1).Any())
                 return null;
 
             //actuall func
-            return (from TUser in IDb.DbInstance.TUsers
-                    select
+            return db.TUsers
+                .Select(e =>
                         new TokenUser()
                         {
                             Success = false,
-                            Id = TUser.Id,
-                            Nick = TUser.Nick,
-                            Name = TUser.Name,
-                            Surname = TUser.Surname,
-                            Roles = from asoc in IDb.DbInstance.TUserRoles where asoc.User == TUser select asoc.Role,
+                            Id = e.Id,
+                            Nick = e.Nick,
+                            Name = e.Name,
+                            Surname = e.Surname,
+                            Roles = db.FindTUserRoles(e.Id).Select(e => e.Role),
                             Token = null
-                        }).ToList();
-        }//done
-
-        private bool IsUsrStillValid(TUser usr)
-        {
-            if (usr == null)
-            {
-
-                return false;
-            }
-            if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0)
-            {
-
-                return false;
-            }
-
-            return true;
+                        });
         }//done
     }//?done
 }

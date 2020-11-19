@@ -29,7 +29,7 @@ export const routes: Route[] = [
   { path: 'login', component: AuthorizationComponent },
   {
     path: 'admin',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     children: [
       { path: 'panel', component: AdminPanelDashboardComponent },
       { path: 'users', component: AdminPanelUsersComponent },

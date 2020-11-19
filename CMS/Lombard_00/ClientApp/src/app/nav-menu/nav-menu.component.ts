@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import * as rx from 'rxjs/operators';
 import { isNil } from 'lodash';
+import { User } from '../model/auth.model';
 
 @Component({
   selector: 'app-nav-menu',
@@ -12,12 +13,15 @@ import { isNil } from 'lodash';
 })
 export class NavMenuComponent implements OnInit {
   isExpanded = false;
-  isLogged: Observable<boolean>;
+  currentUser: Observable<User>;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.isLogged = this.auth.currentUser.pipe(rx.map((user) => !isNil(user)));
+    // check for logged user - menu visibility
+    this.currentUser = this.auth.currentUser.pipe(
+      rx.shareReplay(1)
+    );
   }
 
   collapse() {

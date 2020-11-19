@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,12 +54,12 @@ namespace Lombard_00.Controllers
             return true;
         }//done
 
-        [Route("api/admin/users")]
-        [HttpGet]
-        public List<TokenUser> List(int Id, string Token)
+        [HttpGet("users")]
+        [Authorize(Roles = "ADMIN")]
+        public List<TokenUser> List()
         {
             //check if logged in
-            IDb db = IDb.DbInstance;
+            /*IDb db = IDb.DbInstance;
             var usr = db.TUsers.Find(usr => usr.Id == Id && usr.Token == Token);
             if (IsUsrStillValid(usr))
                 return null;
@@ -66,6 +67,7 @@ namespace Lombard_00.Controllers
             var rols = from asoc in db.TUserRoles where asoc.User == usr select asoc.Role;
             if(!rols.Where(rol=>rol.Id==1).Any())
                 return null;
+            */
 
             //actuall func
             return (from TUser in IDb.DbInstance.TUsers

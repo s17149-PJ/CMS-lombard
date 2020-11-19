@@ -90,15 +90,15 @@ namespace Lombard_00.Controllers
 
         [Route("api/user/register")]
         [HttpPost]
-        public TokenUser Register(string Nick, string Name, string Surname, string Password)
+        public TokenUser Register(string nick, string name, string surname, string password)
         {
             IDb db = IDb.DbInstance;
             var usr = new TUser()
             {
-                Nick = Nick,
-                Name = Name,
-                Surname = Surname,
-                Password = Password
+                Nick = nick,
+                Name = name,
+                Surname = surname,
+                Password = password
             };
             var token = GetNewToken();
             usr.Token = token;
@@ -119,7 +119,7 @@ namespace Lombard_00.Controllers
                 };
             }// db MAY refuse to create user. for now db demands Nick to be unique.
 
-            usr = db.TUsers.Find(usr => usr.Nick == Nick);
+            usr = db.TUsers.Find(usr => usr.Nick == nick);
             db.AddTUserRole(new TUserRole()
             {
                 User = usr,

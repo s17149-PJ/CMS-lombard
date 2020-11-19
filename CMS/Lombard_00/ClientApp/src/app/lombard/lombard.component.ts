@@ -1,4 +1,7 @@
+import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { LombardService } from './lombard.service';
 
 @Component({
   selector: 'app-lombard',
@@ -7,7 +10,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LombardComponent implements OnInit {
 
-  constructor() { }
+
+
+  constructor(public lombard: LombardService) {}
 
   ngOnInit() {
   }

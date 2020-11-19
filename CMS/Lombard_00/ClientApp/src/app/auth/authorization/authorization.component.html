@@ -1,55 +1,72 @@
 <div class="col-md-6 offset-md-3 mt-5">
-  <mat-card class="bg-warning">
+  <mat-card class="lo-warning">
     Username: user / totaly admin<br />
     Password: 12345 / AdminGodDamit
   </mat-card>
-  <mat-card class="card">
+  <mat-card class="card" *ngIf="signInPanel">
     <h4 class="card-header">Login</h4>
     <div class="card-body">
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
         <div class="form-group">
           <mat-form-field appearance="fill">
             <mat-label>Username</mat-label>
-            <input
-              matInput
-              placeholder="pat@example.com"
-              formControlName="username"
-              required
-            />
+            <input matInput  formControlName="username" required />
           </mat-form-field>
-          <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-            <div *ngIf="f.username.errors.required">Username is required</div>
-          </div>
         </div>
         <div class="form-group">
           <mat-form-field appearance="fill">
             <mat-label>Password</mat-label>
-            <input
-              matInput
-              placeholder="***"
-              formControlName="password"
-              required
-            />
+            <input matInput placeholder="***" formControlName="password" required type="password" />
           </mat-form-field>
-          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Password is required</div>
-          </div>
         </div>
-        <button
-          mat-raised-button
-          color="primary"
-          [disabled]="loading || loginForm.invalid"
-        >
-          <span
-            *ngIf="loading"
-            class="spinner-border spinner-border-sm mr-1"
-          ></span>
+        <button mat-raised-button color="primary" [disabled]="loading || loginForm.invalid">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
           Login
         </button>
         <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
           {{ error }}
         </div>
       </form>
+      <button mat-flat-button (click)="toggleSignIn(false)">Don't have an account? Register</button>
+    </div>
+  </mat-card>
+  <mat-card class="card" *ngIf="!signInPanel">
+    <h4 class="card-header">Register</h4>
+    <div class="card-body">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" required />
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required />
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Surname</mat-label>
+            <input matInput formControlName="surname" required />
+          </mat-form-field>
+        </div>
+        <div class="form-group">
+          <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput placeholder="***" formControlName="password" required type="password" />
+          </mat-form-field>
+        </div>
+        <button mat-raised-button color="primary" [disabled]="loading || registerForm.invalid">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          Register
+        </button>
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">
+          {{ error }}
+        </div>
+      </form>
+      <button mat-flat-button (click)="toggleSignIn(true)">Already have an account? Login!</button>
     </div>
   </mat-card>
 </div>

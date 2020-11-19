@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { AuthService } from 'src/app/auth/auth.service';
-import { User } from 'src/app/model/auth.model';
+import { RoleDefinition, User } from 'src/app/model/auth.model';
 
 @Component({
   selector: 'app-admin-panel-users',
@@ -23,5 +23,9 @@ export class AdminPanelUsersComponent implements OnInit {
       this.tableData.paginator = this.paginator;
       this.tableData.sort = this.sort;
     });
+  }
+
+  getRoleName(roles: RoleDefinition[]): string {
+    return roles.sort((r1, r2) => r1.id - r2.id)[0].name;
   }
 }

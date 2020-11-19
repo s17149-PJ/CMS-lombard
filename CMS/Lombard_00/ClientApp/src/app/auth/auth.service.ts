@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../model/auth.model';
@@ -24,18 +24,41 @@ export class AuthService {
     return this.http
       .post<any>('api/user/login', { nick, password })
       .pipe(
-        rx.map((user) => {
-          user.authdata = window.btoa(nick + ':' + password);
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          this.currentUserSubject.next(user);
-          return user;
+        rx.map((user: User) => {
+          if (user.success) {
+            user.authdata = window.btoa(user.token);
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+            return user;
+          } else {
+            return null;
+          }
         })
       );
   }
 
+  register(nick: string, name: string, surname: string, password: string): Observable<User> {
+    return this.http.post<any>('api/user/register', { nick, name, surname, password })
+      .pipe(
+        rx.map((user: User) => {
+          if (user.success) {
+            user.authdata = window.btoa(user.token);
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+            return user;
+          } else {
+            return null;
+          }
+        })
+      )
+  }
+
   get fetchUsers(): Observable<User[]> {
+    const httpParams: HttpParams = new HttpParams();
+    httpParams.set('id', '1');
+    httpParams.set('token', this.currentUserValue.token);
     return this.http
-      .get<User[]>('api/user/list')
+      .get<User[]>('api/CAdmin/users', { params: httpParams })
       .pipe(rx.map((users) => users));
   }
 

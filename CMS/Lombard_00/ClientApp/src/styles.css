@@ -23,3 +23,21 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+.lo-warning {
+  background-color: orange;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.lo-info {
+  background-color: lightblue;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.lo-success {
+  background-color: lightgreen;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}

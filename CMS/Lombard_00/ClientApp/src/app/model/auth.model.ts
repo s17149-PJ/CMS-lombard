@@ -4,7 +4,7 @@ export interface User {
   surname?: string;
   password?: string;
   email?: string;
-  roles?: string[];
+  roles?: RoleDefinition[];
   authdata?: string;
   token?: string;
   validUntil?: number;

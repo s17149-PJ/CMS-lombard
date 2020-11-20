@@ -172,7 +172,11 @@ namespace Lombard_00.Controllers
             usr.Surname = edit.TokenUser.Surname;
             usr.Password = edit.Password;
 
-            return db.ModifyTUser(usr, usr);
+            if (!db.ModifyTUser(usr, usr)) {
+                Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return false;
+            }
+            return true;
         }//done
         //?redo to obj?
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------

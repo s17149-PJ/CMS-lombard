@@ -84,7 +84,11 @@ namespace Lombard_00.Controllers
                 return false;
             }//can't delete connection bids
 
-            return db.RemoveTUserItemBid(toDel);
+            if (!db.RemoveTUserItemBid(toDel)) {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/bid/list")]

@@ -58,7 +58,11 @@ namespace Lombard_00.Controllers
             if (toDel.User.Id != usr.Id)
                 return false;//must be owner
 
-            return db.RemoveTItemComment(toDel);
+            if (!db.RemoveTItemComment(toDel)) {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/comment/edit")]
@@ -79,7 +83,11 @@ namespace Lombard_00.Controllers
                 Comment = pack.Comment.Comment
             };
 
-            return db.ModifyTItemComment(com,com);
+            if (!db.ModifyTItemComment(com, com)) {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/comment/list")]

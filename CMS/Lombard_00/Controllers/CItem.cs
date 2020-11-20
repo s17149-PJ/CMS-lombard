@@ -96,7 +96,11 @@ namespace Lombard_00.Controllers
                 return false;
             }//must be owner or admin
 
-            return db.RemoveTItem(toDel);
+            if (!db.RemoveTItem(toDel)) {
+                Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return false;
+            }
+            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/edit")]
@@ -141,7 +145,11 @@ namespace Lombard_00.Controllers
             if (pack.Item.Image != null)
                 ite.Image = pack.Item.Image;
             //return
-            return db.ModifyTItem(ite,ite);
+            if (!db.ModifyTItem(ite, ite)) {
+                Response.StatusCode = (int)HttpStatusCode.Conflict;
+                return false;
+            }
+            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/refresh")]

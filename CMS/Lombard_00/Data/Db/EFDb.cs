@@ -80,6 +80,8 @@ namespace Lombard_00.Data.Db
                 return false;
             //are there duplicates?
             if (CTUserRoles
+                .Include(e => e.Role)
+                .Include(e => e.User)
                 .AsQueryable()
                 .Where(e=> e.Role==asoc.Role && asoc.User == asoc.User)
                 .Any())

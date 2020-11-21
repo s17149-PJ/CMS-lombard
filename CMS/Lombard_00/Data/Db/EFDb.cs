@@ -39,7 +39,7 @@ namespace Lombard_00.Data.Db
             return CTUsers.Find(Id);
         }//done
         public TUser FindUser(string UniqueNick) {
-            return CTUsers.AsQueryable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
+            return CTUsers.AsEnumerable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
         }//done
         public bool ModifyTUser(TUser toBeModified, TUser newData)
         {
@@ -82,7 +82,7 @@ namespace Lombard_00.Data.Db
             if (CTUserRoles
                 .Include(e => e.Role)
                 .Include(e => e.User)
-                .AsQueryable()
+                .AsEnumerable()
                 .Where(e=> e.Role==asoc.Role && asoc.User == asoc.User)
                 .Any())
                 return false;
@@ -100,7 +100,7 @@ namespace Lombard_00.Data.Db
             return CTUserRoles
                 .Include(e => e.Role)
                 .Include(e => e.User)
-                .AsQueryable()
+                .AsEnumerable()
                 .Where(e => e.User == User)
                 .ToList();
         }//done

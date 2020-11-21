@@ -66,56 +66,6 @@ namespace Lombard_00
                         Password = GetNewToken()
                     });
                 }
-
-                var citem = new CItem();
-
-                citem.ItemAdd(1,"0",new TokenItem() { 
-                    Name = "test item 0",
-                    Description = "yes",
-                    StartingBid = new TokenBid()
-                });
-                citem.ItemAdd(1, "0", new TokenItem()
-                {
-                    Name = "test item 1",
-                    Description = "yes",
-                    StartingBid = new TokenBid()
-                });
-                citem.ItemAdd(1, "0", new TokenItem()
-                {
-                    Name = "test item 2",
-                    Description = "yes",
-                    StartingBid = new TokenBid()
-                });
-
-                var ccoment = new CComent();
-                
-                ccoment.CommentCreate(1,"0", new TokenComment() 
-                {
-                    User = new TokenUser() { Id = 1 },
-                    Item = new TokenItem() { Id = 1 },
-                    Comment = "example 0"
-                });
-                ccoment.CommentCreate(1, "0", new TokenComment()
-                {
-                    User = new TokenUser() { Id = 1 },
-                    Item = new TokenItem() { Id = 1 },
-                    Comment = "example 1"
-                });
-
-                var cbid = new CBid();
-
-                cbid.BidCreate(1, "0", new TokenBid()
-                {
-                    User = new TokenUser() { Id = 1 },
-                    Item = new TokenItem() { Id = 1 },
-                    Money = 10
-                });
-                cbid.BidCreate(1, "0", new TokenBid()
-                {
-                    User = new TokenUser() { Id = 1 },
-                    Item = new TokenItem() { Id = 1 },
-                    Money = 20
-                });
             }
             int x = 2;
             //tests

@@ -17,5 +17,8 @@ namespace Lombard_00.Data.Tables
 
         public DateTime CreatedOn { get; set; }
         public decimal Money { get; set; }
+
+        //optional - rating
+        public bool IsRating { get; set; }
     }//done I think. dunno.
 }

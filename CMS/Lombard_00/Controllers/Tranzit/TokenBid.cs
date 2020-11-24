@@ -17,6 +17,9 @@ namespace Lombard_00.Controllers.Tranzit
             User = TokenUser.CallByToken(bid.User);
             CreatedOn = bid.CreatedOn;
             Money = bid.Money;
+
+            //optional - rating
+            IsRating = bid.IsRating;
         }//done
         public static TokenBid CallByTokenItem(TUserItemBid bid)
         {
@@ -35,5 +38,8 @@ namespace Lombard_00.Controllers.Tranzit
         public TokenUser User { get; set; }
         public DateTime CreatedOn { get; set; }
         public decimal Money { get; set; }
+
+        //optional - rating
+        public bool IsRating { get; set; }
     }
 }

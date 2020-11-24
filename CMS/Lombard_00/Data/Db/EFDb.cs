@@ -284,22 +284,50 @@ namespace Lombard_00.Data.Db
             bid.Item = ite;
 
             var value = CTUserItemBids.Add(bid);
+
+            if (bid.IsRating) {
+                bid.Item.RatingAvarage =
+                    ((bid.Item.RatingAvarage * bid.Item.NumberOfRatings)//get original value
+                    + bid.Money) //alter
+                    / (bid.Item.NumberOfRatings + 1);//create new one
+                bid.Item.NumberOfRatings = bid.Item.NumberOfRatings + 1;//update amout
+            }
+
             SaveChanges();
 
             return value;
         }//done
         public bool RemoveTUserItemBid(TUserItemBid bid) 
         {
-            var usr = FindUser(bid.User.Id);
+            var bidfound = FindTUserItemBid(bid.Id);
+            var usr = FindUser(bidfound.User.Id);
             if (usr == null)
                 return false;
-            bid.User = usr;
-            var ite = FindTItem(bid.Item.Id);
+            bidfound.User = usr;
+            var ite = FindTItem(bidfound.Item.Id);
             if (ite == null)
                 return false;
-            bid.Item = ite;
+            bidfound.Item = ite;
 
-            CTUserItemBids.Remove(bid);
+            CTUserItemBids.Remove(bidfound);
+
+            if (bidfound.IsRating)
+            {
+                if (bidfound.Item.NumberOfRatings != 1)
+                {
+                    bidfound.Item.RatingAvarage =
+                        ((bidfound.Item.RatingAvarage * bidfound.Item.NumberOfRatings)//get original value
+                        - bidfound.Money) //alter
+                        / (bidfound.Item.NumberOfRatings - 1);//create new one
+                    bidfound.Item.NumberOfRatings = bidfound.Item.NumberOfRatings - 1;//update amout
+                }
+                else 
+                {
+                    bidfound.Item.RatingAvarage = 0;
+                    bidfound.Item.NumberOfRatings = 0;
+                }
+            }
+
             SaveChanges();
 
             return true;

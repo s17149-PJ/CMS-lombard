@@ -18,6 +18,10 @@ namespace Lombard_00.Controllers.Tranzit
             Image = item.Image;
             StartingBid = TokenBid.CallByTokenItem(item.StartingBid);
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid);
+
+            //optional - rating
+            RatingAvarage = item.RatingAvarage;
+            NumberOfRatings = item.NumberOfRatings;
         }//done
 
         public int Id { get; set; }
@@ -27,5 +31,9 @@ namespace Lombard_00.Controllers.Tranzit
         public byte[] Image { get; set; }
         public TokenBid StartingBid { get; set; }
         public TokenBid WinningBid { get; set; }
+
+        //optional - rating
+        public Decimal RatingAvarage { get; set; }
+        public int NumberOfRatings { get; set; }
     }
 }

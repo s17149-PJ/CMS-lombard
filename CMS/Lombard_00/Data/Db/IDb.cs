@@ -95,11 +95,14 @@ namespace Lombard_00.Data.Db
         public TTag AddTag(TTag tag);
         public bool SoftRemoveTag(TTag tag);
         public bool HardRemoveTag(TTag tag);
+        public TTag FindTag(int Id);
+        public TTag HardFindTag(TTag tag);
+        public List<TTag> FindTags(TItem item);
 
         public List<TItemTag> TItemsTags{ get; }
         public TItemTag AddItemTag(TItemTag itemTag);
         public bool RemoveItemTag(TItemTag itemTag);
-        
+        public TItemTag FindItemTag(int Id);
         /*
          * CleanUp -> archive old offers
          * VoidOut -> empty db. IMPORTANT: it's broken in EF so do *NOT* use it

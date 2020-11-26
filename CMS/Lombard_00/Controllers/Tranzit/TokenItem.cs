@@ -1,4 +1,5 @@
-﻿using Lombard_00.Data.Tables;
+﻿using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Lombard_00.Controllers.Tranzit
             Image = item.Image;
             StartingBid = TokenBid.CallByTokenItem(item.StartingBid);
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid);
+            Tags = IDb.DbInstance.FindTags(item);
 
             //optional - rating
             RatingAvarage = item.RatingAvarage;
@@ -31,7 +33,8 @@ namespace Lombard_00.Controllers.Tranzit
         public byte[] Image { get; set; }
         public TokenBid StartingBid { get; set; }
         public TokenBid WinningBid { get; set; }
-
+        //tag system
+        public IEnumerable<TTag> Tags { get; set; }
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }

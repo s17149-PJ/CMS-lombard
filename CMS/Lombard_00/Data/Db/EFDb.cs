@@ -461,6 +461,17 @@ namespace Lombard_00.Data.Db
 
             return value;
         }
+        public List<TTag> FindTags(TItem item) 
+        {
+            var found = FindTItem(item.Id);
+            return CTItemTag
+                    .Include(e => e.Item)
+                    .Include(e => e.Tag)
+                    .Where(e => e.Item == found)
+                    .Select(e => e.Tag)
+                    .Distinct()//just to be sure
+                    .ToList();
+        }//done
 
         public List<TItemTag> TItemsTags { 
             get 

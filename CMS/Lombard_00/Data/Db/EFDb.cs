@@ -65,7 +65,7 @@ namespace Lombard_00.Data.Db
             {
                 return CTUserRoles.Include(e=>e.Role).Include(e=>e.User).ToList();
             }
-        }
+        }//done
         public bool AddTUserRole(TUserRole asoc)
         {
             //are incoming values nulls?
@@ -118,7 +118,7 @@ namespace Lombard_00.Data.Db
             {
                 return CTRoles.ToList();
             }
-        }
+        }//done
         public bool AddTRole(TRole role)
         {
             //name must be unique
@@ -153,7 +153,7 @@ namespace Lombard_00.Data.Db
             {
                 return CTItems.Include(e=>e.StartingBid).Include(e=>e.WinningBid).ToList();
             }
-        }
+        }//done
         public TItem AddTItem(TItem item)
         {
             var value = CTItems.Add(item);
@@ -204,11 +204,64 @@ namespace Lombard_00.Data.Db
         public TItem FindTItem(int Id) {
             return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Where(e=>e.Id==Id).FirstOrDefault();
         }//done
+
+        /*IMPORTANT: this function have a nice O(n^2) cost so do NOT abuse it
+         * at best use it to with few tags or uncommon tags. otherwise the serwer will die.
+         */
+        public List<TItem> FindTItems(List<TTag> tags) {
+            //find valid tags at all cost.
+            var foundTags = tags.Select(e => HardFindTag(e)).Where(e=>e!=null).ToList();
+            //if found nothing ret error
+            if (foundTags.Count() == 0)
+                return null;
+
+            var foundItems = CTItemTag
+                .Include(e => e.Tag)
+                .Include(e => e.Item)
+                .Where(e => e.Tag == foundTags.ElementAt(0))
+                .Select(e => e.Item);//those are initially found items. now on to filtering them out
+
+            foundTags.RemoveAt(0);//remove already found tag
+
+            if (foundTags.Count() != 0)//if there are still tags to process
+                foundItems =
+                    foundItems.Where(item =>//for each item
+                    /*(to self) all right here is the idea:
+                     * we got this fancy list of items that HAVE ONE required tag.
+                     * now we got to get rid of those that DO NOT have TItemTag with EVERY other tag that is on
+                     * list foundTags. we do it in a following way:
+                     * 
+                     * we ask found tags if it has ANY tag that:
+                     * DOES NOT have coressponding TItemTag that:
+                     * -> HAVE TItem the same as looked up item
+                     * -> HAVE TTag the sane as looked up tag
+                     */
+                        foundTags//get required tags
+                            .Where(tag => // and find those
+
+                                   !CTItemTag//that DO NOT have coresponding TItemTag 
+                                       .Include(e => e.Tag)
+                                       .Include(e => e.Item)
+                                       .Where(e//that HAVE this item AND this tag
+                                           => (e.Item == item
+                                            && e.Tag == tag))
+                                       .Any())//we ask if ANY of CTItemTag does meet those conditions NOT
+                                              //eg. if ALL of those NOT meet those conditions
+
+                            .Any()//ANY that does NOT have proper TItemTag.
+                    );//what remains are items that EACH have ALL of req tags.
+
+            /*i have no slightest idea what i have just wrote. 
+             * it will go plaid the moment you will try to run it, probably
+             */
+
+            return foundItems.ToList();//return list
+        }//dunno? mabe? mabe not? who knows. <=======================
         public bool TryToFinishDeal(TItem item) 
         {
 
             return false;
-        }
+        }//NOPE <=======================
 
         public List<TItemComment> TItemComments
         {
@@ -216,7 +269,7 @@ namespace Lombard_00.Data.Db
             {
                 return CTItemComments.Include(e => e.Item).Include(e => e.User).ToList();
             }
-        }
+        }//done
         public TItemComment AddTItemComment(TItemComment comment)
         {
             var usr = FindUser(comment.User.Id);
@@ -263,7 +316,7 @@ namespace Lombard_00.Data.Db
         }//done
         public TItemComment FindTItemComment(int Id) {
             return CTItemComments.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
-        }
+        }//done
 
         public List<TUserItemBid> TUserItemBids
         {
@@ -271,7 +324,7 @@ namespace Lombard_00.Data.Db
             {
                 return CTUserItemBids.Include(e => e.Item).Include(e => e.User).ToList();
             }
-        }
+        }//done
         public TUserItemBid AddTUserItemBid(TUserItemBid bid) 
         {
             var usr = FindUser(bid.User.Id);
@@ -334,8 +387,129 @@ namespace Lombard_00.Data.Db
         }//done
         public TUserItemBid FindTUserItemBid(int Id) {
             return CTUserItemBids.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
+        }//done
+
+        public List<TTag> TTags {
+            get 
+            {
+                return CTTag.ToList();
+            } 
+        }//done
+        public TTag AddTag(TTag tag) 
+        {
+            var value = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
+            if (value != null)
+                return value;
+
+            value = CTTag.Add(tag);
+            SaveChanges();
+
+            return value;
+        }//done
+        public bool SoftRemoveTag(TTag tag) 
+        {
+            var foundTag = FindTag(tag.Id);
+
+            if (foundTag == null)
+                foundTag = CTTag.Where(e=>e.Name==tag.Name).FirstOrDefault();
+
+            if (foundTag == null)
+                return false;
+
+            if (CTItemTag.Include(e => e.Tag).Where(e => e.Tag == foundTag).Any())
+                return false;
+
+            CTTag.Remove(foundTag);
+            SaveChanges();
+
+            return true;
+        }//done
+        public bool HardRemoveTag(TTag tag)
+        {
+            var foundTag = FindTag(tag.Id);
+
+            if (foundTag == null)
+                foundTag = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
+
+            if (foundTag == null)
+                return false;
+
+            var toDel = CTItemTag.Include(e => e.Tag).Where(e => e.Tag == foundTag).ToList();
+            toDel.ForEach(e => RemoveItemTag(e));
+
+            CTTag.Remove(foundTag);
+            SaveChanges();
+
+            return true;
+        }//done
+        public TTag FindTag(int Id) {
+            return CTTag.Find(Id);
+        }//done
+        public TTag HardFindTag(TTag tag) {
+            var value = FindTag(tag.Id);
+            if (value == null)
+                value = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
+
+            return value;
         }
 
+        public List<TItemTag> TItemsTags { 
+            get 
+            {
+                return CTItemTag
+                    .Include(e => e.Item)
+                    .Include(e => e.Tag)
+                    .ToList();
+            } 
+        }//done
+        public TItemTag AddItemTag(TItemTag itemTag)
+        {
+            var foundTag = FindTag(itemTag.Tag.Id);
+            var foundItem = FindTItem(itemTag.Item.Id);
+
+            if (foundTag == null)
+                foundTag = AddTag(itemTag.Tag);
+
+            if (CTItemTag
+                .Include(e => e.Item)
+                .Include(e => e.Tag)
+                .Where(e => e.Item == foundItem)
+                .Where(e => e.Tag == foundTag)
+                .Any())
+                return null;
+
+
+            var value = CTItemTag.Add(
+                new TItemTag()
+                {
+                    Item = foundItem,
+                    Tag = foundTag
+                });
+            SaveChanges();
+
+            return value;
+        }//done
+        public bool RemoveItemTag(TItemTag itemTag) 
+        {
+            var toDel = FindItemTag(itemTag.Id);
+            if (toDel == null)
+                return false;
+
+            CTItemTag.Remove(toDel);
+
+            return true;
+        }//done
+        public TItemTag FindItemTag(int Id)
+        {
+            return CTItemTag
+                .Include(e => e.Item)
+                .Include(e => e.Tag)
+                .Where(e => e.Id == Id)
+                .FirstOrDefault();
+        }//done
+
+
+        //chk func ---------------------------------------------------------------------------------------------------
         private DateTime LastChek = DateTime.Now;//start class with default value now
         public void CleanUp() 
         {
@@ -379,10 +553,13 @@ namespace Lombard_00.Data.Db
         public DbSet<TUser> CTUsers { get; set; }
         public DbSet<TUserRole> CTUserRoles { get; set; }
         public DbSet<TRole> CTRoles { get; set; }
+
         public DbSet<TItem> CTItems { get; set; }
         public DbSet<TItemComment> CTItemComments { get; set; }
         public DbSet<TUserItemBid> CTUserItemBids { get; set; }
 
+        public DbSet<TTag> CTTag { get; set; }
+        public DbSet<TItemTag> CTItemTag { get; set; }
         /*
          * ma poważne wątpliwości co do autonumeracji EF. co więcej sporo rzeczy wymaga JOIN po stronie kontrollerów.
          * można by to zoptymalizować. kiedyś. na razie jako POC wystarczy.

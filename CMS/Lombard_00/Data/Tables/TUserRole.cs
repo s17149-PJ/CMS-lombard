@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Tables
 {
+    [Table("TUserRole")]
     public class TUserRole
     {
         //stupid but works. 

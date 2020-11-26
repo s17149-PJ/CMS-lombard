@@ -222,41 +222,50 @@ namespace Lombard_00.Data.Db
                 .Select(e => e.Item);//those are initially found items. now on to filtering them out
 
             foundTags.RemoveAt(0);//remove already found tag
+            
+            var task = Task.Run(() => {
+                if (foundTags.Count() != 0)//if there are still tags to process
+                    foundItems =
+                        foundItems.Where(item =>//for each item
+                            /*(to self) all right here is the idea:
+                             * we got this fancy list of items that HAVE ONE required tag.
+                             * now we got to get rid of those that DO NOT have TItemTag with EVERY other tag that is on
+                             * list foundTags. we do it in a following way:
+                             * 
+                             * we ask found tags if it has ANY tag that:
+                             * DOES NOT have coressponding TItemTag that:
+                             * -> HAVE TItem the same as looked up item
+                             * -> HAVE TTag the sane as looked up tag
+                             */
+                            foundTags//get required tags
+                                .Where(tag => // and find those
 
-            if (foundTags.Count() != 0)//if there are still tags to process
-                foundItems =
-                    foundItems.Where(item =>//for each item
-                    /*(to self) all right here is the idea:
-                     * we got this fancy list of items that HAVE ONE required tag.
-                     * now we got to get rid of those that DO NOT have TItemTag with EVERY other tag that is on
-                     * list foundTags. we do it in a following way:
-                     * 
-                     * we ask found tags if it has ANY tag that:
-                     * DOES NOT have coressponding TItemTag that:
-                     * -> HAVE TItem the same as looked up item
-                     * -> HAVE TTag the sane as looked up tag
-                     */
-                        foundTags//get required tags
-                            .Where(tag => // and find those
+                                       !CTItemTag//that DO NOT have coresponding TItemTag 
+                                           .Include(e => e.Tag)
+                                           .Include(e => e.Item)
+                                           .Where(e//that HAVE this item AND this tag
+                                               => (e.Item == item
+                                                && e.Tag == tag))
+                                           .Any())//we ask if ANY of CTItemTag does meet those conditions NOT
+                                                  //eg. if ALL of those NOT meet those conditions
 
-                                   !CTItemTag//that DO NOT have coresponding TItemTag 
-                                       .Include(e => e.Tag)
-                                       .Include(e => e.Item)
-                                       .Where(e//that HAVE this item AND this tag
-                                           => (e.Item == item
-                                            && e.Tag == tag))
-                                       .Any())//we ask if ANY of CTItemTag does meet those conditions NOT
-                                              //eg. if ALL of those NOT meet those conditions
+                                .Any()//ANY that does NOT have proper TItemTag.
+                        );//what remains are items that EACH have ALL of req tags.
 
-                            .Any()//ANY that does NOT have proper TItemTag.
-                    );//what remains are items that EACH have ALL of req tags.
+                /*i have no slightest idea what I have just wrote. 
+                 *it will go plaid agaist the wall the moment you will try to run it, probably
+                 */
+            });
 
-            /*i have no slightest idea what i have just wrote. 
-             * it will go plaid the moment you will try to run it, probably
-             */
-
-            return foundItems.ToList();//return list
+            //kill if it lag serwer for more than: x
+            if (task.Wait(TimeSpan.FromSeconds(5)))
+                return foundItems.ToList();//return list
+            else
+                return foundItems.ToList();//return list
+            //also i copypasted it (task idea) from stack so god know what it actually does
         }//dunno? mabe? mabe not? who knows. <=======================
+
+
         public bool TryToFinishDeal(TItem item) 
         {
 

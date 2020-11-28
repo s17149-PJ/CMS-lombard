@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Tables
 {
-    [Table("TComment")]
-    public class TItemComment
+    [Table("TItemTag")]
+    public class TItemTag
     {
         [Key]
         public int Id { get; set; }
+        public TTag Tag { get; set; }
         public TItem Item { get; set; }
-        public TUser User { get; set; }
-        [MaxLength(512)]
-        public string Comment { get; set; }
-    }//done
+    }
 }

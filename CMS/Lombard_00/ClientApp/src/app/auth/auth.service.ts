@@ -60,7 +60,7 @@ export class AuthService {
     httpParams.set('id', '1');
     httpParams.set('token', this.currentUserValue.token);
     return this.http
-      .get<User[]>('api/CAdmin/users', { params: httpParams })
+      .get<User[]>('api/admin/users', { params: httpParams })
       .pipe(rx.map((users) => users));
   }
 

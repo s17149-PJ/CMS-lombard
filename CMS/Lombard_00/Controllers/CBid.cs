@@ -38,11 +38,12 @@ namespace Lombard_00.Controllers
             }
             //try to add item
             var value = db.AddTUserItemBid(new TUserItemBid()
-            { 
+            {
                 Item = new TItem() { Id = pack.Bid.Item.Id },
                 User = new TUser() { Id = pack.Bid.User.Id },
                 CreatedOn = DateTime.Now,
-                Money = pack.Bid.Money
+                Money = pack.Bid.Money,
+                IsRating = pack.Bid.IsRating
             });
             //sucsess?
             if (value == null)

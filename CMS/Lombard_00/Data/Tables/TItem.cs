@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Tables
 {
+    [Table("TItem")]
     public class TItem
     {
         [Key]
@@ -20,5 +22,9 @@ namespace Lombard_00.Data.Tables
 
         public TUserItemBid StartingBid { get; set; }//also holds ref to prev owner
         public TUserItemBid WinningBid { get; set; }//holds ref to current owner
+
+        //optional - rating
+        public Decimal RatingAvarage { get; set; }
+        public int NumberOfRatings { get; set; }
     }//done somethings. dunno how much do we want really
 }

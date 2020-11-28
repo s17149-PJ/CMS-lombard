@@ -64,6 +64,7 @@ namespace Lombard_00.Data.Db
         public bool RemoveTItem(TItem item);
         public bool ModifyTItem(TItem toBeModified, TItem newData);
         public TItem FindTItem(int Id);
+        public List<TItem> FindTItems(List<TTag> tags);
         public bool TryToFinishDeal(TItem item);
 
         /*
@@ -85,7 +86,23 @@ namespace Lombard_00.Data.Db
         public TUserItemBid AddTUserItemBid(TUserItemBid bid);
         public bool RemoveTUserItemBid(TUserItemBid bid);
         public TUserItemBid FindTUserItemBid(int Id);
+        
+        /*
+         * IMPORTANT: Tags add automatically so don't bother.
+         * 
+         */
+        public List<TTag> TTags { get; }
+        public TTag AddTag(TTag tag);
+        public bool SoftRemoveTag(TTag tag);
+        public bool HardRemoveTag(TTag tag);
+        public TTag FindTag(int Id);
+        public TTag HardFindTag(TTag tag);
+        public List<TTag> FindTags(TItem item);
 
+        public List<TItemTag> TItemsTags{ get; }
+        public TItemTag AddItemTag(TItemTag itemTag);
+        public bool RemoveItemTag(TItemTag itemTag);
+        public TItemTag FindItemTag(int Id);
         /*
          * CleanUp -> archive old offers
          * VoidOut -> empty db. IMPORTANT: it's broken in EF so do *NOT* use it

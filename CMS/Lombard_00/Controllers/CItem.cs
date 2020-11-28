@@ -182,5 +182,46 @@ namespace Lombard_00.Controllers
 
             return (from item in db.TItems select new TokenItem(item)).ToList();
         }//done
+
+        public class LocalItemFindClass {
+            public TokenUser User { get; set; }
+            public List<String> Tags { get; set; }
+        }
+        [Route("api/item/find")]
+        [HttpPost]
+        public List<TokenItem> ItemFind(LocalItemFindClass pack)
+        {
+            IDb db = IDb.DbInstance;
+            var usr = db.FindUser(pack.User.Id);
+            if (TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+
+            return db
+                .FindTItems(
+                    pack
+                        .Tags
+                        .Select(e=>new TTag() {Id = -1, Name = e })
+                        .ToList())
+                .Select(e=>new TokenItem(e))
+                .ToList();
+        }//done
+
+        [Route("api/item/tags")]
+        [HttpPost]
+        public List<TTag> TagList(TokenUser user)
+        {
+            IDb db = IDb.DbInstance;
+            var usr = db.FindUser(user.Id);
+            if (TokenUser.IsUsrStillValid(usr, user.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+
+            return db.TTags;
+        }//done
     }
 }

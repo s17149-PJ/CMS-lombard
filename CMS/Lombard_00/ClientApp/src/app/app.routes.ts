@@ -1,14 +1,13 @@
 import { Route } from '@angular/router';
-import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admin-panel-dashboard.component';
-import { AdminPanelUsersComponent } from './admin/admin-panel-users/admin-panel-users.component';
-import { AdminPanelComponent } from './admin/admin-panel.component';
+import { AdminPanelDashboardComponent } from './sec-admin/admin-panel-dashboard/admin-panel-dashboard.component';
+import { AdminPanelUsersComponent } from './sec-admin/admin-panel-users/admin-panel-users.component';
+import { AdminPanelComponent } from './sec-admin/admin-panel.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthorizationComponent } from './auth/authorization/authorization.component';
 import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { HomeComponent } from './home/home.component';
-import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
-import { LombardComponent } from './lombard/lombard.component';
+import { LombardDetailsComponent } from './sec-lombard/lombard-details/lombard-details.component';
+import { LombardComponent } from './sec-lombard/lombard.component';
 
 export const routes: Route[] = [
   {
@@ -20,11 +19,6 @@ export const routes: Route[] = [
   {
     path: 'counter',
     component: CounterComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'fetch-data',
-    component: FetchDataComponent,
     canActivate: [AuthGuard],
   },
   { path: 'login', component: AuthorizationComponent },

@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import * as rx from 'rxjs/operators';
 import { AuthService } from '../auth.service';
-import { isNil } from 'lodash';
+import { isNil } from 'src/app/sec-shared-nav-menu/node_modules/lodash';
 
 @Component({
   selector: 'app-authorization',

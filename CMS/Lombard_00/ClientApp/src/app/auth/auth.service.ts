@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../model/auth.model';
 import * as rx from 'rxjs/operators';
-import { trim } from 'lodash';
+import { trim } from 'src/app/sec-shared-nav-menu/node_modules/lodash';
 
 @Injectable({
   providedIn: 'root',

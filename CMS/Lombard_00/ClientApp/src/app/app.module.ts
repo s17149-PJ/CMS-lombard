@@ -1,4 +1,4 @@
-import { UserPanelComponent } from './user/user-panel.component';
+import { UserPanelComponent } from './sec-user/user-panel.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,21 +24,20 @@ import {
   MatToolbarModule,
 } from '@angular/material';
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { NavMenuComponent } from './sec-shared-nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorInterceptor } from './auth/auth-error.interceptor';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { AuthorizationComponent } from './auth/authorization/authorization.component';
 import { AuthGuard } from './auth/auth.guard';
 import { routes } from './app.routes';
-import { AdminPanelComponent } from './admin/admin-panel.component';
-import { AdminPanelUsersComponent } from './admin/admin-panel-users/admin-panel-users.component';
-import { LombardComponent } from './lombard/lombard.component';
-import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admin-panel-dashboard.component';
-import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
+import { AdminPanelComponent } from './sec-admin/admin-panel.component';
+import { AdminPanelUsersComponent } from './sec-admin/admin-panel-users/admin-panel-users.component';
+import { LombardComponent } from './sec-lombard/lombard.component';
+import { AdminPanelDashboardComponent } from './sec-admin/admin-panel-dashboard/admin-panel-dashboard.component';
+import { LombardDetailsComponent } from './sec-lombard/lombard-details/lombard-details.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +46,6 @@ import { LombardDetailsComponent } from './lombard/lombard-details/lombard-detai
     NavMenuComponent,
     HomeComponent,
     CounterComponent,
-    FetchDataComponent,
     AdminPanelComponent,
     AdminPanelUsersComponent,
     AdminPanelDashboardComponent,

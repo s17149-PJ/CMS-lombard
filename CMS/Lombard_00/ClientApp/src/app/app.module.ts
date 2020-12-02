@@ -24,7 +24,7 @@ import {
   MatToolbarModule,
 } from '@angular/material';
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './sec-shared-nav-menu/nav-menu.component';
+import { NavMenuComponent } from './sec-nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,9 +35,9 @@ import { AuthGuard } from './auth/auth.guard';
 import { routes } from './app.routes';
 import { AdminPanelComponent } from './sec-admin/admin-panel.component';
 import { AdminPanelUsersComponent } from './sec-admin/admin-panel-users/admin-panel-users.component';
-import { LombardComponent } from './sec-lombard/lombard.component';
+import { LombardComponent } from './lombard/lombard.component';
 import { AdminPanelDashboardComponent } from './sec-admin/admin-panel-dashboard/admin-panel-dashboard.component';
-import { LombardDetailsComponent } from './sec-lombard/lombard-details/lombard-details.component';
+import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
 
 @NgModule({
   declarations: [

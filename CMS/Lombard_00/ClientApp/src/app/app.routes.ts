@@ -6,8 +6,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthorizationComponent } from './auth/authorization/authorization.component';
 import { CounterComponent } from './counter/counter.component';
 import { HomeComponent } from './home/home.component';
-import { LombardDetailsComponent } from './sec-lombard/lombard-details/lombard-details.component';
-import { LombardComponent } from './sec-lombard/lombard.component';
+import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
+import { LombardComponent } from './lombard/lombard.component';
 
 export const routes: Route[] = [
   {

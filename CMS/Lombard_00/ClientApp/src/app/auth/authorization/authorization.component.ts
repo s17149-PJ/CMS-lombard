@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import * as rx from 'rxjs/operators';
 import { AuthService } from '../auth.service';
-import { isNil } from 'src/app/sec-shared-nav-menu/node_modules/lodash';
+import { isNullOrUndefined } from 'util';
 
 @Component({
   selector: 'app-authorization',
@@ -72,7 +72,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
     this._subscription.add(
       this.auth.login(loginUser.username, loginUser.password).subscribe(
         (user) => {
-          if (!isNil(user)) {
+          if (!isNullOrUndefined(user)) {
             this.router.navigate(['/']);
           } else {
             this.error = 'Login failed!';
@@ -103,7 +103,7 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
       this.auth.register(registerUser.username, registerUser.name,
         registerUser.surname, registerUser.password).subscribe(
           (user) => {
-            if (!isNil(user)) {
+            if (!isNullOrUndefined(user)) {
               this.router.navigate(['/']);
             } else {
               this.error = 'Register failed!';

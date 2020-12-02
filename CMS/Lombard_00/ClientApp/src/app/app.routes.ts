@@ -7,6 +7,7 @@ import { AuthorizationComponent } from './auth/authorization/authorization.compo
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { HomeComponent } from './home/home.component';
+import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
 import { LombardComponent } from './lombard/lombard.component';
 
 export const routes: Route[] = [
@@ -14,7 +15,7 @@ export const routes: Route[] = [
     path: '',
     component: HomeComponent,
     pathMatch: 'full',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
   },
   {
     path: 'counter',
@@ -39,5 +40,8 @@ export const routes: Route[] = [
     path: 'lombard',
     component: LombardComponent,
     canActivate: [AuthGuard],
+    children: [
+      { path: 'details', component: LombardDetailsComponent },
+    ],
   },
 ];

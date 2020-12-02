@@ -57,7 +57,8 @@ export class AuthService {
 
   get fetchUsers(): Observable<User[]> {
     const httpParams: HttpParams = new HttpParams();
-    httpParams.set('id', '1');
+    httpParams.set('id', this.currentUserValue.id.toString());
+    httpParams.set('name', this.currentUserValue.name);
     httpParams.set('token', this.currentUserValue.token);
     return this.http
       .get<User[]>('api/admin/users', { params: httpParams })

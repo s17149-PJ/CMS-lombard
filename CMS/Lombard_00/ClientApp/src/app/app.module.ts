@@ -1,13 +1,16 @@
+import { UserPanelComponent } from './user/user-panel.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {
+  MatAccordion,
   MatButtonModule,
   MatCardModule,
   MatChipsModule,
   MatDividerModule,
+  MatExpansionModule,
   MatFormFieldModule,
   MatGridListModule,
   MatIconModule,
@@ -35,6 +38,7 @@ import { AdminPanelComponent } from './admin/admin-panel.component';
 import { AdminPanelUsersComponent } from './admin/admin-panel-users/admin-panel-users.component';
 import { LombardComponent } from './lombard/lombard.component';
 import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admin-panel-dashboard.component';
+import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +52,8 @@ import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admi
     AdminPanelUsersComponent,
     AdminPanelDashboardComponent,
     LombardComponent,
+    UserPanelComponent,
+    LombardDetailsComponent,
   ],
   imports: [
     ReactiveFormsModule,
@@ -55,6 +61,7 @@ import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admi
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    MatExpansionModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
@@ -80,4 +87,4 @@ import { AdminPanelDashboardComponent } from './admin/admin-panel-dashboard/admi
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }

@@ -39,7 +39,7 @@
               {{currentUserName | async}}
             </button>
             <mat-menu #userMenu="matMenu">
-              <button mat-menu-item>
+              <button mat-menu-item (click)="myData()">
                 Moje dane
               </button>
               <button mat-menu-item>

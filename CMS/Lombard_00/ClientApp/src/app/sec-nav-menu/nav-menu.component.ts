@@ -38,6 +38,10 @@ export class NavMenuComponent implements OnInit {
     this.isExpanded = !this.isExpanded;
   }
 
+  myData() {
+    this.router.navigate(['/userPanel']);
+  }
+
   logout() {
     this.auth.logout();
     this.router.navigate(['/login']);

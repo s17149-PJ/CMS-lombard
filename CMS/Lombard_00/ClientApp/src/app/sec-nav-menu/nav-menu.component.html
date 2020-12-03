@@ -1,7 +1,12 @@
 <header>
-  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+  <mdb-navbar
+    SideClass="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark unique-color border-bottom box-shadow mb-3">
     <div class="container">
-      <a class="navbar-brand" [routerLink]="['/lombard']">Lombard</a>
+      <mdb-navbar-brand>
+        <a class="navbar-brand" href="/lombard">
+          <img src="./../../assets/logo_lombard.jpg" height="80" alt="">
+        </a>
+      </mdb-navbar-brand>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
         aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
         <span class="navbar-toggler-icon"></span>
@@ -10,15 +15,15 @@
         <ul *ngIf="currentUser | async" class="navbar-nav flex-grow">
 
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/lombard']">O nas</a>
+            <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard']">O nas</a>
           </li>
 
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/lombard']">Przeglądaj</a>
+            <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard']">Przeglądaj</a>
           </li>
 
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/lombard']">Wystaw</a>
+            <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard']">Wystaw</a>
           </li>
           <mat-menu #adminMenu="matMenu">
             <button mat-menu-item [routerLink]="['admin/panel']">
@@ -29,7 +34,7 @@
             </button>
           </mat-menu>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <button mat-icon-button class="nav-link text-dark" [matMenuTriggerFor]="userMenu">
+            <button mat-icon-button class="nav-link waves-light" mdbWavesEffect [matMenuTriggerFor]="userMenu">
               <mat-icon>person</mat-icon>
               {{currentUserName | async}}
             </button>
@@ -51,10 +56,10 @@
         </ul>
         <ul *ngIf="!(currentUser | async)" class="navbar-nav flex-grow">
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/login']">Login</a>
+            <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/login']">Login</a>
           </li>
         </ul>
       </div>
     </div>
-  </nav>
+  </mdb-navbar>
 </header>

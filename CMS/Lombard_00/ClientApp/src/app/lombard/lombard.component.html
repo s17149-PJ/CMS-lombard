@@ -6,18 +6,16 @@
   </mat-chip-list>
 </mat-card>
 <div class="grid-container">
-  <mat-card class="products" *ngFor="let item of lombardProducts | async">
-    <mat-card-title>{{item.name}}</mat-card-title>
-    <div class="container">
-      <div class="child">
-        <p>Added: {{item.publishDate | date}}</p>
-        <p>Expires: {{item.expirationDate | date}}</p>
-      </div>
-      <div class="child">
-        <p>Current bid: 15zł</p>
-        <input matInput placeholder="min. 20zł" type="number" name="bidInput">
-        <button mat-raised-button color="primary" (click)="bid(item)">Bid</button>
-      </div>
-    </div>
-  </mat-card>
+  <mdb-card class="products" *ngFor="let item of lombardProducts | async">
+    <mdb-card-img src="https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(97).jpg" alt="Card image cap">
+    </mdb-card-img>
+    <mdb-card-body>
+      <mdb-card-title>
+        <h4>{{item.name}}</h4>
+      </mdb-card-title>
+      <mdb-card-text> Expires: {{item.expirationDate | date}}
+      </mdb-card-text>
+      <a href="#" mdbBtn color="primary" mdbWavesEffect>Bid</a>
+    </mdb-card-body>
+  </mdb-card>
 </div>

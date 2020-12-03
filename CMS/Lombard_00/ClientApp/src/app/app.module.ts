@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import {
-  MatAccordion,
   MatButtonModule,
   MatCardModule,
   MatChipsModule,
@@ -38,6 +37,10 @@ import { AdminPanelUsersComponent } from './sec-admin/admin-panel-users/admin-pa
 import { LombardComponent } from './lombard/lombard.component';
 import { AdminPanelDashboardComponent } from './sec-admin/admin-panel-dashboard/admin-panel-dashboard.component';
 import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StatsCardComponent } from './sec-admin/common/stats-card/stats-card.component';
+import { StatsCard2Component } from './sec-admin/common/stats-card2/stats-card2.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,8 @@ import { LombardDetailsComponent } from './lombard/lombard-details/lombard-detai
     LombardComponent,
     UserPanelComponent,
     LombardDetailsComponent,
+    StatsCardComponent,
+    StatsCard2Component,
   ],
   imports: [
     ReactiveFormsModule,
@@ -77,6 +82,8 @@ import { LombardDetailsComponent } from './lombard/lombard-details/lombard-detai
     MatTableModule,
     RouterModule.forRoot(routes),
     NoopAnimationsModule,
+    MDBBootstrapModule.forRoot(),
+    BrowserAnimationsModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

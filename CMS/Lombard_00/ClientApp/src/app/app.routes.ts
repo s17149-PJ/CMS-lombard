@@ -8,6 +8,7 @@ import { CounterComponent } from './counter/counter.component';
 import { HomeComponent } from './home/home.component';
 import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
 import { LombardComponent } from './lombard/lombard.component';
+import { UserPanelComponent } from './sec-user/user-panel.component';
 
 export const routes: Route[] = [
   {
@@ -22,6 +23,7 @@ export const routes: Route[] = [
     canActivate: [AuthGuard],
   },
   { path: 'login', component: AuthorizationComponent },
+  { path: 'userPanel', component: UserPanelComponent },
   {
     path: 'admin',
     canActivate: [AuthGuard],

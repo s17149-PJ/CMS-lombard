@@ -14,8 +14,9 @@ th.mat-sort-header-sorted {
 }
 
 .products {
-  flex-grow: 12;
+  flex-grow: 4;
   margin: 15px 15px auto;
+  max-width: 300px;
 }
 
 .container {

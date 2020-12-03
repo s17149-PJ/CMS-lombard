@@ -4,7 +4,6 @@ import { Observable, Subscription } from 'rxjs';
 import { LombardProduct, LompardProductCategory } from './lombard.model';
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
-import { MatSort, MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-lombard',

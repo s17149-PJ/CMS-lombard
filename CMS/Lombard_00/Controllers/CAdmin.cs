@@ -11,11 +11,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class CAdmin : ControllerBase
     {
-        public class LocalEditClass {
+        public class AuthorizationUser
+        {
+            public bool Success { get; set; }
+            public int Id { get; set; }
+            public string Nick { get; set; }
+            public string Name { get; set; }
+            public string Surname { get; set; }
+            public IEnumerable<TRole> Roles { get; set; }
+            public string Token { get; set; }
+        }
+    public class LocalEditClass {
             public TokenUser Admin { get; set; }
             public TokenUser Edited { get; set; }
         }//done
@@ -73,10 +82,11 @@ namespace Lombard_00.Controllers
 
             return true;
         }//done
-        ////--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+         
+
         [Route("api/admin/users")]
-        [HttpGet]
-        public IEnumerable<TokenUser> List(TokenUser admin)
+        [HttpPost]
+        public IEnumerable<TokenUser> List(AuthorizationUser admin)
         {
             //check if logged in
             IDb db = IDb.DbInstance;

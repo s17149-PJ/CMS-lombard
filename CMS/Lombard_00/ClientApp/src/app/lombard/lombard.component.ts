@@ -43,4 +43,8 @@ export class LombardComponent implements OnInit {
     //   this.products.sort = this.sort;
     // });
   }
+
+  bid(item: LombardProduct, bid: number) {
+
+  }
 }

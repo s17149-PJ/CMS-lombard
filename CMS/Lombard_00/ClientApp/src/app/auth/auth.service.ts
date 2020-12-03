@@ -55,12 +55,16 @@ export class AuthService {
   }
 
   get fetchUsers(): Observable<User[]> {
-    const httpParams: HttpParams = new HttpParams();
-    httpParams.set('id', this.currentUserValue.id.toString());
-    httpParams.set('name', this.currentUserValue.name);
-    httpParams.set('token', this.currentUserValue.token);
     return this.http
-      .get<User[]>('api/admin/users', { params: httpParams })
+      .post<User[]>('api/admin/users', {
+        success: this.currentUserValue.success,
+        id: this.currentUserValue.id,
+        nick: this.currentUserValue.nick,
+        name: this.currentUserValue.name,
+        surname: this.currentUserValue.surname,
+        roles: this.currentUserValue.roles,
+        token: this.currentUserValue.token
+      })
       .pipe(rx.map((users) => users));
   }
 

@@ -14,6 +14,8 @@ import { User } from '../model/auth.model';
 export class NavMenuComponent implements OnInit {
   isExpanded = false;
   currentUser: Observable<User>;
+  currentUserName: Observable<string>;
+  isAdmin: Observable<boolean>;
 
   constructor(private auth: AuthService, private router: Router) { }
 
@@ -22,6 +24,10 @@ export class NavMenuComponent implements OnInit {
     this.currentUser = this.auth.currentUser.pipe(
       rx.shareReplay(1)
     );
+    this.currentUserName = this.currentUser.pipe(
+      rx.map(user => user.nick)
+    );
+
   }
 
   collapse() {

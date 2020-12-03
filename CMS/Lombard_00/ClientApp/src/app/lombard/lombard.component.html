@@ -15,7 +15,8 @@
       </div>
       <div class="child">
         <p>Current bid: 15zł</p>
-        <button mat-raised-button color="primary">Bid</button>
+        <input matInput placeholder="min. 20zł" type="number" name="bidInput">
+        <button mat-raised-button color="primary" (click)="bid(item)">Bid</button>
       </div>
     </div>
   </mat-card>

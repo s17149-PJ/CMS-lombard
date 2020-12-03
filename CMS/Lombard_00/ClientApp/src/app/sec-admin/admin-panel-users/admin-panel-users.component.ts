@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { isNil } from 'lodash';
 import { AuthService } from 'src/app/auth/auth.service';
 import { RoleDefinition, User } from 'src/app/model/auth.model';
 
@@ -15,7 +16,7 @@ export class AdminPanelUsersComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService) { }
 
   ngOnInit(): void {
     this.auth.fetchUsers.subscribe((data) => {
@@ -25,7 +26,7 @@ export class AdminPanelUsersComponent implements OnInit {
     });
   }
 
-  getRoleName(roles: RoleDefinition[]): string {
-    return roles.sort((r1, r2) => r1.id - r2.id)[0].name;
+  getRoleName(user: User): string {
+    return !isNil(user.roles) && user.roles.length > 0 ? user.roles.sort((r1, r2) => r1.id - r2.id)[0].name : 'User';
   }
 }

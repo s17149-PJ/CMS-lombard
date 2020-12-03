@@ -20,41 +20,34 @@
           <li class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/lombard']">Wystaw</a>
           </li>
-
+          <mat-menu #adminMenu="matMenu">
+            <button mat-menu-item [routerLink]="['admin/panel']">
+              Panel
+            </button>
+            <button mat-menu-item [routerLink]="['admin/users']">
+              Users
+            </button>
+          </mat-menu>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [matMenuTriggerFor]="menu">Admin<=dynamiczne znikać</a>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item [routerLink]="['admin/panel']">
-                Panel
-              </button>
-              <button mat-menu-item [routerLink]="['admin/users']">
-                Users
-              </button>
-            </mat-menu>
-          </li>
-
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [matMenuTriggerFor]="menu">Nazwa użytkowka<=dynamiczne znikać</a>
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="logout()">
+            <button mat-icon-button class="nav-link text-dark" [matMenuTriggerFor]="userMenu">
+              <mat-icon>person</mat-icon>
+              {{currentUserName | async}}
+            </button>
+            <mat-menu #userMenu="matMenu">
+              <button mat-menu-item>
                 Moje dane
               </button>
-              <button mat-menu-item (click)="logout()">
+              <button mat-menu-item>
                 Moje przedmioty
               </button>
-              <button mat-menu-item (click)="logout()">
-                Kupione przedmioty
+              <button mat-menu-item [matMenuTriggerFor]="adminMenu">
+                Admin panel
               </button>
               <button mat-menu-item (click)="logout()">
-                Wylogowanie
+                Wyloguj
               </button>
             </mat-menu>
           </li>
-
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/lombard']">Login<=dynamiczne pojawiać</a>
-          </li>
-
         </ul>
         <ul *ngIf="!(currentUser | async)" class="navbar-nav flex-grow">
           <li class="nav-item" [routerLinkActive]="['link-active']">

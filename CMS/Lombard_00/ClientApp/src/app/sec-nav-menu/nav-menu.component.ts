@@ -17,7 +17,7 @@ export class NavMenuComponent implements OnInit {
   currentUserName: Observable<string>;
   isAdmin: Observable<boolean>;
 
-  constructor(private auth: AuthService, private router: Router) { }
+  constructor(public auth: AuthService, private router: Router) { }
 
   ngOnInit() {
     // check for logged user - menu visibility

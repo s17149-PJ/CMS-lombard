@@ -51,7 +51,11 @@ export class AuthService {
             return null;
           }
         })
-      )
+      );
+  }
+
+  getRole(): string {
+    return this.currentUserValue.roles.length > 0 ? this.currentUserValue.roles[0].name.toUpperCase() : 'USER';
   }
 
   get fetchUsers(): Observable<User[]> {

@@ -7,7 +7,7 @@
 </mat-card>
 <div class="grid-container">
   <mdb-card class="products" *ngFor="let item of lombardProducts | async">
-    <mdb-card-img src="https://mdbootstrap.com/img/Photos/Lightbox/Thumbnail/img%20(97).jpg" alt="Card image cap">
+    <mdb-card-img src="{{item.img}}" alt="Card image cap">
     </mdb-card-img>
     <mdb-card-body>
       <mdb-card-title>
@@ -15,7 +15,8 @@
       </mdb-card-title>
       <mdb-card-text> Expires: {{item.expirationDate | date}}
       </mdb-card-text>
-      <a href="#" mdbBtn color="primary" mdbWavesEffect>Bid</a>
+      <a routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
+        more!</a>
     </mdb-card-body>
   </mdb-card>
 </div>

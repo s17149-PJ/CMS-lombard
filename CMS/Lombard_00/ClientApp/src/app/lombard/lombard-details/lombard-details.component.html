@@ -1,1 +1,35 @@
-<p>lombard-details works!</p>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8 center" *ngIf="(product | async) as p">
+    <mdb-card cascade="true" narrower="true">
+      <div class="view view-cascade overlay waves-light" mdbWavesEffect>
+        <mdb-card-img src="{{p.img}}"></mdb-card-img>
+        <a>
+          <div class="mask rgba-white-slight"></div>
+        </a>
+      </div>
+      <mdb-card-body cascade="true" class="text-center">
+        <h5 class="pink-text">
+          <mdb-icon fas icon="tag"></mdb-icon> {{p.category.name}}
+        </h5>
+        <h4 class="card-title">{{p.name}}</h4>
+        <mdb-card-text>
+          {{p.description}}
+        </mdb-card-text>
+        <mdb-card-text>
+          <h5>Auction expires: {{p.expirationDate | date}}</h5>
+          <h6>Current highest bid: 0</h6>
+          <form>
+            <div class="def-number-input number-input safari_only">
+              <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="minus"></button>
+              <input class="quantity" min="0" name="quantity" value="1" type="number" [formControl]="bidAmount">
+              <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus"></button>
+            </div>
+            <button mdbBtn color="primary">Bid!</button>
+          </form>
+        </mdb-card-text>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+  <div class="col-md-2"></div>
+</div>

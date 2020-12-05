@@ -27,6 +27,9 @@ export const routes: Route[] = [
   {
     path: 'admin',
     canActivate: [AuthGuard],
+    data: {
+      role: 'ADMIN',
+    },
     children: [
       { path: 'panel', component: AdminPanelDashboardComponent },
       { path: 'users', component: AdminPanelUsersComponent },
@@ -36,8 +39,10 @@ export const routes: Route[] = [
     path: 'lombard',
     component: LombardComponent,
     canActivate: [AuthGuard],
-    children: [
-      { path: 'details', component: LombardDetailsComponent },
-    ],
   },
+  {
+    path: 'product-details/:id',
+    component: LombardDetailsComponent,
+    canActivate: [AuthGuard],
+  }
 ];

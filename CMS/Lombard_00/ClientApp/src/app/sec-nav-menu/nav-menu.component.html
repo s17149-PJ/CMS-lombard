@@ -45,7 +45,7 @@
               <button mat-menu-item>
                 Moje przedmioty
               </button>
-              <button mat-menu-item [matMenuTriggerFor]="adminMenu">
+              <button mat-menu-item [matMenuTriggerFor]="adminMenu" *ngIf="this.auth.getRole() === 'ADMIN'">
                 Admin panel
               </button>
               <button mat-menu-item (click)="logout()">

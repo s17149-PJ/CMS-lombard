@@ -70,8 +70,10 @@ namespace Lombard_00
             int x = 2;
             //tests
             {
-
+            
             }
+            var list = IDb.DbInstance.TItems;
+
             x = 2;
         }
         private string GetNewToken()

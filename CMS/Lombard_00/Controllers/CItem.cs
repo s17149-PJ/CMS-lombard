@@ -226,5 +226,22 @@ namespace Lombard_00.Controllers
 
             return db.TTags;
         }//done
+
+        //=========simple
+
+        [Route("api/item/Slist")]
+        [HttpPost]
+        public List<SimpleTokenItem> SItemList(TokenUser user)
+        {
+            IDb db = IDb.DbInstance;
+            var usr = db.FindUser(user.Id);
+            if (TokenUser.IsUsrStillValid(usr, user.Token))
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return null;
+            }
+
+            return (from item in db.TItems select new TokenItem(item).Simplify()).ToList();
+        }//done
     }
 }

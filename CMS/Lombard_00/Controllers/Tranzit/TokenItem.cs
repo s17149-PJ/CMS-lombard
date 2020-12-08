@@ -25,6 +25,12 @@ namespace Lombard_00.Controllers.Tranzit
             //optional - rating
             RatingAvarage = item.RatingAvarage;
             NumberOfRatings = item.NumberOfRatings;
+
+            //temporary
+
+            FinalizationTime = FinallizationDateTime.ToShortDateString();
+            RatingsAvg = RatingAvarage.ToString();
+            RatingsNum = NumberOfRatings.ToString();
         }//done
 
         public int Id { get; set; }
@@ -42,5 +48,12 @@ namespace Lombard_00.Controllers.Tranzit
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }
+
+        //temporary string solution
+        public string FinalizationTime { get; set; }
+        public string RatingsAvg { get; set; }
+        public string RatingsNum { get; set; }
+
+
     }
 }

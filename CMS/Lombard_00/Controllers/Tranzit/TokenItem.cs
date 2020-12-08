@@ -19,6 +19,7 @@ namespace Lombard_00.Controllers.Tranzit
             Image = item.Image;
             StartingBid = TokenBid.CallByTokenItem(item.StartingBid);
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid);
+            FinallizationDateTime = item.FinallizationDateTime;
             Tags = IDb.DbInstance.FindTags(item);
 
             //optional - rating
@@ -33,6 +34,9 @@ namespace Lombard_00.Controllers.Tranzit
         public byte[] Image { get; set; }
         public TokenBid StartingBid { get; set; }
         public TokenBid WinningBid { get; set; }
+
+        public DateTime FinallizationDateTime { get; set; }
+
         //tag system
         public IEnumerable<TTag> Tags { get; set; }
         //optional - rating

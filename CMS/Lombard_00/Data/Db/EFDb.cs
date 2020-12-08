@@ -179,6 +179,9 @@ namespace Lombard_00.Data.Db
                 value.StartingBid   = newData.StartingBid;
             if (newData.WinningBid    != null) 
                 value.WinningBid    = newData.WinningBid;
+            if (newData.FinallizationDateTime != null)
+                value.FinallizationDateTime = newData.FinallizationDateTime;
+
             SaveChanges();
 
             return true;

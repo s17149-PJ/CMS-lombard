@@ -43,7 +43,8 @@ namespace Lombard_00.Controllers
                     Name = pack.Item.Name,
                     Description = pack.Item.Description,
                     ImageMetaData = pack.Item.ImageMetaData,
-                    Image = pack.Item.Image
+                    Image = pack.Item.Image,
+                    FinallizationDateTime = pack.Item.FinallizationDateTime
             };
             //!?SHOULD be automatically added to db
             itemToAdd.StartingBid = 
@@ -144,6 +145,8 @@ namespace Lombard_00.Controllers
                 ite.ImageMetaData = pack.Item.ImageMetaData;
             if (pack.Item.Image != null)
                 ite.Image = pack.Item.Image;
+            if (pack.Item.FinallizationDateTime != null)
+                ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
             //return
             if (!db.ModifyTItem(ite, ite)) {
                 Response.StatusCode = (int)HttpStatusCode.Conflict;

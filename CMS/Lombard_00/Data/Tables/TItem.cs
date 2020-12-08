@@ -23,6 +23,8 @@ namespace Lombard_00.Data.Tables
         public TUserItemBid StartingBid { get; set; }//also holds ref to prev owner
         public TUserItemBid WinningBid { get; set; }//holds ref to current owner
 
+        public DateTime FinallizationDateTime { get; set; }
+
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }

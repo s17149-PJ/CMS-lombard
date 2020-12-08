@@ -25,13 +25,26 @@ namespace Lombard_00.Controllers.Tranzit
             //optional - rating
             RatingAvarage = item.RatingAvarage;
             NumberOfRatings = item.NumberOfRatings;
-
-            //temporary
-
-            FinalizationTime = FinallizationDateTime.ToShortDateString();
-            RatingsAvg = RatingAvarage.ToString();
-            RatingsNum = NumberOfRatings.ToString();
         }//done
+
+        public SimpleTokenItem Simplify() 
+        {
+            return new SimpleTokenItem()
+            {
+                Id = Id,
+                Name = Name,
+                Description = Description,
+                Image = ImageMetaData,
+                FinallizationDateTime = FinallizationDateTime.ToString(),
+                Tags = Tags.Select(e => e.Name),
+                RatingAvarage = RatingAvarage.ToString(),
+                NumberOfRatings = NumberOfRatings.ToString()
+            };
+        }
+        public TokenItem(SimpleTokenItem token) 
+        {
+            
+        }
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -48,12 +61,5 @@ namespace Lombard_00.Controllers.Tranzit
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }
-
-        //temporary string solution
-        public string FinalizationTime { get; set; }
-        public string RatingsAvg { get; set; }
-        public string RatingsNum { get; set; }
-
-
     }
 }

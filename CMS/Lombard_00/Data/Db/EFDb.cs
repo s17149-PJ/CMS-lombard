@@ -271,8 +271,33 @@ namespace Lombard_00.Data.Db
 
         public bool TryToFinishDeal(TItem item) 
         {
+            //find said item
+            var foundItem = FindTItem(item.Id);
+            //is there winnner already?
+            if (foundItem.WinningBid != null)
+                return false;
+            //is it time to find one?
+            if (DateTime.Compare(foundItem.FinallizationDateTime, DateTime.Now) > 0)
+                return false;
 
-            return false;
+            //get neccesary data
+            var bids = CTUserItemBids
+                .Include(e => e.Item)
+                .Include(e => e.User)
+                .Where(e => e.Item == foundItem)
+                .OrderBy(e => e.Money)
+                .ToList();
+            bids.Remove(item.StartingBid);
+            //was there any valid bid?
+            if (bids.Count <= 0)
+                return false;
+            //who won?
+            var wbid = bids.ToArray()[bids.Count - 1];
+            //hurrah
+            foundItem.WinningBid = wbid;
+            SaveChanges();
+
+            return true;
         }//NOPE <=======================
 
         public List<TItemComment> TItemComments

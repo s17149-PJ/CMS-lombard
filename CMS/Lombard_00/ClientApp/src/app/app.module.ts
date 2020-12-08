@@ -8,6 +8,8 @@ import {
   MatButtonModule,
   MatCardModule,
   MatChipsModule,
+  MatDatepicker,
+  MatDatepickerModule,
   MatDividerModule,
   MatExpansionModule,
   MatFormFieldModule,
@@ -16,6 +18,7 @@ import {
   MatInputModule,
   MatListModule,
   MatMenuModule,
+  MatNativeDateModule,
   MatPaginatorModule,
   MatSidenavModule,
   MatSortModule,
@@ -41,6 +44,7 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatsCardComponent } from './sec-admin/common/stats-card/stats-card.component';
 import { StatsCard2Component } from './sec-admin/common/stats-card2/stats-card2.component';
+import { LombardNewComponent } from './lombard/lombard-new/lombard-new.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +57,7 @@ import { StatsCard2Component } from './sec-admin/common/stats-card2/stats-card2.
     AdminPanelUsersComponent,
     AdminPanelDashboardComponent,
     LombardComponent,
+    LombardNewComponent,
     UserPanelComponent,
     LombardDetailsComponent,
     StatsCardComponent,
@@ -68,6 +73,8 @@ import { StatsCard2Component } from './sec-admin/common/stats-card2/stats-card2.
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatDividerModule,
     MatGridListModule,
     MatIconModule,

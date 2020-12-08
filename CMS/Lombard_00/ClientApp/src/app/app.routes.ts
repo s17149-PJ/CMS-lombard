@@ -9,6 +9,7 @@ import { HomeComponent } from './home/home.component';
 import { LombardDetailsComponent } from './lombard/lombard-details/lombard-details.component';
 import { LombardComponent } from './lombard/lombard.component';
 import { UserPanelComponent } from './sec-user/user-panel.component';
+import { LombardNewComponent } from './lombard/lombard-new/lombard-new.component';
 
 export const routes: Route[] = [
   {
@@ -41,8 +42,13 @@ export const routes: Route[] = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'lombard/new',
+    component: LombardNewComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'product-details/:id',
     component: LombardDetailsComponent,
     canActivate: [AuthGuard],
-  }
+  },
 ];

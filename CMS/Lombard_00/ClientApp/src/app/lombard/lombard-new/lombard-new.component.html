@@ -12,12 +12,12 @@
             Name
           </span>
         </div>
-        <input formControlName="productName" type="text" class="form-control" placeholder="Product name"
+        <input formControlName="name" type="text" class="form-control" placeholder="Product name"
           aria-label="Product name" aria-describedby="basic-addon1">
       </div>
 
       <div class="input-group mb-3">
-        <select formControlName="productCategory" class="browser-default custom-select">
+        <select formControlName="category" class="browser-default custom-select">
           <option value="" selected>Choose product category</option>
           <option value="javelery">Jawelery</option>
           <option value="furniture">Furniture</option>
@@ -31,7 +31,7 @@
       </div>
 
       <div class="input-group mb-3">
-        <input formControlName="expirationDate" class="form-control" matInput [matDatepicker]="picker"
+        <input formControlName="finallizationDateTime" class="form-control" matInput [matDatepicker]="picker"
           placeholder="Expiration date">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -42,7 +42,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon3">https://example.com/image/</span>
         </div>
-        <input formControlName="productUrl" type="text" class="form-control" id="basic-url"
+        <input formControlName="imageMetaData" type="text" class="form-control" id="basic-url"
           aria-describedby="basic-addon3">
       </div>
 

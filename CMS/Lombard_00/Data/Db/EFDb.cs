@@ -494,9 +494,10 @@ namespace Lombard_00.Data.Db
             return CTItemTag
                     .Include(e => e.Item)
                     .Include(e => e.Tag)
+                    .ToList()
                     .Where(e => e.Item == found)
+                    .AsEnumerable()
                     .Select(e => e.Tag)
-                    .Distinct()//just to be sure
                     .ToList();
         }//done
 

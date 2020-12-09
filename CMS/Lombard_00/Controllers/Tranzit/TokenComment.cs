@@ -1,4 +1,5 @@
-﻿using Lombard_00.Data.Tables;
+﻿using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,9 @@ namespace Lombard_00.Controllers.Tranzit
         public TokenComment() { }
         public TokenComment(TItemComment comment)
         {
+            IDb db = IDb.DbInstance;
             Id = comment.Id;
-            Item = new TokenItem(comment.Item);
+            Item = new TokenItem(comment.Item,db);
             User = TokenUser.CallByToken(comment.User);
             Comment = comment.Comment;
         }//done

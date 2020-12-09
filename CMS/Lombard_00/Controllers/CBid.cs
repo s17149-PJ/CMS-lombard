@@ -51,7 +51,7 @@ namespace Lombard_00.Controllers
                 return null;
             }
             //yes
-            return new TokenBid(value);
+            return new TokenBid(value, db);
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/bid/delete")]
@@ -103,7 +103,7 @@ namespace Lombard_00.Controllers
                 return null;
             }
 
-            return db.TUserItemBids.Select(bid=>new TokenBid(bid));
+            return db.TUserItemBids.Select(bid=>new TokenBid(bid, db));
         }//todo add serach
     }
 }

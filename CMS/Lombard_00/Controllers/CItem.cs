@@ -63,7 +63,7 @@ namespace Lombard_00.Controllers
                 return null;
             }
             //yes
-            return new TokenItem(itemToAdd);
+            return new TokenItem(itemToAdd,db);
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/delete")]
@@ -167,7 +167,7 @@ namespace Lombard_00.Controllers
             }
             //return
             db.TryToFinishDeal(new TItem() { Id = pack.Item.Id });
-            return new TokenItem(db.FindTItem(pack.Item.Id));
+            return new TokenItem(db.FindTItem(pack.Item.Id),db);
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------   
         [Route("api/item/list")]
@@ -175,14 +175,16 @@ namespace Lombard_00.Controllers
         public List<TokenItem> ItemList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(user.Id);
-            if (!TokenUser.IsUsrStillValid(usr, user.Token))
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+            lock (db) { 
+                var usr = db.FindUser(user.Id);
+                if (!TokenUser.IsUsrStillValid(usr, user.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            return (from item in db.TItems select new TokenItem(item)).ToList();
+                return (from item in db.TItems select new TokenItem(item,db)).ToList();
+            }
         }//done
 
         public class LocalItemFindClass {
@@ -207,7 +209,7 @@ namespace Lombard_00.Controllers
                         .Tags
                         .Select(e=>new TTag() {Id = -1, Name = e })
                         .ToList())
-                .Select(e=>new TokenItem(e))
+                .Select(e=>new TokenItem(e,db))
                 .ToList();
         }//done
 
@@ -233,14 +235,17 @@ namespace Lombard_00.Controllers
         public List<SimpleTokenItem> SItemList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(user.Id);
-            if (!TokenUser.IsUsrStillValid(usr, user.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                var usr = db.FindUser(user.Id);
+                if (!TokenUser.IsUsrStillValid(usr, user.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            return (from item in db.TItems select new TokenItem(item).Simplify()).ToList();
+                return (from item in db.TItems select new TokenItem(item,db).Simplify()).ToList();
+            }
         }//done
     }
 }

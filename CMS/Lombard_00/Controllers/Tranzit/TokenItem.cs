@@ -10,7 +10,7 @@ namespace Lombard_00.Controllers.Tranzit
     public class TokenItem
     {
         public TokenItem() { }
-        public TokenItem(TItem item) 
+        public TokenItem(TItem item, IDb context) 
         {
             Id = item.Id;
             Name = item.Name;
@@ -20,7 +20,7 @@ namespace Lombard_00.Controllers.Tranzit
             StartingBid = TokenBid.CallByTokenItem(item.StartingBid);
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid);
             FinallizationDateTime = item.FinallizationDateTime;
-            Tags = IDb.DbInstance.FindTags(item);
+            Tags = context.FindTags(item);
 
             //optional - rating
             RatingAvarage = item.RatingAvarage;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Db
 {
-    interface IDb
+    public interface IDb
     {
         /*
          * I know that this is violation of several good C# practises but I forgot how to make dependecy injection,

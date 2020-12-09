@@ -35,7 +35,7 @@ namespace Lombard_00.Controllers
             //check if logged in
             IDb db = IDb.DbInstance;
             var usr = db.FindUser(pack.Admin.Id);
-            if (TokenUser.IsUsrStillValid(usr, pack.Admin.Token))
+            if (!TokenUser.IsUsrStillValid(usr, pack.Admin.Token))
             {
                 Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
@@ -91,7 +91,7 @@ namespace Lombard_00.Controllers
             //check if logged in
             IDb db = IDb.DbInstance;
             var usr = db.FindUser(admin.Id);
-            if (TokenUser.IsUsrStillValid(usr, admin.Token))
+            if (!TokenUser.IsUsrStillValid(usr, admin.Token))
             {
                 Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return null;

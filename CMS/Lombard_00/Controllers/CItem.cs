@@ -182,7 +182,7 @@ namespace Lombard_00.Controllers
                 return null;
             }
 
-            return (from item in db.TItems select new TokenItem(item)).ToList();
+            return db.TItems.Select(e => new TokenItem(e)).ToList();
         }//done
 
         public class LocalItemFindClass {
@@ -240,7 +240,7 @@ namespace Lombard_00.Controllers
                 return null;
             }
 
-            return (from item in db.TItems select new TokenItem(item).Simplify()).ToList();
+            return db.TItems.Select(e=>new TokenItem(e).Simplify()).ToList();
         }//done
     }
 }

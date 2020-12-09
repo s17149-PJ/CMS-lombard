@@ -55,7 +55,7 @@ export class LombardService {
 
   get fetchProducts(): Observable<LombardProduct[]> {
     return this.http
-      .post<LombardProduct[]>('api/item/list', {
+      .post<LombardProduct[]>('api/item/Slist', {
         success: this.authService.currentUserValue.success,
         id: this.authService.currentUserValue.id,
         nick: this.authService.currentUserValue.nick,

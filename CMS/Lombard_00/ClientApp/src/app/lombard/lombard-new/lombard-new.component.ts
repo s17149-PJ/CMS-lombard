@@ -20,7 +20,7 @@ export class LombardNewComponent implements OnInit {
       category: new FormControl('', Validators.required),
       finallizationDateTime: new FormControl('', Validators.required),
       imageMetaData: new FormControl('', Validators.required),
-      startingBid: new FormControl('', Validators.required),
+      // startingBid: new FormControl('', Validators.required),
       description: new FormControl('', Validators.required)
     });
   }

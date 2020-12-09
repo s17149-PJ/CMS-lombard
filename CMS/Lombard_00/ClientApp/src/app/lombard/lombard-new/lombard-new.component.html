@@ -1,0 +1,72 @@
+<mdb-card cascade="true" narrower="true">
+  <mdb-card-title class="text-center">
+    <h4 class="card-title">
+      <strong>Add new auction!</strong>
+    </h4>
+  </mdb-card-title>
+  <mdb-card-body>
+    <form [formGroup]="productForm" (submit)="create()">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">
+            Name
+          </span>
+        </div>
+        <input formControlName="name" type="text" class="form-control" placeholder="Product name"
+          aria-label="Product name" aria-describedby="basic-addon1">
+      </div>
+
+      <div class="input-group mb-3">
+        <select formControlName="category" class="browser-default custom-select">
+          <option value="" selected>Choose product category</option>
+          <option value="javelery">Jawelery</option>
+          <option value="furniture">Furniture</option>
+          <option value="clock">Clock</option>
+          <option value="painting">Painting</option>
+          <option value="cloth">Cloth</option>
+        </select>
+        <div class="input-group-append">
+          <span class="input-group-text" id="basic-addon2">Category</span>
+        </div>
+      </div>
+
+      <div class="input-group mb-3">
+        <input formControlName="finallizationDateTime" class="form-control" matInput [matDatepicker]="picker"
+          placeholder="Expiration date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </div>
+
+      <label for="basic-url">Enter url to product image</label>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon3">https://example.com/image/</span>
+        </div>
+        <input formControlName="imageMetaData" type="text" class="form-control" id="basic-url"
+          aria-describedby="basic-addon3">
+      </div>
+
+      <!-- <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+        </div>
+        <input formControlName="startingBid" type="number" class="form-control" aria-label="Starting bid"
+          placeholder="Starting bid">
+        <div class="input-group-append">
+          <span class="input-group-text">.00</span>
+        </div>
+      </div> -->
+
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Description</span>
+        </div>
+        <textarea formControlName="description" class="form-control" aria-label="Description"></textarea>
+      </div>
+      <button mdbBtn color="info" outline="true" rounded="true" block="true" class="z-depth-0 my-4 waves-effect"
+        mdbWavesEffect type="submit">
+        Create
+      </button>
+    </form>
+  </mdb-card-body>
+</mdb-card>

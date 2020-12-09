@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../model/auth.model';
 import * as rx from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,19 @@ export class AuthService {
     this.currentUserSubject = new BehaviorSubject<User>(
       JSON.parse(localStorage.getItem('currentUser'))
     );
+
+
+    this.currentUser.subscribe(user => {
+      if (user.validUntil) {
+        const expTime = moment(user.validUntil);
+        const now = moment.now();
+        if (expTime.isBefore(now)) {
+          this.logout();
+        } else {
+          this.login(user.nick, user.password);
+        }
+      }
+    });
   }
 
   public get currentUserValue(): User {
@@ -52,6 +66,18 @@ export class AuthService {
           }
         })
       );
+  }
+
+  private keepAlive(): Observable<User> {
+    return this.http.post<any>('api/user/keepAlive', {
+      success: this.currentUserValue.success,
+      id: this.currentUserValue.id,
+      nick: this.currentUserValue.nick,
+      name: this.currentUserValue.name,
+      surname: this.currentUserValue.surname,
+      roles: this.currentUserValue.roles,
+      token: this.currentUserValue.token
+    }).pipe(user => user);
   }
 
   getRole(): string {

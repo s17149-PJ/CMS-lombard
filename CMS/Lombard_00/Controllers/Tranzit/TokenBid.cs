@@ -23,17 +23,14 @@ namespace Lombard_00.Controllers.Tranzit
         }//done
         public static TokenBid CallByTokenItem(TUserItemBid bid)
         {
-            var ret = new TokenBid()
+            return new TokenBid()
             {
                 Id = bid.Id,
                 Item = null,//NO CIRCLES!
                 User = TokenUser.CallByToken(bid.User),
-                CreatedOn = bid.CreatedOn
+                CreatedOn = bid.CreatedOn,
+                Money = bid.Money
             };
-            if (bid != null)
-                ret.Money = bid.Money;
-
-            return ret;
         }//done
 
         public int Id { get; set; }

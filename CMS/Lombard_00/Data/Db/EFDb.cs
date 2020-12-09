@@ -268,7 +268,6 @@ namespace Lombard_00.Data.Db
             //also i copypasted it (task idea) from stack so god know what it actually does
         }//dunno? mabe? mabe not? who knows. <=======================
 
-
         public bool TryToFinishDeal(TItem item) 
         {
             //find said item

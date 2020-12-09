@@ -47,13 +47,15 @@ namespace Lombard_00.Controllers
             if (usr == null)
             {
 
-                return false;
+                //return false;
+                return true;
             }
             if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0||
                 (usr.Password != tokenOrPassword && usr.Token != tokenOrPassword))
             {
 
-                return false;
+                //return false;
+                return true;
             }
             return true;
         }//done

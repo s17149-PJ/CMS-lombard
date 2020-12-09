@@ -66,7 +66,21 @@ namespace Lombard_00
                         Password = GetNewToken()
                     });
                 }
+
+               
             }
+            IDb.DbInstance.AddTItem(new TItem()
+            {
+                Name = "test",
+                Description = "test",
+                ImageMetaData = "test",
+                FinallizationDateTime = DateTime.Now,
+                StartingBid = new TUserItemBid() 
+                {
+                    CreatedOn = DateTime.Now,
+                    User = IDb.DbInstance.TUsers.ToArray()[0]
+                }
+            });
             int x = 2;
             //tests
             {

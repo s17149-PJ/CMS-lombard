@@ -70,7 +70,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             //find and veryfiy
             var usr = db.FindUser(token.Id);
-            if (TokenUser.IsUsrStillValid(usr,token.Token))
+            if (!TokenUser.IsUsrStillValid(usr,token.Token))
             {
                 Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return new TokenUser()
@@ -162,7 +162,7 @@ namespace Lombard_00.Controllers
         {
             IDb db = IDb.DbInstance;
             var usr = db.FindUser(edit.TokenUser.Id);
-            if (TokenUser.IsUsrStillValid(usr, edit.Password)) {
+            if (!TokenUser.IsUsrStillValid(usr, edit.Password)) {
                 Response.StatusCode = (int)HttpStatusCode.Forbidden;
                 return false;
             }

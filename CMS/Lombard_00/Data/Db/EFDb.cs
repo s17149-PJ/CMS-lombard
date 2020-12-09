@@ -593,6 +593,7 @@ namespace Lombard_00.Data.Db
         /*end of interface stuff*/
 
         /*start of EF stuff*/
+        //public EFDb() { }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

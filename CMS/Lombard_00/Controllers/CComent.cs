@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class CComent : ControllerBase
     {

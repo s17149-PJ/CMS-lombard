@@ -1,19 +1,15 @@
-<!-- <mat-card *ngIf="products.data === null">Loading...</mat-card>
-  <mat-card *ngIf="products.data.length === 0">Out of stock! Check later.</mat-card> -->
-<mat-card class="filter-panel">
-  <mat-chip-list>
-    <mat-chip color="primary" *ngFor="let c of lombardProductCategories | async">{{c.name}}</mat-chip>
-  </mat-chip-list>
-</mat-card>
+<mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
+<mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async).length === 0">Out of stock! Check
+  later.</mat-card>
 <div class="grid-container">
   <mdb-card class="products" *ngFor="let item of lombardProducts | async">
-    <mdb-card-img src="{{item.img}}" alt="Card image cap">
+    <mdb-card-img src="{{item.image}}" width="200px" heigh="200px" alt="Item photo">
     </mdb-card-img>
     <mdb-card-body>
       <mdb-card-title>
         <h4>{{item.name}}</h4>
       </mdb-card-title>
-      <mdb-card-text> Expires: {{item.expirationDate | date}}
+      <mdb-card-text> Expires: {{item.finallizationDateTime}}
       </mdb-card-text>
       <a routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
         more!</a>

@@ -1,3 +1,5 @@
+import { isNil } from 'lodash';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,15 +19,23 @@ export class LombardDetailsComponent implements OnInit {
 
   bidAmount: FormControl;
 
+  isUserActive: Observable<boolean>;
+
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private lombardService: LombardService) { }
+    private lombardService: LombardService,
+    private auth: AuthService) { }
 
   ngOnInit() {
     const productId = parseInt(this.route.snapshot.params.id, 10);
     this.product = this.lombardService.lombardProductById(productId);
 
     this.bidAmount = new FormControl(0, Validators.required);
+
+    this.isUserActive = this.auth.currentUser.pipe(
+      rx.map(user => !isNil(user)),
+      rx.shareReplay(1)
+    )
   }
 
 }

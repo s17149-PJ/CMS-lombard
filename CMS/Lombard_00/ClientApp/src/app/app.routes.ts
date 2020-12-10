@@ -49,6 +49,5 @@ export const routes: Route[] = [
   {
     path: 'product-details/:id',
     component: LombardDetailsComponent,
-    canActivate: [AuthGuard],
   },
 ];

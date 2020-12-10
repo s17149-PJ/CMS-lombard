@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { LombardProduct } from './../lombard.model';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -12,7 +13,7 @@ export class LombardNewComponent implements OnInit {
 
   productForm: FormGroup;
 
-  constructor(private lombardService: LombardService) { }
+  constructor(private lombardService: LombardService, private router: Router) { }
 
   ngOnInit() {
     this.productForm = new FormGroup({
@@ -26,7 +27,7 @@ export class LombardNewComponent implements OnInit {
   }
 
   create() {
-    this.lombardService.createNewAuction(this.productForm.value).subscribe(r => console.log(r));
+    this.lombardService.createNewAuction(this.productForm.value).subscribe(r => this.router.navigate(['lombard']));
   }
 
 }

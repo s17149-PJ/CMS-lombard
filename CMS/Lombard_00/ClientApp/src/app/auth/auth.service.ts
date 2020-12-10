@@ -18,7 +18,7 @@ export class AuthService {
 
 
     this.currentUser.subscribe(user => {
-      if (user.validUntil) {
+      if (user && user.validUntil) {
         const expTime = moment(user.validUntil);
         const now = moment.now();
         if (expTime.isBefore(now)) {

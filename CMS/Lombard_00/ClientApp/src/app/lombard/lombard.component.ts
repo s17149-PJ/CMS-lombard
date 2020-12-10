@@ -4,6 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { LombardProduct, LompardProductCategory } from './lombard.model';
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-lombard',
@@ -45,5 +46,12 @@ export class LombardComponent implements OnInit {
 
   bid(item: LombardProduct, bid: number) {
 
+  }
+
+  getDate(date: string): string {
+    console.log(date);
+    const d = moment(date).format('DD/MM/YYYY').valueOf();
+    console.log(d);
+    return d;
   }
 }

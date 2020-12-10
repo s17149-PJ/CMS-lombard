@@ -25,7 +25,8 @@ export class NavMenuComponent implements OnInit {
       rx.shareReplay(1)
     );
     this.currentUserName = this.currentUser.pipe(
-      rx.map(user => user.nick)
+      rx.map(user => user ? user.nick : null),
+      rx.take(1)
     );
 
   }

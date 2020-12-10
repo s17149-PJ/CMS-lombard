@@ -3,7 +3,7 @@
     SideClass="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark unique-color border-bottom box-shadow mb-3">
     <div class="container">
       <mdb-navbar-brand>
-        <a class="navbar-brand" href="/lombard">
+        <a class="navbar-brand" [routerLink]="['/lombard']">
           <img src="./../../assets/logo_lombard.jpg" height="50" alt="">
         </a>
       </mdb-navbar-brand>
@@ -12,7 +12,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
-        <ul *ngIf="currentUser | async" class="navbar-nav flex-grow">
+        <ul class="navbar-nav flex-grow">
 
           <li class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard']">O nas</a>
@@ -22,7 +22,7 @@
             <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard']">Przeglądaj</a>
           </li>
 
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li *ngIf="currentUser | async" class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard/new']">Wystaw</a>
           </li>
           <mat-menu #adminMenu="matMenu">
@@ -33,7 +33,7 @@
               Users
             </button>
           </mat-menu>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li *ngIf="currentUser | async" class="nav-item" [routerLinkActive]="['link-active']">
             <button mat-icon-button class="nav-link waves-light" mdbWavesEffect [matMenuTriggerFor]="userMenu">
               <mat-icon>person</mat-icon>
               {{currentUserName | async}}
@@ -53,9 +53,7 @@
               </button>
             </mat-menu>
           </li>
-        </ul>
-        <ul *ngIf="!(currentUser | async)" class="navbar-nav flex-grow">
-          <li class="nav-item" [routerLinkActive]="['link-active']">
+          <li *ngIf="!(currentUser | async)" class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/login']">Login</a>
           </li>
         </ul>

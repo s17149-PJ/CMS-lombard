@@ -253,18 +253,11 @@ namespace Lombard_00.Controllers
 
         [Route("api/item/Slist")]
         [HttpPost]
-        public List<SimpleTokenItem> SItemList(TokenUser user)
+        public List<SimpleTokenItem> SItemList()
         {
             IDb db = IDb.DbInstance;
             lock (db)
-            {
-                var usr = db.FindUser(user.Id);
-                if (!TokenUser.IsUsrStillValid(usr, user.Token))
-                {
-                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                    return null;
-                }
-
+            { 
                 return (from item in db.TItems select new TokenItem(item,db).Simplify()).ToList();
             }
         }//done

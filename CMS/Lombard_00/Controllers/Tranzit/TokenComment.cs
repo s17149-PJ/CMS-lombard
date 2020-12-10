@@ -10,12 +10,11 @@ namespace Lombard_00.Controllers.Tranzit
     public class TokenComment
     {
         public TokenComment() { }
-        public TokenComment(TItemComment comment)
+        public TokenComment(TItemComment comment, IDb context)
         {
-            IDb db = IDb.DbInstance;
             Id = comment.Id;
-            Item = new TokenItem(comment.Item,db);
-            User = TokenUser.CallByToken(comment.User);
+            Item = new TokenItem(comment.Item, context);
+            User = TokenUser.CallByToken(comment.User, context);
             Comment = comment.Comment;
         }//done
 

@@ -28,39 +28,42 @@ namespace Lombard_00.Controllers
             var pass = login.Password.Trim();
 
             IDb db = IDb.DbInstance;
-            //find and veryfiy
-            var usr = db.FindUser(login.Nick);
-            if (usr == null||
-                usr.Password!=login.Password)
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                //find and veryfiy
+                var usr = db.FindUser(login.Nick);
+                if (usr == null ||
+                    usr.Password != login.Password)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return new TokenUser()
+                    {
+                        Success = false,
+                        Id = -1,
+                        Nick = null,
+                        Name = null,
+                        Surname = null,
+                        Roles = null,
+                        Token = null
+                    };
+                }
+                //tokens
+                var token = GetNewToken();
+                usr.Token = token;
+                usr.ValidUnitl = DateTime.Now.AddMinutes(11);
+                db.ModifyTUser(usr, usr);
+                //send response
                 return new TokenUser()
                 {
-                    Success = false,
-                    Id = -1,
-                    Nick = null,
-                    Name = null,
-                    Surname = null,
-                    Roles = null,
-                    Token = null
+                    Success = true,
+                    Id = usr.Id,
+                    Nick = usr.Nick,
+                    Name = usr.Name,
+                    Surname = usr.Surname,
+                    Roles = db.FindTUserRoles(usr.Id).Select(e => e.Role),
+                    Token = token
                 };
             }
-            //tokens
-            var token = GetNewToken();
-            usr.Token = token;
-            usr.ValidUnitl = DateTime.Now.AddMinutes(11);
-            db.ModifyTUser(usr, usr);
-            //send response
-            return new TokenUser()
-            {
-                Success = true,
-                Id = usr.Id,
-                Nick = usr.Nick,
-                Name = usr.Name,
-                Surname = usr.Surname,
-                Roles = db.FindTUserRoles(usr.Id).Select(e=>e.Role),
-                Token = token
-            };
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/user/keepAlive")]
@@ -68,38 +71,41 @@ namespace Lombard_00.Controllers
         public TokenUser RenewToken(TokenUser token)
         {
             IDb db = IDb.DbInstance;
-            //find and veryfiy
-            var usr = db.FindUser(token.Id);
-            if (!TokenUser.IsUsrStillValid(usr,token.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                //find and veryfiy
+                var usr = db.FindUser(token.Id);
+                if (!TokenUser.IsUsrStillValid(usr, token.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return new TokenUser()
+                    {
+                        Success = false,
+                        Id = -1,
+                        Nick = null,
+                        Name = null,
+                        Surname = null,
+                        Roles = null,
+                        Token = null
+                    };
+                }
+                //tokens
+                var newtoken = GetNewToken();
+                usr.Token = newtoken;
+                usr.ValidUnitl = DateTime.Now.AddMinutes(11);
+                db.ModifyTUser(usr, usr);
+                //send response
                 return new TokenUser()
                 {
-                    Success = false,
-                    Id = -1,
-                    Nick = null,
-                    Name = null,
-                    Surname = null,
-                    Roles = null,
-                    Token = null
+                    Success = true,
+                    Id = usr.Id,
+                    Nick = usr.Nick,
+                    Name = usr.Name,
+                    Surname = usr.Surname,
+                    Roles = db.FindTUserRoles(usr.Id).Select(e => e.Role),
+                    Token = newtoken
                 };
             }
-            //tokens
-            var newtoken = GetNewToken();
-            usr.Token = newtoken;
-            usr.ValidUnitl = DateTime.Now.AddMinutes(11);
-            db.ModifyTUser(usr, usr);
-            //send response
-            return new TokenUser()
-            {
-                Success = true,
-                Id = usr.Id,
-                Nick = usr.Nick,
-                Name = usr.Name,
-                Surname = usr.Surname,
-                Roles = db.FindTUserRoles(usr.Id).Select(e=>e.Role),
-                Token = newtoken
-            };
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public class LocalRegisterClass : LocalLoginClass {
@@ -111,44 +117,47 @@ namespace Lombard_00.Controllers
         public TokenUser Register(LocalRegisterClass register)
         {
             IDb db = IDb.DbInstance;
-            var usr = new TUser()
+            lock (db)
             {
-                Nick = register.Nick,
-                Name = register.Name,
-                Surname = register.Surname,
-                Password = register.Password
-            };
-            var token = GetNewToken();
-            usr.Token = token;
-            usr.ValidUnitl = DateTime.Now.AddMinutes(11);
+                var usr = new TUser()
+                {
+                    Nick = register.Nick,
+                    Name = register.Name,
+                    Surname = register.Surname,
+                    Password = register.Password
+                };
+                var token = GetNewToken();
+                usr.Token = token;
+                usr.ValidUnitl = DateTime.Now.AddMinutes(11);
 
-            var value = db.AddTUser(usr);
+                var value = db.AddTUser(usr);
 
-            if (value == null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                if (value == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return new TokenUser()
+                    {
+                        Success = false,
+                        Id = -1,
+                        Nick = null,
+                        Name = null,
+                        Surname = null,
+                        Roles = null,
+                        Token = null
+                    };
+                }// db MAY refuse to create user. for now db demands Nick to be unique.
+
                 return new TokenUser()
                 {
-                    Success = false,
-                    Id = -1,
-                    Nick = null,
-                    Name = null,
-                    Surname = null,
-                    Roles = null,
-                    Token = null
+                    Success = true,
+                    Id = value.Id,
+                    Nick = value.Nick,
+                    Name = value.Name,
+                    Surname = value.Surname,
+                    Roles = db.FindTUserRoles(usr.Id).Select(e => e.Role),
+                    Token = token
                 };
-            }// db MAY refuse to create user. for now db demands Nick to be unique.
-
-            return new TokenUser()
-            {
-                Success = true,
-                Id = value.Id,
-                Nick = value.Nick,
-                Name = value.Name,
-                Surname = value.Surname,
-                Roles = db.FindTUserRoles(usr.Id).Select(e=>e.Role),
-                Token = token
-            };
+            }
         }//done
         //?redo to obj?
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -161,22 +170,27 @@ namespace Lombard_00.Controllers
         public bool Edit(LocalEdiitClass edit)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(edit.TokenUser.Id);
-            if (!TokenUser.IsUsrStillValid(usr, edit.Password)) {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
-            //update
-            usr.Nick = edit.TokenUser.Nick;
-            usr.Name = edit.TokenUser.Name;
-            usr.Surname = edit.TokenUser.Surname;
-            usr.Password = edit.Password;
+            lock (db)
+            {
+                var usr = db.FindUser(edit.TokenUser.Id);
+                if (!TokenUser.IsUsrStillValid(usr, edit.Password))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
+                //update
+                usr.Nick = edit.TokenUser.Nick;
+                usr.Name = edit.TokenUser.Name;
+                usr.Surname = edit.TokenUser.Surname;
+                usr.Password = edit.Password;
 
-            if (!db.ModifyTUser(usr, usr)) {
-                Response.StatusCode = (int)HttpStatusCode.Conflict;
-                return false;
+                if (!db.ModifyTUser(usr, usr))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    return false;
+                }
+                return true;
             }
-            return true;
         }//done
         //?redo to obj?
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------

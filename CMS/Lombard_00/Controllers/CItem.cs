@@ -23,47 +23,51 @@ namespace Lombard_00.Controllers
         public TokenItem ItemAdd(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
-            //must have starting bid
-            if (pack.Item.StartingBid == null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
-            //daily cleanup of old items
-            db.CleanUp();
-            //add item
-            var itemToAdd = new TItem() { 
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
+                //must have starting bid
+                if (pack.Item.StartingBid == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
+                //daily cleanup of old items
+                db.CleanUp();
+                //add item
+                var itemToAdd = new TItem()
+                {
                     Name = pack.Item.Name,
                     Description = pack.Item.Description,
                     ImageMetaData = pack.Item.ImageMetaData,
                     Image = pack.Item.Image,
                     FinallizationDateTime = pack.Item.FinallizationDateTime
-            };
-            //!?SHOULD be automatically added to db
-            itemToAdd.StartingBid = 
-                new TUserItemBid()
-                {
-                    Item = itemToAdd,
-                    User = usr,
-                    CreatedOn = DateTime.Now
+                };
+                //!?SHOULD be automatically added to db
+                itemToAdd.StartingBid =
+                    new TUserItemBid()
+                    {
+                        Item = itemToAdd,
+                        User = usr,
+                        CreatedOn = DateTime.Now
                     //Money = pack.Item.StartingBid.Money
                 };
-            //add
-            itemToAdd = db.AddTItem(itemToAdd);
-            //sucsess?
-            if (itemToAdd == null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                //add
+                itemToAdd = db.AddTItem(itemToAdd);
+                //sucsess?
+                if (itemToAdd == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
+                //yes
+                return new TokenItem(itemToAdd, db);
             }
-            //yes
-            return new TokenItem(itemToAdd,db);
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/delete")]
@@ -71,36 +75,40 @@ namespace Lombard_00.Controllers
         public bool ItemDelete(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
-                return false;
-            //find
-            var toDel = db.FindTItem(pack.Item.Id);
-            
-            if (toDel == null)
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }//must exist
-            if (toDel
-                .StartingBid
-                .User
-                .Id != usr.Id &&
-                db
-                .FindTUserRoles(usr.Id)
-                .Select(e => e.Role)
-                .Where(rol => rol.Id == 1)
-                .Any())
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }//must be owner or admin
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                    return false;
+                //find
+                var toDel = db.FindTItem(pack.Item.Id);
 
-            if (!db.RemoveTItem(toDel)) {
-                Response.StatusCode = (int)HttpStatusCode.Conflict;
-                return false;
+                if (toDel == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }//must exist
+                if (toDel
+                    .StartingBid
+                    .User
+                    .Id != usr.Id &&
+                    db
+                    .FindTUserRoles(usr.Id)
+                    .Select(e => e.Role)
+                    .Where(rol => rol.Id == 1)
+                    .Any())
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }//must be owner or admin
+
+                if (!db.RemoveTItem(toDel))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    return false;
+                }
+                return true;
             }
-            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/edit")]
@@ -108,50 +116,54 @@ namespace Lombard_00.Controllers
         public bool ItemEdit(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
-            //find
-            var ite = db.FindTItem(pack.Item.Id);
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
+                //find
+                var ite = db.FindTItem(pack.Item.Id);
 
-            if (ite == null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }//must exist
-            if (ite
-                .StartingBid
-                .User
-                .Id != usr.Id &&
-                db
-                .FindTUserRoles(usr.Id)
-                .Select(e => e.Role)
-                .Where(rol => rol.Id == 1)
-                .Any())
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }//must be owner or admin
-            //update
-            if (pack.Item.Name != null)
-                ite.Name = pack.Item.Name;
-            if (pack.Item.Description != null)
-                ite.Description = pack.Item.Description;
-            if (pack.Item.ImageMetaData != null)
-                ite.ImageMetaData = pack.Item.ImageMetaData;
-            if (pack.Item.Image != null)
-                ite.Image = pack.Item.Image;
-            if (pack.Item.FinallizationDateTime != null)
-                ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
-            //return
-            if (!db.ModifyTItem(ite, ite)) {
-                Response.StatusCode = (int)HttpStatusCode.Conflict;
-                return false;
+                if (ite == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }//must exist
+                if (ite
+                    .StartingBid
+                    .User
+                    .Id != usr.Id &&
+                    db
+                    .FindTUserRoles(usr.Id)
+                    .Select(e => e.Role)
+                    .Where(rol => rol.Id == 1)
+                    .Any())
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }//must be owner or admin
+                 //update
+                if (pack.Item.Name != null)
+                    ite.Name = pack.Item.Name;
+                if (pack.Item.Description != null)
+                    ite.Description = pack.Item.Description;
+                if (pack.Item.ImageMetaData != null)
+                    ite.ImageMetaData = pack.Item.ImageMetaData;
+                if (pack.Item.Image != null)
+                    ite.Image = pack.Item.Image;
+                if (pack.Item.FinallizationDateTime != null)
+                    ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
+                //return
+                if (!db.ModifyTItem(ite, ite))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Conflict;
+                    return false;
+                }
+                return true;
             }
-            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/item/refresh")]
@@ -159,15 +171,18 @@ namespace Lombard_00.Controllers
         public TokenItem ItemRefreh(LocalItemClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
+                //return
+                db.TryToFinishDeal(new TItem() { Id = pack.Item.Id });
+                return new TokenItem(db.FindTItem(pack.Item.Id), db);
             }
-            //return
-            db.TryToFinishDeal(new TItem() { Id = pack.Item.Id });
-            return new TokenItem(db.FindTItem(pack.Item.Id),db);
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------   
         [Route("api/item/list")]
@@ -196,21 +211,24 @@ namespace Lombard_00.Controllers
         public List<TokenItem> ItemFind(LocalItemFindClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            return db
-                .FindTItems(
-                    pack
-                        .Tags
-                        .Select(e=>new TTag() {Id = -1, Name = e })
-                        .ToList())
-                .Select(e=>new TokenItem(e,db))
-                .ToList();
+                return db
+                    .FindTItems(
+                        pack
+                            .Tags
+                            .Select(e => new TTag() { Id = -1, Name = e })
+                            .ToList())
+                    .Select(e => new TokenItem(e, db))
+                    .ToList();
+            }
         }//done
 
         [Route("api/item/tags")]
@@ -218,14 +236,17 @@ namespace Lombard_00.Controllers
         public List<TTag> TagList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(user.Id);
-            if (TokenUser.IsUsrStillValid(usr, user.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                var usr = db.FindUser(user.Id);
+                if (TokenUser.IsUsrStillValid(usr, user.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            return db.TTags;
+                return db.TTags;
+            }
         }//done
 
         //=========simple

@@ -23,19 +23,22 @@ namespace Lombard_00.Controllers
         public TokenComment CommentCreate(LocalCommentClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            return new TokenComment(db.AddTItemComment(new TItemComment() 
-            { 
-                Item = db.FindTItem(pack.Comment.Item.Id),
-                User = db.FindUser(pack.Comment.User.Id),
-                Comment = pack.Comment.Comment
-            }));
+                return new TokenComment(db.AddTItemComment(new TItemComment()
+                {
+                    Item = db.FindTItem(pack.Comment.Item.Id),
+                    User = db.FindUser(pack.Comment.User.Id),
+                    Comment = pack.Comment.Comment,
+                }),db);
+            }
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/comment/delete")]
@@ -43,25 +46,29 @@ namespace Lombard_00.Controllers
         public bool CommentDelete(LocalCommentClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
+
+                var toDel = db.FindTItemComment(pack.Comment.Id);
+
+                if (toDel == null)
+                    return false;//must exist
+                if (toDel.User.Id != usr.Id)
+                    return false;//must be owner
+
+                if (!db.RemoveTItemComment(toDel))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
+                return true;
             }
-
-            var toDel = db.FindTItemComment(pack.Comment.Id);
-
-            if (toDel == null)
-                return false;//must exist
-            if (toDel.User.Id != usr.Id)
-                return false;//must be owner
-
-            if (!db.RemoveTItemComment(toDel)) {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
-            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/comment/edit")]
@@ -69,24 +76,28 @@ namespace Lombard_00.Controllers
         public bool CommentEdit(LocalCommentClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
 
-            var com = new TItemComment()
-            {
-                Id = pack.Comment.Id,
-                Comment = pack.Comment.Comment
-            };
+                var com = new TItemComment()
+                {
+                    Id = pack.Comment.Id,
+                    Comment = pack.Comment.Comment
+                };
 
-            if (!db.ModifyTItemComment(com, com)) {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
+                if (!db.ModifyTItemComment(com, com))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
+                return true;
             }
-            return true;
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         [Route("api/comment/list")]
@@ -94,14 +105,17 @@ namespace Lombard_00.Controllers
         public IEnumerable<TokenComment> CommentList(LocalCommentClass pack)
         {
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.User.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                var usr = db.FindUser(pack.User.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            return db.TItemComments.Select(e=>new TokenComment(e));
+                return db.TItemComments.Select(e => new TokenComment(e, db));
+            }
         }//todo add serach
     }
 }

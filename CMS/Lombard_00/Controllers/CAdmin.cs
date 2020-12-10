@@ -34,53 +34,56 @@ namespace Lombard_00.Controllers
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(pack.Admin.Id);
-            if (!TokenUser.IsUsrStillValid(usr, pack.Admin.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
+                var usr = db.FindUser(pack.Admin.Id);
+                if (!TokenUser.IsUsrStillValid(usr, pack.Admin.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
 
-            //check if admin (role Id == 1)
-            var rols = db.FindTUserRoles(usr.Id).Select(e=>e.Role);
-            if (!rols.Where(rol => rol.Id == 1).Any())
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
+                //check if admin (role Id == 1)
+                var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
+                if (!rols.Where(rol => rol.Id == 1).Any())
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
 
-            //find edited user
-            usr = db.FindUser(pack.Edited.Id);
-            //if record exists that is
-            if (usr == null)
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return false;
-            }
+                //find edited user
+                usr = db.FindUser(pack.Edited.Id);
+                //if record exists that is
+                if (usr == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return false;
+                }
 
-            List<TUserRole> OldTUserRole = db.FindTUserRoles(usr.Id);//current rolls
+                List<TUserRole> OldTUserRole = db.FindTUserRoles(usr.Id);//current rolls
 
-            //remove exessive rolles
-            OldTUserRole
-                    .Where(ToRemove =>
-                        !pack.Edited.Roles
-                        .Select(e=>e.Id)//select Id from new roles
+                //remove exessive rolles
+                OldTUserRole
+                        .Where(ToRemove =>
+                            !pack.Edited.Roles
+                            .Select(e => e.Id)//select Id from new roles
+                            .ToList()
+                            .Contains(ToRemove.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
                         .ToList()
-                        .Contains(ToRemove.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
-                    .ToList()
-                    .ForEach(ToRemove => db.RemoveTUserRole(ToRemove));
+                        .ForEach(ToRemove => db.RemoveTUserRole(ToRemove));
 
-            //add missing ones
-            pack.Edited.Roles
-                .Where(ToAdd =>
-                    !OldTUserRole
-                    .Select(e=>e.Role.Id)//select Id from old roles
+                //add missing ones
+                pack.Edited.Roles
+                    .Where(ToAdd =>
+                        !OldTUserRole
+                        .Select(e => e.Role.Id)//select Id from old roles
+                        .ToList()
+                        .Contains(ToAdd.Id))//select only ROL's that have Role.Id that is NOT in OldTUserRole
                     .ToList()
-                    .Contains(ToAdd.Id))//select only ROL's that have Role.Id that is NOT in OldTUserRole
-                .ToList()
-                .ForEach(ToAdd => db.AddTUserRole(new TUserRole() { User = usr, Role = ToAdd }));
+                    .ForEach(ToAdd => db.AddTUserRole(new TUserRole() { User = usr, Role = ToAdd }));
 
-            return true;
+                return true;
+            }
         }//done
          
 
@@ -90,34 +93,37 @@ namespace Lombard_00.Controllers
         {
             //check if logged in
             IDb db = IDb.DbInstance;
-            var usr = db.FindUser(admin.Id);
-            if (!TokenUser.IsUsrStillValid(usr, admin.Token))
+            lock (db)
             {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                var usr = db.FindUser(admin.Id);
+                if (!TokenUser.IsUsrStillValid(usr, admin.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            //check if admin (role Id == 1)
-            var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
-            if (!rols.Where(rol => rol.Id == 1).Any())
-            {
-                Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                return null;
-            }
+                //check if admin (role Id == 1)
+                var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
+                if (!rols.Where(rol => rol.Id == 1).Any())
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
 
-            //actuall func
-            return db.TUsers
-                .Select(e =>
-                        new TokenUser()
-                        {
-                            Success = false,
-                            Id = e.Id,
-                            Nick = e.Nick,
-                            Name = e.Name,
-                            Surname = e.Surname,
-                            Roles = db.FindTUserRoles(e.Id).Select(e => e.Role),
-                            Token = null
-                        });
+                //actuall func
+                return db.TUsers
+                    .Select(e =>
+                            new TokenUser()
+                            {
+                                Success = false,
+                                Id = e.Id,
+                                Nick = e.Nick,
+                                Name = e.Name,
+                                Surname = e.Surname,
+                                Roles = db.FindTUserRoles(e.Id).Select(e => e.Role),
+                                Token = null
+                            });
+            }
         }//done
     }//?done
 }

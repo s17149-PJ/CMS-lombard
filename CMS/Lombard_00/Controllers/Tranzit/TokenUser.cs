@@ -10,17 +10,17 @@ namespace Lombard_00.Controllers
     public class TokenUser
     {
         public TokenUser() { }
-        public TokenUser(TUser user,bool success) 
+        public TokenUser(TUser user,bool success, IDb context) 
         {
             Success = success;
             Id = user.Id;
             Nick = user.Nick;
             Name = user.Name;
             Surname = user.Surname;
-            Roles = IDb.DbInstance.FindTUserRoles(user.Id).Select(e => e.Role);
+            Roles = context.FindTUserRoles(user.Id).Select(e => e.Role);
             Token = user.Token;
         }//done
-        public static TokenUser CallByToken(TUser user)
+        public static TokenUser CallByToken(TUser user, IDb context)
         {
             return new TokenUser()
             {
@@ -29,7 +29,7 @@ namespace Lombard_00.Controllers
                 Nick = user.Nick,
                 Name = user.Name,
                 Surname = user.Surname,
-                Roles = IDb.DbInstance.FindTUserRoles(user.Id).Select(e => e.Role),
+                Roles = context.FindTUserRoles(user.Id).Select(e => e.Role),
                 Token = null//NO leak!
             };
         }//done

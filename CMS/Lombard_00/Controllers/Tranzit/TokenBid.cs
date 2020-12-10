@@ -15,14 +15,14 @@ namespace Lombard_00.Controllers.Tranzit
         {
             Id = bid.Id;
             Item = new TokenItem(bid.Item, context);
-            User = TokenUser.CallByToken(bid.User);
+            User = TokenUser.CallByToken(bid.User, context);
             CreatedOn = bid.CreatedOn;
             Money = bid.Money;
 
             //optional - rating
             IsRating = bid.IsRating;
         }//done
-        public static TokenBid CallByTokenItem(TUserItemBid bid)
+        public static TokenBid CallByTokenItem(TUserItemBid bid, IDb context)
         {
             if (bid == null)
                 return null;
@@ -31,7 +31,7 @@ namespace Lombard_00.Controllers.Tranzit
             {
                 Id = bid.Id,
                 Item = null,//NO CIRCLES!
-                User = TokenUser.CallByToken(bid.User),
+                User = TokenUser.CallByToken(bid.User, context),
                 Money = bid.Money,
                 CreatedOn = bid.CreatedOn
             };

@@ -12,8 +12,8 @@ namespace Lombard_00.Controllers.Tranzit
         public string Description { get; set; }
         public string Image { get; set; }
         public string FinallizationDateTime { get; set; }
+        public double FinallizationDateTimeDouble { get; set; }
 
-        public int FinallizationDateTimeInt { get; set; }
         //tag system
         public IEnumerable<string> Tags { get; set; }
         //optional - rating

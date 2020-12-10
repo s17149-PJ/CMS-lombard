@@ -4,6 +4,7 @@ export interface LombardProduct {
   category: LompardProductCategory;
   publishDate: number;
   finallizationDateTime: number;
+  finallizationDateTimeDouble: number;
   description: string;
   image?: string;
 }

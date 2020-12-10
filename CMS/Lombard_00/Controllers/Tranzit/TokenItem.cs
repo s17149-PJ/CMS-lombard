@@ -20,7 +20,7 @@ namespace Lombard_00.Controllers.Tranzit
             StartingBid = TokenBid.CallByTokenItem(item.StartingBid, context);
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid, context);
             FinallizationDateTime = item.FinallizationDateTime;
-            FinallizationDateTimeInt = FinallizationDateTime.Millisecond;
+            FinallizationDateTimeDouble = (new DateTime(1970, 1, 1) - FinallizationDateTime).TotalMilliseconds;
             Tags = context.FindTags(item);
 
             //optional - rating
@@ -37,7 +37,7 @@ namespace Lombard_00.Controllers.Tranzit
                 Description = Description,
                 Image = ImageMetaData,
                 FinallizationDateTime = FinallizationDateTime.ToString(),
-                FinallizationDateTimeInt = FinallizationDateTime.Millisecond,
+                FinallizationDateTimeDouble = (new DateTime(1970, 1, 1) - FinallizationDateTime).TotalMilliseconds,
                 Tags = Tags.Select(e => e.Name),
                 RatingAvarage = RatingAvarage.ToString(),
                 NumberOfRatings = NumberOfRatings.ToString()
@@ -57,7 +57,7 @@ namespace Lombard_00.Controllers.Tranzit
         public TokenBid WinningBid { get; set; }
 
         public DateTime FinallizationDateTime { get; set; }
-        public int FinallizationDateTimeInt { get; set; }
+        public double FinallizationDateTimeDouble { get; set; }
 
         //tag system
         public IEnumerable<TTag> Tags { get; set; }

@@ -128,20 +128,20 @@ namespace Lombard_00.Controllers
 
 
         public class AdminPanel {
-            public int AllUsers { get; set; }
-            public int CurrentlyOnline { get; set; }
-            public int RecentNewUsers { get; set; }//last week
+            public decimal AllUsers { get; set; }
+            public decimal CurrentlyOnline { get; set; }
+            public decimal RecentNewUsers { get; set; }//last week
 
-            public int AllItems { get; set; }
-            public int ActiveItems { get; set; }//not yet sold
-            public int CompletedItems { get; set; }//auction was won by someone
-            public int TerminatedItems { get; set; }//aution not won by the time
+            public decimal AllItems { get; set; }
+            public decimal ActiveItems { get; set; }//not yet sold
+            public decimal CompletedItems { get; set; }//auction was won by someone
+            public decimal TerminatedItems { get; set; }//aution not won by the time
 
-            public int RecentMonyFlow { get; set; }//money earned from CompletedItems
-            public int RecentLoginCount { get; set; }//login over last week
+            public decimal RecentMonyFlow { get; set; }//money earned from CompletedItems
+            public decimal RecentLoginCount { get; set; }//login over last week
         }
 
-        [Route("api/admin/panel")]
+        [Route("api/admin/stats")]
         [HttpPost]
         public AdminPanel GetStats(TokenUser admin)
         {
@@ -166,7 +166,16 @@ namespace Lombard_00.Controllers
                 return new AdminPanel()
                 {
                     AllUsers = db.TUsers.Count(),
-                    CurrentlyOnline = db.TUsers.Where(usr => DateTime.Compare(usr.ValidUnitl, DateTime.Now) < 0).Count()
+                    CurrentlyOnline = db.TUsers.Where(usr => DateTime.Compare(usr.ValidUnitl, DateTime.Now) < 0).Count(),
+                    RecentNewUsers = 0,
+                    AllItems = db.TItems.Count(),
+                    ActiveItems = db.TItems.Where(ite => DateTime.Compare(ite.FinallizationDateTime, DateTime.Now) < 0).Count(),
+                    CompletedItems = db.TItems.Where(ite => ite.WinningBid != null).Count(),
+                    TerminatedItems = db.TItems.Where(ite =>
+                    DateTime.Compare(ite.FinallizationDateTime, DateTime.Now) < 0 ||
+                    ite.WinningBid == null).Count(),
+                    RecentMonyFlow = db.TItems.Where(ite => ite.WinningBid != null).Select(ite=>ite.WinningBid.Money).Sum(),
+                    RecentLoginCount = 0
                 };
             }
         }

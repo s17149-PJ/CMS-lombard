@@ -24,7 +24,7 @@ namespace Lombard_00.Controllers
             public IEnumerable<TRole> Roles { get; set; }
             public string Token { get; set; }
         }
-    public class LocalEditClass {
+        public class LocalEditClass {
             public TokenUser Admin { get; set; }
             public TokenUser Edited { get; set; }
         }//done
@@ -125,5 +125,50 @@ namespace Lombard_00.Controllers
                             });
             }
         }//done
+
+
+        public class AdminPanel {
+            public int AllUsers { get; set; }
+            public int CurrentlyOnline { get; set; }
+            public int RecentNewUsers { get; set; }//last week
+
+            public int AllItems { get; set; }
+            public int ActiveItems { get; set; }//not yet sold
+            public int CompletedItems { get; set; }//auction was won by someone
+            public int TerminatedItems { get; set; }//aution not won by the time
+
+            public int RecentMonyFlow { get; set; }//money earned from CompletedItems
+            public int RecentLoginCount { get; set; }//login over last week
+        }
+
+        [Route("api/admin/panel")]
+        [HttpPost]
+        public AdminPanel GetStats(TokenUser admin)
+        {
+            IDb db = IDb.DbInstance;
+            lock (db)
+            {
+                var usr = db.FindUser(admin.Id);
+                if (!TokenUser.IsUsrStillValid(usr, admin.Token))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
+                //check if admin (role Id == 1)
+                var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
+                if (!rols.Where(rol => rol.Id == 1).Any())
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                    return null;
+                }
+
+
+                return new AdminPanel()
+                {
+                    AllUsers = db.TUsers.Count(),
+                    CurrentlyOnline = db.TUsers.Where(usr => DateTime.Compare(usr.ValidUnitl, DateTime.Now) < 0).Count()
+                };
+            }
+        }
     }//?done
 }

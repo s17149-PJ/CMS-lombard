@@ -85,18 +85,23 @@ namespace Lombard_00.Controllers
                 return true;
             }
         }//done
-         
 
+        public class LocalUsers
+        {
+            public TokenUser Admin { get; set; }
+            public int Limit { get; set; }
+            public int Offset { get; set; }
+        }//done
         [Route("api/admin/users")]
         [HttpPost]
-        public IEnumerable<TokenUser> List(AuthorizationUser admin)
+        public IEnumerable<TokenUser> List(LocalUsers users)
         {
             //check if logged in
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(admin.Id);
-                if (!TokenUser.IsUsrStillValid(usr, admin.Token))
+                var usr = db.FindUser(users.Admin.Id);
+                if (!TokenUser.IsUsrStillValid(usr, users.Admin.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
@@ -167,7 +172,7 @@ namespace Lombard_00.Controllers
                 {
                     AllUsers = db.TUsers.Count(),
                     CurrentlyOnline = db.TUsers.Where(usr => DateTime.Compare(usr.ValidUnitl, DateTime.Now) < 0).Count(),
-                    RecentNewUsers = 0,
+                    RecentNewUsers = db.TUsers.Where(usr => DateTime.Compare(usr.JoinedOn, DateTime.Now.AddDays(-7)) > 0).Count(),
                     AllItems = db.TItems.Count(),
                     ActiveItems = db.TItems.Where(ite => DateTime.Compare(ite.FinallizationDateTime, DateTime.Now) < 0).Count(),
                     CompletedItems = db.TItems.Where(ite => ite.WinningBid != null).Count(),

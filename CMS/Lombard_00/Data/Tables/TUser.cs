@@ -27,6 +27,8 @@ namespace Lombard_00.Data.Tables
         //private DateTime validUnitl;
         [Column(TypeName = "datetime2")]
         public DateTime ValidUnitl { get; set; }
+        [Column(TypeName = "datetime2")]
+        public DateTime JoinedOn { get; set; }
         /*
          * get 
              {

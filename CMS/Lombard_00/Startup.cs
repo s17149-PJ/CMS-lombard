@@ -67,20 +67,51 @@ namespace Lombard_00
                     });
                 }
 
-               
+                IDb.DbInstance.AddTItem(new TItem()
+                {
+                    Name = "test0",
+                    Description = "test0",
+                    ImageMetaData = "test",
+                    FinallizationDateTime = DateTime.Now,
+                    StartingBid = new TUserItemBid()
+                    {
+                        CreatedOn = DateTime.Now,
+                        User = IDb.DbInstance.TUsers.ToArray()[0]
+                    }
+                });//pending
+                IDb.DbInstance.AddTItem(new TItem()
+                {
+                    Name = "test1",
+                    Description = "test1",
+                    ImageMetaData = "test",
+                    FinallizationDateTime = DateTime.Now.AddDays(-1),
+                    StartingBid = new TUserItemBid()
+                    {
+                        CreatedOn = DateTime.Now.AddDays(-1),
+                        User = IDb.DbInstance.TUsers.ToArray()[0] 
+                    }
+                });//broken
+                IDb.DbInstance.AddTItem(new TItem()
+                {
+                    Name = "test2",
+                    Description = "test2",
+                    ImageMetaData = "test",
+                    FinallizationDateTime = DateTime.Now.AddDays(-2),
+                    StartingBid = new TUserItemBid()
+                    {
+                        CreatedOn = DateTime.Now.AddDays(-2),
+                        User = IDb.DbInstance.TUsers.ToArray()[0],
+                    },
+                    WinningBid = new TUserItemBid()
+                    {
+                        CreatedOn = DateTime.Now.AddDays(-1),
+                        User = IDb.DbInstance.TUsers.ToArray()[1],
+                        Money = 100
+                    }
+                });//done
+
             }
-            //IDb.DbInstance.AddTItem(new TItem()
-            //{
-            //    Name = "test",
-            //    Description = "test",
-            //    ImageMetaData = "test",
-            //    FinallizationDateTime = DateTime.Now,
-            //    StartingBid = new TUserItemBid() 
-            //    {
-            //        CreatedOn = DateTime.Now,
-            //        User = IDb.DbInstance.TUsers.ToArray()[0]
-            //    }
-            //});
+
             int x = 2;
             //tests
             {

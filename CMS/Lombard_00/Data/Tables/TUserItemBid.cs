@@ -16,7 +16,7 @@ namespace Lombard_00.Data.Tables
         public int Id { get; set; }
         public TItem Item { get; set; }
         public TUser User { get; set; }
-
+        [Column(TypeName = "datetime2")]
         public DateTime CreatedOn { get; set; }
         public decimal Money { get; set; }
 

@@ -179,8 +179,9 @@ namespace Lombard_00.Controllers
                     TerminatedItems = db.TItems.Where(ite =>
                     DateTime.Compare(ite.FinallizationDateTime, DateTime.Now) < 0 ||
                     ite.WinningBid == null).Count(),
-                    RecentMonyFlow = db.TItems.Where(ite => ite.WinningBid != null).Select(ite=>ite.WinningBid.Money).Sum(),
-                    RecentLoginCount = 0
+                    RecentMonyFlow = db.TItems.Where(ite => ite.WinningBid != null).Select(ite => ite.WinningBid.Money).Sum(),
+                    RecentLoginCount = db.Log.Where(log => log.Key == "ActionLogin" &&
+                    DateTime.Compare(log.When, DateTime.Now.AddDays(-7)) > 0).Count()
                 };
             }
         }

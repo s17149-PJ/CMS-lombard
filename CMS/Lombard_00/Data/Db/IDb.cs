@@ -30,6 +30,7 @@ namespace Lombard_00.Data.Db
         public TUser FindUser(int Id);
         public TUser FindUser(string UniqueNick);
         public bool ModifyTUser(TUser toBeModified, TUser newData);
+        public void PokeDbLogin();
 
         /*
          * many to many implementation
@@ -107,6 +108,9 @@ namespace Lombard_00.Data.Db
          * CleanUp -> archive old offers
          * VoidOut -> empty db. IMPORTANT: it's broken in EF so do *NOT* use it
          */
+
+        public List<TNode> Log { get; }
+
         public void CleanUp();
         public void VoidOut();
     }

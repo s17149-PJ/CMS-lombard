@@ -22,7 +22,7 @@ namespace Lombard_00.Data.Tables
 
         public TUserItemBid StartingBid { get; set; }//also holds ref to prev owner
         public TUserItemBid WinningBid { get; set; }//holds ref to current owner
-
+        [Column(TypeName = "datetime2")]
         public DateTime FinallizationDateTime { get; set; }
 
         //optional - rating

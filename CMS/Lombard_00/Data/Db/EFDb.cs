@@ -58,6 +58,15 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
+        public void PokeDbLogin() {
+            InternalData.Add(new TNode()
+            {
+                Key = "ActionLogin",
+                When = DateTime.Now,
+                Value = 0
+            }); ;
+            SaveChanges();
+        }
 
         public List<TUserRole> TUserRoles
         {
@@ -590,6 +599,8 @@ namespace Lombard_00.Data.Db
 
             SaveChanges();
         }
+
+        public List<TNode> Log { get { return InternalData.ToList(); } }
         /*end of interface stuff*/
 
         /*start of EF stuff*/
@@ -609,6 +620,8 @@ namespace Lombard_00.Data.Db
 
         public DbSet<TTag> CTTag { get; set; }
         public DbSet<TItemTag> CTItemTag { get; set; }
+
+        public DbSet<TNode> InternalData { get; set; }
         /*
          * ma poważne wątpliwości co do autonumeracji EF. co więcej sporo rzeczy wymaga JOIN po stronie kontrollerów.
          * można by to zoptymalizować. kiedyś. na razie jako POC wystarczy.

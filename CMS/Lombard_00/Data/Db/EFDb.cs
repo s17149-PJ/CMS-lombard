@@ -63,7 +63,8 @@ namespace Lombard_00.Data.Db
             {
                 Key = "ActionLogin",
                 When = DateTime.Now,
-                Value = 0
+                ValueDecimal = 0,
+                ValueString = ""
             }); ;
             SaveChanges();
         }

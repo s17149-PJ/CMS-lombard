@@ -14,6 +14,7 @@ namespace Lombard_00.Data.Tables
         public string Key { get; set; }
         [Column(TypeName = "datetime2")]
         public DateTime When { get; set; }
-        public Decimal Value { get; set; }
+        public Decimal ValueDecimal { get; set; }
+        public string ValueString { get; set; }
     }
 }

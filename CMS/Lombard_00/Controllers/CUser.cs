@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.Design;
+﻿using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Lombard_00.Data.Db;
-using Lombard_00.Data.Tables;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
     [ApiController]
     public class CUser : ControllerBase
     {
-        public class LocalLoginClass{
+        public class LocalLoginClass
+        {
             public string Nick { get; set; }
             public string Password { get; set; }
         }//done
@@ -74,7 +70,7 @@ namespace Lombard_00.Controllers
             lock (db)
             {
                 //find and veryfiy
-                
+
                 if (!TokenUser.IsUsrStillValid(token.Id, token.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -110,7 +106,8 @@ namespace Lombard_00.Controllers
             }
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        public class LocalRegisterClass : LocalLoginClass {
+        public class LocalRegisterClass : LocalLoginClass
+        {
             public string Name { get; set; }
             public string Surname { get; set; }
         }//done
@@ -163,7 +160,8 @@ namespace Lombard_00.Controllers
         }//done
         //?redo to obj?
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        public class LocalEdiitClass {
+        public class LocalEdiitClass
+        {
             public TokenUser TokenUser { get; set; }
             public string NewPassword { get; set; }
         }//done

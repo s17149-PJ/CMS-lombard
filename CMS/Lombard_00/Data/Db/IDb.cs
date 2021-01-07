@@ -1,8 +1,5 @@
 ﻿using Lombard_00.Data.Tables;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Db
 {
@@ -13,8 +10,10 @@ namespace Lombard_00.Data.Db
          * so it will do for now.
          */
         private static IDb dbInstance;
-        public static IDb DbInstance {
-            get {
+        public static IDb DbInstance
+        {
+            get
+            {
                 if (dbInstance == null)
                     dbInstance = new EFDb();
 
@@ -60,12 +59,14 @@ namespace Lombard_00.Data.Db
          * IMPORTANT:
          * TryToFinishDeal zwraca TRUE JEŻELI aukcja się SKOŃCZYŁA i FALSE  jeżeli NIE. to nie świadczy o tym czy operacja zakończyła się sukcesem, z zasady jednak jeżeli nie, zwórcone zostanie FALSE.
          */
-        public List<TItem> TItems{ get; }
+        public List<TItem> TItems { get; }
         public TItem AddTItem(TItem item);
         public bool RemoveTItem(TItem item);
         public bool ModifyTItem(TItem toBeModified, TItem newData);
         public TItem FindTItem(int Id);
         public List<TItem> FindTItems(List<TTag> tags);
+        public TItem FindTItemNySeller(TUser who);
+        public TItem FindTItemNyBuyer(TUser who);
         public bool TryToFinishDeal(TItem item);
 
         /*
@@ -87,7 +88,7 @@ namespace Lombard_00.Data.Db
         public TUserItemBid AddTUserItemBid(TUserItemBid bid);
         public bool RemoveTUserItemBid(TUserItemBid bid);
         public TUserItemBid FindTUserItemBid(int Id);
-        
+
         /*
          * IMPORTANT: Tags add automatically so don't bother.
          * 
@@ -100,7 +101,7 @@ namespace Lombard_00.Data.Db
         public TTag HardFindTag(TTag tag);
         public List<TTag> FindTags(TItem item);
 
-        public List<TItemTag> TItemsTags{ get; }
+        public List<TItemTag> TItemsTags { get; }
         public TItemTag AddItemTag(TItemTag itemTag);
         public bool RemoveItemTag(TItemTag itemTag);
         public TItemTag FindItemTag(int Id);

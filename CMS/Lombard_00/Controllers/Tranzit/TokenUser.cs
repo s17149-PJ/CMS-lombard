@@ -3,14 +3,13 @@ using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lombard_00.Controllers
 {
     public class TokenUser
     {
         public TokenUser() { }
-        public TokenUser(TUser user,bool success, IDb context) 
+        public TokenUser(TUser user, bool success, IDb context)
         {
             Success = success;
             Id = user.Id;
@@ -42,7 +41,7 @@ namespace Lombard_00.Controllers
         public IEnumerable<TRole> Roles { get; set; }
         public string Token { get; set; }
 
-        public static bool IsUsrStillValid(int usr,string tokenOrPassword)
+        public static bool IsUsrStillValid(int usr, string tokenOrPassword)
         {
             var found = IDb.DbInstance.FindUser(usr);
             if (found == null)

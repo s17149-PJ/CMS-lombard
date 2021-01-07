@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Lombard_00.Data.Db;
-using Lombard_00.Data.Tables;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
@@ -24,7 +21,8 @@ namespace Lombard_00.Controllers
             public IEnumerable<TRole> Roles { get; set; }
             public string Token { get; set; }
         }
-        public class LocalEditClass {
+        public class LocalEditClass
+        {
             public TokenUser Admin { get; set; }
             public TokenUser Edited { get; set; }
         }//done
@@ -101,7 +99,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                                if (!TokenUser.IsUsrStillValid(users.Admin.Id, users.Admin.Token))
+                if (!TokenUser.IsUsrStillValid(users.Admin.Id, users.Admin.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
@@ -133,7 +131,8 @@ namespace Lombard_00.Controllers
         }//done
 
 
-        public class AdminPanel {
+        public class AdminPanel
+        {
             public decimal AllUsers { get; set; }
             public decimal CurrentlyOnline { get; set; }
             public decimal RecentNewUsers { get; set; }//last week
@@ -154,7 +153,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                
+
                 if (!TokenUser.IsUsrStillValid(admin.Id, admin.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;

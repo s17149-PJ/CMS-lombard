@@ -65,7 +65,7 @@ export class UserPanelComponent implements OnInit {
     //        if (!isNullOrUndefined(user)) {
     //          this.router.navigate(['/']);
     //        } else {
-    //          this.error = 'Register failed!';
+    //          this.error = 'Edit failed!';
     //          this.loading = false;
     //        }
     //      },

@@ -2,26 +2,26 @@
 using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Data.Entity;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Db
 {
-    public class EFDb : DbContext ,IDb
+    public class EFDb : DbContext, IDb
     {
         /*all of this is interface stuff*/
-        public List<TUser> TUsers { 
-            get {
+        public List<TUser> TUsers
+        {
+            get
+            {
                 return CTUsers.ToList();
-            } 
+            }
         }
         public TUser AddTUser(TUser user)
         {
             //nick must be unique
-            if (CTUsers.Where(usr =>usr.Nick == user.Nick).Any())
+            if (CTUsers.Where(usr => usr.Nick == user.Nick).Any())
                 return null;
 
             var value = CTUsers.Add(user);
@@ -35,30 +35,34 @@ namespace Lombard_00.Data.Db
 
             return value;
         }//done
-        public TUser FindUser(int Id) {
+        public TUser FindUser(int Id)
+        {
             return CTUsers.Find(Id);
         }//done
-        public TUser FindUser(string UniqueNick) {
+        public TUser FindUser(string UniqueNick)
+        {
             return CTUsers.AsEnumerable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
         }//done
         public bool ModifyTUser(TUser toBeModified, TUser newData)
         {
             var value = CTUsers.FirstOrDefault(value => value.Id == toBeModified.Id);
-            if (value == null) {
+            if (value == null)
+            {
 
                 return false;
             }
-            if (newData.Nick     != null)   value.Nick       = newData.Nick;
-            if (newData.Name     != null)   value.Name       = newData.Name;
-            if (newData.Surname  != null)   value.Surname    = newData.Surname;
-            if (newData.Password != null)   value.Password   = newData.Password;
-            if (newData.Token != null)      value.Token      = newData.Token;
+            if (newData.Nick != null) value.Nick = newData.Nick;
+            if (newData.Name != null) value.Name = newData.Name;
+            if (newData.Surname != null) value.Surname = newData.Surname;
+            if (newData.Password != null) value.Password = newData.Password;
+            if (newData.Token != null) value.Token = newData.Token;
             if (newData.ValidUnitl != null) value.ValidUnitl = newData.ValidUnitl;
             SaveChanges();
 
             return true;
         }//done
-        public void PokeDbLogin() {
+        public void PokeDbLogin()
+        {
             InternalData.Add(new TNode()
             {
                 Key = "ActionLogin",
@@ -73,7 +77,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTUserRoles.Include(e=>e.Role).Include(e=>e.User).ToList();
+                return CTUserRoles.Include(e => e.Role).Include(e => e.User).ToList();
             }
         }//done
         public bool AddTUserRole(TUserRole asoc)
@@ -93,7 +97,7 @@ namespace Lombard_00.Data.Db
                 .Include(e => e.Role)
                 .Include(e => e.User)
                 .AsEnumerable()
-                .Where(e=> e.Role==asoc.Role && asoc.User == asoc.User)
+                .Where(e => e.Role == asoc.Role && asoc.User == asoc.User)
                 .Any())
                 return false;
             //add and save
@@ -140,7 +144,8 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public TRole FindRole(int Id) {
+        public TRole FindRole(int Id)
+        {
             return CTRoles.Find(Id);
         }//done
         public bool ModifyTRole(TRole toBeModified, TRole newData)
@@ -161,7 +166,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTItems.Include(e=>e.StartingBid).Include(e=>e.WinningBid).ToList();
+                return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).ToList();
             }
         }//done
         public TItem AddTItem(TItem item)
@@ -177,18 +182,18 @@ namespace Lombard_00.Data.Db
             if (value == null)
                 return false;
 
-            if (newData.Name          != null) 
-                value.Name          = newData.Name;
-            if (newData.Description   != null) 
-                value.Description   = newData.Description;
-            if (newData.ImageMetaData != null) 
+            if (newData.Name != null)
+                value.Name = newData.Name;
+            if (newData.Description != null)
+                value.Description = newData.Description;
+            if (newData.ImageMetaData != null)
                 value.ImageMetaData = newData.ImageMetaData;
-            if (newData.Image         != null) 
-                value.Image         = newData.Image;
-            if (newData.StartingBid   != null) 
-                value.StartingBid   = newData.StartingBid;
-            if (newData.WinningBid    != null) 
-                value.WinningBid    = newData.WinningBid;
+            if (newData.Image != null)
+                value.Image = newData.Image;
+            if (newData.StartingBid != null)
+                value.StartingBid = newData.StartingBid;
+            if (newData.WinningBid != null)
+                value.WinningBid = newData.WinningBid;
             if (newData.FinallizationDateTime != null)
                 value.FinallizationDateTime = newData.FinallizationDateTime;
 
@@ -214,16 +219,18 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public TItem FindTItem(int Id) {
-            return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Where(e=>e.Id==Id).FirstOrDefault();
+        public TItem FindTItem(int Id)
+        {
+            return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Where(e => e.Id == Id).FirstOrDefault();
         }//done
 
         /*IMPORTANT: this function have a nice O(n^2) cost so do NOT abuse it
          * at best use it to with few tags or uncommon tags. otherwise the serwer will die.
          */
-        public List<TItem> FindTItems(List<TTag> tags) {
+        public List<TItem> FindTItems(List<TTag> tags)
+        {
             //find valid tags at all cost.
-            var foundTags = tags.Select(e => HardFindTag(e)).Where(e=>e!=null).ToList();
+            var foundTags = tags.Select(e => HardFindTag(e)).Where(e => e != null).ToList();
             //if found nothing ret error
             if (foundTags.Count() == 0)
                 return null;
@@ -235,8 +242,9 @@ namespace Lombard_00.Data.Db
                 .Select(e => e.Item);//those are initially found items. now on to filtering them out
 
             foundTags.RemoveAt(0);//remove already found tag
-            
-            var task = Task.Run(() => {
+
+            var task = Task.Run(() =>
+            {
                 if (foundTags.Count() != 0)//if there are still tags to process
                     foundItems =
                         foundItems.Where(item =>//for each item
@@ -277,8 +285,27 @@ namespace Lombard_00.Data.Db
                 return foundItems.ToList();//return list
             //also i copypasted it (task idea) from stack so god know what it actually does
         }//dunno? mabe? mabe not? who knows. <=======================
+        public TItem FindTItemNySeller(TUser who) 
+        {
+            return CTItems
+                .Include(e => e.StartingBid)
+                .Include(e => e.WinningBid)
+                .Include(e => e.StartingBid.User)
+                .Where(e => e.StartingBid.User == who)
+                .FirstOrDefault();
+        }
+        public TItem FindTItemNyBuyer(TUser who)
+        {
+            return CTItems
+                .Include(e => e.StartingBid)
+                .Include(e => e.WinningBid)
+                .Include(e => e.WinningBid.User)
+                .Where(e => e.StartingBid != null)// null poiter exception <-
+                .Where(e => e.WinningBid.User == who)
+                .FirstOrDefault();
+        }
 
-        public bool TryToFinishDeal(TItem item) 
+        public bool TryToFinishDeal(TItem item)
         {
             //find said item
             var foundItem = FindTItem(item.Id);
@@ -360,7 +387,8 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public TItemComment FindTItemComment(int Id) {
+        public TItemComment FindTItemComment(int Id)
+        {
             return CTItemComments.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
         }//done
 
@@ -371,7 +399,7 @@ namespace Lombard_00.Data.Db
                 return CTUserItemBids.Include(e => e.Item).Include(e => e.User).ToList();
             }
         }//done
-        public TUserItemBid AddTUserItemBid(TUserItemBid bid) 
+        public TUserItemBid AddTUserItemBid(TUserItemBid bid)
         {
             var usr = FindUser(bid.User.Id);
             if (usr == null)
@@ -384,7 +412,8 @@ namespace Lombard_00.Data.Db
 
             var value = CTUserItemBids.Add(bid);
 
-            if (bid.IsRating) {
+            if (bid.IsRating)
+            {
                 bid.Item.RatingAvarage =
                     ((bid.Item.RatingAvarage * bid.Item.NumberOfRatings)//get original value
                     + bid.Money) //alter
@@ -396,7 +425,7 @@ namespace Lombard_00.Data.Db
 
             return value;
         }//done
-        public bool RemoveTUserItemBid(TUserItemBid bid) 
+        public bool RemoveTUserItemBid(TUserItemBid bid)
         {
             var bidfound = FindTUserItemBid(bid.Id);
             var usr = FindUser(bidfound.User.Id);
@@ -420,7 +449,7 @@ namespace Lombard_00.Data.Db
                         / (bidfound.Item.NumberOfRatings - 1);//create new one
                     bidfound.Item.NumberOfRatings = bidfound.Item.NumberOfRatings - 1;//update amout
                 }
-                else 
+                else
                 {
                     bidfound.Item.RatingAvarage = 0;
                     bidfound.Item.NumberOfRatings = 0;
@@ -431,17 +460,19 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public TUserItemBid FindTUserItemBid(int Id) {
+        public TUserItemBid FindTUserItemBid(int Id)
+        {
             return CTUserItemBids.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
         }//done
 
-        public List<TTag> TTags {
-            get 
+        public List<TTag> TTags
+        {
+            get
             {
                 return CTTag.ToList();
-            } 
+            }
         }//done
-        public TTag AddTag(TTag tag) 
+        public TTag AddTag(TTag tag)
         {
             var value = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
             if (value != null)
@@ -452,12 +483,12 @@ namespace Lombard_00.Data.Db
 
             return value;
         }//done
-        public bool SoftRemoveTag(TTag tag) 
+        public bool SoftRemoveTag(TTag tag)
         {
             var foundTag = FindTag(tag.Id);
 
             if (foundTag == null)
-                foundTag = CTTag.Where(e=>e.Name==tag.Name).FirstOrDefault();
+                foundTag = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
 
             if (foundTag == null)
                 return false;
@@ -488,17 +519,19 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public TTag FindTag(int Id) {
+        public TTag FindTag(int Id)
+        {
             return CTTag.Find(Id);
         }//done
-        public TTag HardFindTag(TTag tag) {
+        public TTag HardFindTag(TTag tag)
+        {
             var value = FindTag(tag.Id);
             if (value == null)
                 value = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
 
             return value;
         }
-        public List<TTag> FindTags(TItem item) 
+        public List<TTag> FindTags(TItem item)
         {
             var found = FindTItem(item.Id);
             return CTItemTag
@@ -511,14 +544,15 @@ namespace Lombard_00.Data.Db
                     .ToList();
         }//done
 
-        public List<TItemTag> TItemsTags { 
-            get 
+        public List<TItemTag> TItemsTags
+        {
+            get
             {
                 return CTItemTag
                     .Include(e => e.Item)
                     .Include(e => e.Tag)
                     .ToList();
-            } 
+            }
         }//done
         public TItemTag AddItemTag(TItemTag itemTag)
         {
@@ -547,7 +581,7 @@ namespace Lombard_00.Data.Db
 
             return value;
         }//done
-        public bool RemoveItemTag(TItemTag itemTag) 
+        public bool RemoveItemTag(TItemTag itemTag)
         {
             var toDel = FindItemTag(itemTag.Id);
             if (toDel == null)
@@ -569,7 +603,7 @@ namespace Lombard_00.Data.Db
 
         //chk func ---------------------------------------------------------------------------------------------------
         private DateTime LastChek = DateTime.Now;//start class with default value now
-        public void CleanUp() 
+        public void CleanUp()
         {
             if (DateTime.Compare(LastChek, DateTime.Now) > 0)
                 return;
@@ -582,7 +616,7 @@ namespace Lombard_00.Data.Db
             CTItems
                 .Where(item => item.WinningBid != null)
                 .ToList()
-                .ForEach(item=> 
+                .ForEach(item =>
                 {
                     if (DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
                         toRemove.Add(item);
@@ -590,7 +624,7 @@ namespace Lombard_00.Data.Db
             //now having all refs del each item
             toRemove.ForEach(item => RemoveTItem(item));
         }// this method SHOULD be async. done
-        public void VoidOut() 
+        public void VoidOut()
         {
             CTItems.RemoveRange(CTItems);
 

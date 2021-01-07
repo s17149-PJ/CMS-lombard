@@ -1,19 +1,12 @@
-using Lombard_00.Controllers;
-using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Data.SqlTypes;
 using System.Linq;
 
 namespace Lombard_00
@@ -23,7 +16,7 @@ namespace Lombard_00
         private void TestingStuff()
         {
             //restart db if you want / need
-            if (IDb.DbInstance.TUsers.Count==0)
+            if (IDb.DbInstance.TUsers.Count == 0)
             {
                 IDb.DbInstance.AddTRole(new TRole()
                 {
@@ -88,7 +81,7 @@ namespace Lombard_00
                     StartingBid = new TUserItemBid()
                     {
                         CreatedOn = DateTime.Now.AddDays(-1),
-                        User = IDb.DbInstance.TUsers.ToArray()[0] 
+                        User = IDb.DbInstance.TUsers.ToArray()[0]
                     }
                 });//broken
                 IDb.DbInstance.AddTItem(new TItem()
@@ -112,10 +105,12 @@ namespace Lombard_00
 
             }
 
+#pragma warning disable CS0219 // The variable 'x' is assigned but its value is never used
             int x = 2;
+#pragma warning restore CS0219 // The variable 'x' is assigned but its value is never used
             //tests
             {
-            
+
             }
             var list = IDb.DbInstance.TItems;
 

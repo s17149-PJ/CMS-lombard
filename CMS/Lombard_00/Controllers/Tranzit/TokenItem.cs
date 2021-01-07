@@ -3,14 +3,13 @@ using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lombard_00.Controllers.Tranzit
 {
     public class TokenItem
     {
         public TokenItem() { }
-        public TokenItem(TItem item, IDb context) 
+        public TokenItem(TItem item, IDb context)
         {
             Id = item.Id;
             Name = item.Name;
@@ -28,7 +27,7 @@ namespace Lombard_00.Controllers.Tranzit
             NumberOfRatings = item.NumberOfRatings;
         }//done
 
-        public SimpleTokenItem Simplify() 
+        public SimpleTokenItem Simplify()
         {
             return new SimpleTokenItem()
             {
@@ -43,7 +42,7 @@ namespace Lombard_00.Controllers.Tranzit
                 NumberOfRatings = NumberOfRatings.ToString()
             };
         }
-        public TokenItem(SimpleTokenItem token) 
+        public TokenItem(SimpleTokenItem token)
         {
 
         }

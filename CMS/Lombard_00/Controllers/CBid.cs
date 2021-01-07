@@ -1,20 +1,19 @@
-﻿using System;
+﻿using Lombard_00.Controllers.Tranzit;
+using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Lombard_00.Controllers.Tranzit;
-using Lombard_00.Data.Db;
-using Lombard_00.Data.Tables;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
     [ApiController]
     public class CBid : ControllerBase
     {
-        public class LocalBidClass {
+        public class LocalBidClass
+        {
             public TokenUser User { get; set; }
             public TokenBid Bid { get; set; }
         }
@@ -23,7 +22,8 @@ namespace Lombard_00.Controllers
         public TokenBid BidCreate(LocalBidClass pack)
         {
             IDb db = IDb.DbInstance;
-            lock (db) {
+            lock (db)
+            {
                 if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;

@@ -1,20 +1,18 @@
-﻿using System;
+﻿using Lombard_00.Controllers.Tranzit;
+using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Lombard_00.Controllers.Tranzit;
-using Lombard_00.Data.Db;
-using Lombard_00.Data.Tables;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
     [ApiController]
     public class CComent : ControllerBase
     {
-        public class LocalCommentClass {
+        public class LocalCommentClass
+        {
             public TokenUser User { get; set; }
             public TokenComment Comment { get; set; }
         }
@@ -37,7 +35,7 @@ namespace Lombard_00.Controllers
                     Item = db.FindTItem(pack.Comment.Item.Id),
                     User = db.FindUser(pack.Comment.User.Id),
                     Comment = pack.Comment.Comment,
-                }),db);
+                }), db);
             }
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------

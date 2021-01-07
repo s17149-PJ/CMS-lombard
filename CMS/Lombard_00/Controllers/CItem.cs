@@ -1,20 +1,19 @@
-﻿using System;
+﻿using Lombard_00.Controllers.Tranzit;
+using Lombard_00.Data.Db;
+using Lombard_00.Data.Tables;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
-using Lombard_00.Controllers.Tranzit;
-using Lombard_00.Data.Db;
-using Lombard_00.Data.Tables;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Lombard_00.Controllers
 {
     [ApiController]
     public class CItem : ControllerBase
     {
-        public class LocalItemClass {
+        public class LocalItemClass
+        {
             public TokenUser User { get; set; }
             public TokenItem Item { get; set; }
         }
@@ -56,8 +55,8 @@ namespace Lombard_00.Controllers
                         Item = itemToAdd,
                         User = usr,
                         CreatedOn = DateTime.Now
-                    //Money = pack.Item.StartingBid.Money
-                };
+                        //Money = pack.Item.StartingBid.Money
+                    };
                 //add
                 itemToAdd = db.AddTItem(itemToAdd);
                 //sucsess?
@@ -192,18 +191,20 @@ namespace Lombard_00.Controllers
         public List<TokenItem> ItemList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
-            lock (db) { 
+            lock (db)
+            {
                 if (!TokenUser.IsUsrStillValid(user.Id, user.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
 
-                return (from item in db.TItems select new TokenItem(item,db)).ToList();
+                return (from item in db.TItems select new TokenItem(item, db)).ToList();
             }
         }//done
 
-        public class LocalItemFindClass {
+        public class LocalItemFindClass
+        {
             public TokenUser User { get; set; }
             public List<String> Tags { get; set; }
         }
@@ -256,8 +257,8 @@ namespace Lombard_00.Controllers
         {
             IDb db = IDb.DbInstance;
             lock (db)
-            { 
-                return (from item in db.TItems select new TokenItem(item,db).Simplify()).ToList();
+            {
+                return (from item in db.TItems select new TokenItem(item, db).Simplify()).ToList();
             }
         }//done
     }

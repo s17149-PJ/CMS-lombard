@@ -513,9 +513,9 @@ namespace Lombard_00.Data.Db
             //async serach for items that are to  be removed
             //dunno if deleting during iteration will break it so I don't
             CTItems
-                .Include(e=>e.StartingBid)
-                .Include(e=>e.WinningBid)
-                .Include(e=>e.Tags)
+                .Include(e => e.StartingBid)
+                .Include(e => e.WinningBid)
+                .Include(e => e.Tags)
                 .Where(item => item.WinningBid != null)
                 .ToList()
                 .ForEach(item =>
@@ -524,7 +524,8 @@ namespace Lombard_00.Data.Db
                         toRemove.Add(item);
                 });
             //now having all refs del each item
-            toRemove.ForEach(item => {
+            toRemove.ForEach(item =>
+            {
 
                 var bids = CTUserItemBids
                 .Include(e => e.Item)
@@ -533,7 +534,7 @@ namespace Lombard_00.Data.Db
 
                 CTUserItemBids.RemoveRange(bids);
 
-                var comments  = CTItemComments
+                var comments = CTItemComments
                 .Include(e => e.Item)
                 .Where(e => e.Item == item)
                 .ToList();

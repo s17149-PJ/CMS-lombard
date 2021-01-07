@@ -285,7 +285,7 @@ namespace Lombard_00.Data.Db
                 return foundItems.ToList();//return list
             //also i copypasted it (task idea) from stack so god know what it actually does
         }//dunno? mabe? mabe not? who knows. <=======================
-        public TItem FindTItemNySeller(TUser who) 
+        public TItem FindTItemBySeller(TUser who) 
         {
             return CTItems
                 .Include(e => e.StartingBid)
@@ -294,7 +294,7 @@ namespace Lombard_00.Data.Db
                 .Where(e => e.StartingBid.User == who)
                 .FirstOrDefault();
         }
-        public TItem FindTItemNyBuyer(TUser who)
+        public TItem FindTItemByBuyer(TUser who)
         {
             return CTItems
                 .Include(e => e.StartingBid)

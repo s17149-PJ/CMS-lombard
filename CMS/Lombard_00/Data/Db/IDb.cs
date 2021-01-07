@@ -65,8 +65,8 @@ namespace Lombard_00.Data.Db
         public bool ModifyTItem(TItem toBeModified, TItem newData);
         public TItem FindTItem(int Id);
         public List<TItem> FindTItems(List<TTag> tags);
-        public TItem FindTItemNySeller(TUser who);
-        public TItem FindTItemNyBuyer(TUser who);
+        public TItem FindTItemBySeller(TUser who);
+        public TItem FindTItemByBuyer(TUser who);
         public bool TryToFinishDeal(TItem item);
 
         /*

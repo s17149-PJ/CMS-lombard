@@ -25,12 +25,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
+
+                var usr = db.FindUser(pack.User.Id);
                 //must have starting bid
                 if (pack.Item.StartingBid == null)
                 {
@@ -77,9 +78,10 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                     return false;
+
+                var usr = db.FindUser(pack.User.Id);
                 //find
                 var toDel = db.FindTItem(pack.Item.Id);
 
@@ -118,12 +120,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
+
+                var usr = db.FindUser(pack.User.Id);
                 //find
                 var ite = db.FindTItem(pack.Item.Id);
 
@@ -173,8 +176,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
@@ -191,8 +193,7 @@ namespace Lombard_00.Controllers
         {
             IDb db = IDb.DbInstance;
             lock (db) { 
-                var usr = db.FindUser(user.Id);
-                if (!TokenUser.IsUsrStillValid(usr, user.Token))
+                if (!TokenUser.IsUsrStillValid(user.Id, user.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
@@ -213,8 +214,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
@@ -238,8 +238,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(user.Id);
-                if (TokenUser.IsUsrStillValid(usr, user.Token))
+                if (TokenUser.IsUsrStillValid(user.Id, user.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;

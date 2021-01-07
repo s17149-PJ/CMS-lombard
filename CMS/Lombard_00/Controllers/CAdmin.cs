@@ -36,12 +36,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.Admin.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.Admin.Token))
+                if (!TokenUser.IsUsrStillValid(pack.Admin.Id, pack.Admin.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
+
+                var usr = db.FindUser(pack.Admin.Id);
 
                 //check if admin (role Id == 1)
                 var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
@@ -100,13 +101,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(users.Admin.Id);
-                if (!TokenUser.IsUsrStillValid(usr, users.Admin.Token))
+                                if (!TokenUser.IsUsrStillValid(users.Admin.Id, users.Admin.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
 
+                var usr = db.FindUser(users.Admin.Id);
                 //check if admin (role Id == 1)
                 var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
                 if (!rols.Where(rol => rol.Id == 1).Any())
@@ -153,12 +154,14 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(admin.Id);
-                if (!TokenUser.IsUsrStillValid(usr, admin.Token))
+                
+                if (!TokenUser.IsUsrStillValid(admin.Id, admin.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
+
+                var usr = db.FindUser(admin.Id);
                 //check if admin (role Id == 1)
                 var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
                 if (!rols.Where(rol => rol.Id == 1).Any())

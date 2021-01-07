@@ -74,8 +74,8 @@ namespace Lombard_00.Controllers
             lock (db)
             {
                 //find and veryfiy
-                var usr = db.FindUser(token.Id);
-                if (!TokenUser.IsUsrStillValid(usr, token.Token))
+                
+                if (!TokenUser.IsUsrStillValid(token.Id, token.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return new TokenUser()
@@ -89,6 +89,8 @@ namespace Lombard_00.Controllers
                         Token = null
                     };
                 }
+
+                var usr = db.FindUser(token.Id);
                 //tokens
                 var newtoken = GetNewToken();
                 usr.Token = newtoken;
@@ -163,7 +165,7 @@ namespace Lombard_00.Controllers
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
         public class LocalEdiitClass {
             public TokenUser TokenUser { get; set; }
-            public string Password { get; set; }
+            public string NewPassword { get; set; }
         }//done
         [Route("api/user/edit")]
         [HttpPost]
@@ -172,17 +174,18 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(edit.TokenUser.Id);
-                if (!TokenUser.IsUsrStillValid(usr, edit.Password))
+                if (!TokenUser.IsUsrStillValid(edit.TokenUser.Id, edit.TokenUser.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
+
+                var usr = db.FindUser(edit.TokenUser.Id);
                 //update
                 usr.Nick = edit.TokenUser.Nick;
                 usr.Name = edit.TokenUser.Name;
                 usr.Surname = edit.TokenUser.Surname;
-                usr.Password = edit.Password;
+                usr.Password = edit.NewPassword;
 
                 if (!db.ModifyTUser(usr, usr))
                 {

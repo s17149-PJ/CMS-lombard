@@ -42,16 +42,17 @@ namespace Lombard_00.Controllers
         public IEnumerable<TRole> Roles { get; set; }
         public string Token { get; set; }
 
-        public static bool IsUsrStillValid(TUser usr,string tokenOrPassword)
+        public static bool IsUsrStillValid(int usr,string tokenOrPassword)
         {
-            if (usr == null)
+            var found = IDb.DbInstance.FindUser(usr);
+            if (found == null)
             {
 
                 //return false;
                 return true;
-            }
-            if (DateTime.Compare(usr.ValidUnitl, DateTime.Now) > 0||
-                (usr.Password != tokenOrPassword && usr.Token != tokenOrPassword))
+            }//if user not found in database
+            if (DateTime.Compare(found.ValidUnitl, DateTime.Now) > 0 ||//if saved IN database token expired OR
+                (found.Password != tokenOrPassword && found.Token != tokenOrPassword))//provided string don't fit password AND token
             {
 
                 //return false;

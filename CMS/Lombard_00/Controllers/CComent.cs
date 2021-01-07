@@ -25,13 +25,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
 
+                var usr = db.FindUser(pack.User.Id);
                 return new TokenComment(db.AddTItemComment(new TItemComment()
                 {
                     Item = db.FindTItem(pack.Comment.Item.Id),
@@ -48,13 +48,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
 
+                var usr = db.FindUser(pack.User.Id);
                 var toDel = db.FindTItemComment(pack.Comment.Id);
 
                 if (toDel == null)
@@ -78,8 +78,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
@@ -107,8 +106,7 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                var usr = db.FindUser(pack.User.Id);
-                if (!TokenUser.IsUsrStillValid(usr, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;

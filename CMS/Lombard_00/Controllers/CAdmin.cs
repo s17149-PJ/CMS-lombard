@@ -56,9 +56,9 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                        usr.Roles.Except(pack.Edited.Roles).ToList().ForEach(e => db.RemoveTUserRole(usr, e));
+                usr.Roles.Except(pack.Edited.Roles).ToList().ForEach(e => db.RemoveTUserRole(usr, e));
 
-                pack.Edited.Roles.Except(usr.Roles        ).ToList().ForEach(e => db.AddTUserRole   (usr, e));
+                pack.Edited.Roles.Except(usr.Roles).ToList().ForEach(e => db.AddTUserRole(usr, e));
 
                 return true;
             }

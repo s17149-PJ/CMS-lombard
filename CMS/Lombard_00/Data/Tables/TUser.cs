@@ -37,7 +37,6 @@ namespace Lombard_00.Data.Tables
                 validUnitl = value;
             } }
         */
-
         public virtual ICollection<TRole> Roles { get; set; }
     }//done
 }

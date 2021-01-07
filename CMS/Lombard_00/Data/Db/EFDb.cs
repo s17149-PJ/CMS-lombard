@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Lombard_00.Data.Db
 {
@@ -15,14 +14,17 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTUsers.Include(e=>e.Roles).ToList();
+                return CTUsers.Include(e => e.Roles).ToList();
             }
         }
         public TUser AddTUser(TUser user)
         {
+            if (user.Roles == null)
+                user.Roles = new List<TRole>();
+
             if (user.Roles.Count == 0)
                 user.Roles.Add(TRoles[1]);
-            
+
             //nick must be unique
             if (CTUsers.Where(usr => usr.Nick == user.Nick).Any())
                 return null;
@@ -34,11 +36,11 @@ namespace Lombard_00.Data.Db
         }//done
         public TUser FindTUser(int Id)
         {
-            return CTUsers.Include(e=>e.Roles).Where(e=>e.Id==Id).FirstOrDefault();
+            return CTUsers.Include(e => e.Roles).Where(e => e.Id == Id).FirstOrDefault();
         }//done
         public TUser FindTUser(string UniqueNick)
         {
-            return CTUsers.Include(e=>e.Roles).AsEnumerable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
+            return CTUsers.Include(e => e.Roles).AsEnumerable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
         }//done
         public bool ModifyTUser(TUser toBeModified, TUser newData)
         {
@@ -80,7 +82,7 @@ namespace Lombard_00.Data.Db
             var fuser = FindTUser(user.Id);
             var frole = FindRole(role.Id);
             //are there duplicates?
-            if (fuser.Roles.Contains(frole)||
+            if (fuser.Roles.Contains(frole) ||
                 frole.Users.Contains(fuser))
                 return false;
             //add and save
@@ -114,7 +116,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTRoles.Include(e=>e.Users).ToList();
+                return CTRoles.Include(e => e.Users).ToList();
             }
         }//done
         public bool AddTRole(TRole role)
@@ -150,7 +152,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Include(e=>e.Tags).ToList();
+                return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Include(e => e.Tags).ToList();
             }
         }//done
         public TItem AddTItem(TItem item)
@@ -225,10 +227,10 @@ namespace Lombard_00.Data.Db
                 .Include(e => e.WinningBid)
                 .Include(e => e.Tags)
                 //.Where(e => e.Tags.Intersect(foundTags).Count() == count)
-                .Where(e=> !foundTags.Except(e.Tags).Any())// *should* be automatically optimized and stop on first missing tag. faster.
+                .Where(e => !foundTags.Except(e.Tags).Any())// *should* be automatically optimized and stop on first missing tag. faster.
                 .ToList();
         }//done
-        public TItem FindTItemBySeller(TUser who) 
+        public TItem FindTItemBySeller(TUser who)
         {
             return CTItems
                 .Include(e => e.StartingBid)
@@ -414,7 +416,7 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTTag.Include(e=>e.Items).ToList();
+                return CTTag.Include(e => e.Items).ToList();
             }
         }//done
         public TTag AddTag(TTag tag)
@@ -446,7 +448,7 @@ namespace Lombard_00.Data.Db
         }//done
         public TTag FindTag(int Id)
         {
-            return CTTag.Include(e=>e.Items).Where(e=>e.Id==Id).FirstOrDefault();
+            return CTTag.Include(e => e.Items).Where(e => e.Id == Id).FirstOrDefault();
         }//done
         public TTag HardFindTag(TTag tag)
         {
@@ -498,9 +500,53 @@ namespace Lombard_00.Data.Db
             return true;
         }//done
 
-
         //chk func ---------------------------------------------------------------------------------------------------
         private DateTime LastChek = DateTime.Now;//start class with default value now
+        public void CleanUp()
+        {
+            if (DateTime.Compare(LastChek, DateTime.Now) > 0)
+                return;
+            //delay next check untill tomorow
+            LastChek = DateTime.Now.AddDays(1);
+            //keep list of items to remove
+            List<TItem> toRemove = new List<TItem>();
+            //async serach for items that are to  be removed
+            //dunno if deleting during iteration will break it so I don't
+            CTItems
+                .Include(e=>e.StartingBid)
+                .Include(e=>e.WinningBid)
+                .Include(e=>e.Tags)
+                .Where(item => item.WinningBid != null)
+                .ToList()
+                .ForEach(item =>
+                {
+                    if (DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
+                        toRemove.Add(item);
+                });
+            //now having all refs del each item
+            toRemove.ForEach(item => {
+
+                var bids = CTUserItemBids
+                .Include(e => e.Item)
+                .Where(e => e.Item == item)
+                .ToList();
+
+                CTUserItemBids.RemoveRange(bids);
+
+                var comments  = CTItemComments
+                .Include(e => e.Item)
+                .Where(e => e.Item == item)
+                .ToList();
+
+                CTItemComments.RemoveRange(comments);
+
+                item.Tags.ToList().ForEach(tag => tag.Items.Remove(item));
+
+                CTItems.Remove(item);
+            });
+
+            SaveChanges();
+        }// this method SHOULD be async. done
 
         public List<TNode> Log { get { return InternalData.ToList(); } }
         /*end of interface stuff*/

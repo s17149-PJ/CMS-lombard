@@ -56,7 +56,7 @@ namespace Lombard_00.Controllers
                     Nick = usr.Nick,
                     Name = usr.Name,
                     Surname = usr.Surname,
-                    Roles = db.FindTUserRoles(usr.Id).Select(e => e.Role),
+                    Roles = usr.Roles,
                     Token = token
                 };
             }
@@ -100,7 +100,7 @@ namespace Lombard_00.Controllers
                     Nick = usr.Nick,
                     Name = usr.Name,
                     Surname = usr.Surname,
-                    Roles = db.FindTUserRoles(usr.Id).Select(e => e.Role),
+                    Roles = usr.Roles,
                     Token = newtoken
                 };
             }
@@ -153,7 +153,7 @@ namespace Lombard_00.Controllers
                     Nick = value.Nick,
                     Name = value.Name,
                     Surname = value.Surname,
-                    Roles = db.FindTUserRoles(usr.Id).Select(e => e.Role),
+                    Roles = value.Roles,
                     Token = token
                 };
             }

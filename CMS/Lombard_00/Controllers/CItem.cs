@@ -90,14 +90,8 @@ namespace Lombard_00.Controllers
                     return false;
                 }//must exist
                 if (toDel
-                    .StartingBid
-                    .User
-                    .Id != usr.Id &&
-                    db
-                    .FindTUserRoles(usr.Id)
-                    .Select(e => e.Role)
-                    .Where(rol => rol.Id == 1)
-                    .Any())
+                    .StartingBid.User.Id != usr.Id &&
+                    usr.Roles.Where(rol => rol.Id == 1).Any())
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
@@ -135,14 +129,8 @@ namespace Lombard_00.Controllers
                     return false;
                 }//must exist
                 if (ite
-                    .StartingBid
-                    .User
-                    .Id != usr.Id &&
-                    db
-                    .FindTUserRoles(usr.Id)
-                    .Select(e => e.Role)
-                    .Where(rol => rol.Id == 1)
-                    .Any())
+                    .StartingBid.User.Id != usr.Id &&
+                    usr.Roles.Where(rol => rol.Id == 1).Any())
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;

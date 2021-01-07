@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Lombard_00
@@ -18,17 +19,6 @@ namespace Lombard_00
             //restart db if you want / need
             if (IDb.DbInstance.TUsers.Count == 0)
             {
-                IDb.DbInstance.AddTRole(new TRole()
-                {
-                    Id = 1,
-                    Name = "Admin"
-                });
-                IDb.DbInstance.AddTRole(new TRole()
-                {
-                    Id = 2,
-                    Name = "User"
-                });
-
                 IDb.DbInstance.AddTUser(new TUser()
                 {
                     Id = 1,
@@ -37,7 +27,14 @@ namespace Lombard_00
                     Surname = "Admin",
                     Password = "AdminGodDamit",
                     ValidUnitl = DateTime.Now.AddDays(1),
-                    Token = "0"
+                    Token = "0",
+                    Roles = new List<TRole>(){
+                        new TRole()
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        }
+                    }
                 });
                 IDb.DbInstance.AddTUser(new TUser()
                 {
@@ -45,10 +42,17 @@ namespace Lombard_00
                     Nick = "user",
                     Name = "Not",
                     Surname = "Hacker",
-                    Password = "12345"
+                    Password = "12345",
+                    Roles = new List<TRole>(){
+                        new TRole()
+                        {
+                            Id = 2,
+                            Name = "User"
+                        }
+                    }
                 });
 
-                for (int i = 2; i < 20; i++)
+                for (int i = 2; i < 10; i++)
                 {
                     IDb.DbInstance.AddTUser(new TUser()
                     {
@@ -105,14 +109,10 @@ namespace Lombard_00
 
             }
 
-#pragma warning disable CS0219 // The variable 'x' is assigned but its value is never used
             int x = 2;
-#pragma warning restore CS0219 // The variable 'x' is assigned but its value is never used
             //tests
-            {
-
-            }
-            var list = IDb.DbInstance.TItems;
+            var users = IDb.DbInstance.TUsers;
+            var items = IDb.DbInstance.TItems;
 
             x = 2;
         }

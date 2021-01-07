@@ -68,7 +68,7 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                var usr = db.FindUser(pack.User.Id);
+                var usr = db.FindTUser(pack.User.Id);
                 var toDel = db.FindTUserItemBid(pack.Bid.Id);
 
                 if (toDel == null)

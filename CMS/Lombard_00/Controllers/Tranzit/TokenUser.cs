@@ -43,7 +43,7 @@ namespace Lombard_00.Controllers
 
         public static bool IsUsrStillValid(int usr, string tokenOrPassword)
         {
-            var found = IDb.DbInstance.FindUser(usr);
+            var found = IDb.DbInstance.FindTUser(usr);
             if (found == null)
             {
 

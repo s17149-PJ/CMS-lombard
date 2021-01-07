@@ -30,7 +30,7 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                var usr = db.FindUser(pack.User.Id);
+                var usr = db.FindTUser(pack.User.Id);
                 //must have starting bid
                 if (pack.Item.StartingBid == null)
                 {
@@ -80,7 +80,7 @@ namespace Lombard_00.Controllers
                 if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                     return false;
 
-                var usr = db.FindUser(pack.User.Id);
+                var usr = db.FindTUser(pack.User.Id);
                 //find
                 var toDel = db.FindTItem(pack.Item.Id);
 
@@ -125,7 +125,7 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                var usr = db.FindUser(pack.User.Id);
+                var usr = db.FindTUser(pack.User.Id);
                 //find
                 var ite = db.FindTItem(pack.Item.Id);
 

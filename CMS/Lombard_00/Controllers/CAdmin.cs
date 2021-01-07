@@ -40,18 +40,15 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                var usr = db.FindUser(pack.Admin.Id);
-
-                //check if admin (role Id == 1)
-                var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
-                if (!rols.Where(rol => rol.Id == 1).Any())
+                var usr = db.FindTUser(pack.Admin.Id);
+                if (!usr.Roles.Where(rol => rol.Id == 1).Any())
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
 
                 //find edited user
-                usr = db.FindUser(pack.Edited.Id);
+                usr = db.FindTUser(pack.Edited.Id);
                 //if record exists that is
                 if (usr == null)
                 {
@@ -59,27 +56,9 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                List<TUserRole> OldTUserRole = db.FindTUserRoles(usr.Id);//current rolls
+                        usr.Roles.Except(pack.Edited.Roles).ToList().ForEach(e => db.RemoveTUserRole(usr, e));
 
-                //remove exessive rolles
-                OldTUserRole
-                        .Where(ToRemove =>
-                            !pack.Edited.Roles
-                            .Select(e => e.Id)//select Id from new roles
-                            .ToList()
-                            .Contains(ToRemove.Role.Id))//select only TUR's that have Role.Id that is NOT in new settings
-                        .ToList()
-                        .ForEach(ToRemove => db.RemoveTUserRole(ToRemove));
-
-                //add missing ones
-                pack.Edited.Roles
-                    .Where(ToAdd =>
-                        !OldTUserRole
-                        .Select(e => e.Role.Id)//select Id from old roles
-                        .ToList()
-                        .Contains(ToAdd.Id))//select only ROL's that have Role.Id that is NOT in OldTUserRole
-                    .ToList()
-                    .ForEach(ToAdd => db.AddTUserRole(new TUserRole() { User = usr, Role = ToAdd }));
+                pack.Edited.Roles.Except(usr.Roles        ).ToList().ForEach(e => db.AddTUserRole   (usr, e));
 
                 return true;
             }
@@ -105,10 +84,9 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                var usr = db.FindUser(users.Admin.Id);
+                var usr = db.FindTUser(users.Admin.Id);
                 //check if admin (role Id == 1)
-                var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
-                if (!rols.Where(rol => rol.Id == 1).Any())
+                if (!usr.Roles.Where(rol => rol.Id == 1).Any())
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
@@ -124,7 +102,7 @@ namespace Lombard_00.Controllers
                                 Nick = e.Nick,
                                 Name = e.Name,
                                 Surname = e.Surname,
-                                Roles = db.FindTUserRoles(e.Id).Select(e => e.Role),
+                                Roles = e.Roles,
                                 Token = null
                             });
             }
@@ -160,10 +138,9 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                var usr = db.FindUser(admin.Id);
+                var usr = db.FindTUser(admin.Id);
                 //check if admin (role Id == 1)
-                var rols = db.FindTUserRoles(usr.Id).Select(e => e.Role);
-                if (!rols.Where(rol => rol.Id == 1).Any())
+                if (!usr.Roles.Where(rol => rol.Id == 1).Any())
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;

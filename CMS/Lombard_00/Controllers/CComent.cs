@@ -29,11 +29,11 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                var usr = db.FindUser(pack.User.Id);
+                var usr = db.FindTUser(pack.User.Id);
                 return new TokenComment(db.AddTItemComment(new TItemComment()
                 {
                     Item = db.FindTItem(pack.Comment.Item.Id),
-                    User = db.FindUser(pack.Comment.User.Id),
+                    User = db.FindTUser(pack.Comment.User.Id),
                     Comment = pack.Comment.Comment,
                 }), db);
             }
@@ -52,7 +52,7 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                var usr = db.FindUser(pack.User.Id);
+                var usr = db.FindTUser(pack.User.Id);
                 var toDel = db.FindTItemComment(pack.Comment.Id);
 
                 if (toDel == null)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -36,5 +37,7 @@ namespace Lombard_00.Data.Tables
                 validUnitl = value;
             } }
         */
+
+        public virtual ICollection<TRole> Roles { get; set; }
     }//done
 }

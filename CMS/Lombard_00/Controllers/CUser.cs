@@ -27,7 +27,7 @@ namespace Lombard_00.Controllers
             lock (db)
             {
                 //find and veryfiy
-                var usr = db.FindUser(login.Nick);
+                var usr = db.FindTUser(login.Nick);
                 if (usr == null ||
                     usr.Password != login.Password)
                 {
@@ -86,7 +86,7 @@ namespace Lombard_00.Controllers
                     };
                 }
 
-                var usr = db.FindUser(token.Id);
+                var usr = db.FindTUser(token.Id);
                 //tokens
                 var newtoken = GetNewToken();
                 usr.Token = newtoken;
@@ -178,7 +178,7 @@ namespace Lombard_00.Controllers
                     return false;
                 }
 
-                var usr = db.FindUser(edit.TokenUser.Id);
+                var usr = db.FindTUser(edit.TokenUser.Id);
                 //update
                 usr.Nick = edit.TokenUser.Nick;
                 usr.Name = edit.TokenUser.Name;

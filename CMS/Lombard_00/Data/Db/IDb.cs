@@ -26,18 +26,16 @@ namespace Lombard_00.Data.Db
          */
         public List<TUser> TUsers { get; }
         public TUser AddTUser(TUser user);
-        public TUser FindUser(int Id);
-        public TUser FindUser(string UniqueNick);
+        public TUser FindTUser(int Id);
+        public TUser FindTUser(string UniqueNick);
         public bool ModifyTUser(TUser toBeModified, TUser newData);
         public void PokeDbLogin();
 
         /*
          * many to many implementation
          */
-        public List<TUserRole> TUserRoles { get; }
-        public bool AddTUserRole(TUserRole role);
-        public List<TUserRole> FindTUserRoles(int userId);
-        public bool RemoveTUserRole(TUserRole role);
+        public bool AddTUserRole(TUser user, TRole role);
+        public bool RemoveTUserRole(TUser user, TRole role);
 
         /*
          * each service user can be associated with multiple roles
@@ -96,23 +94,18 @@ namespace Lombard_00.Data.Db
         public List<TTag> TTags { get; }
         public TTag AddTag(TTag tag);
         public bool SoftRemoveTag(TTag tag);
-        public bool HardRemoveTag(TTag tag);
         public TTag FindTag(int Id);
         public TTag HardFindTag(TTag tag);
-        public List<TTag> FindTags(TItem item);
 
-        public List<TItemTag> TItemsTags { get; }
-        public TItemTag AddItemTag(TItemTag itemTag);
-        public bool RemoveItemTag(TItemTag itemTag);
-        public TItemTag FindItemTag(int Id);
+       
+        public bool AddItemTag(TItem item, TTag tag);
+        public bool RemoveItemTag(TItem item, TTag tag);
+        
         /*
          * CleanUp -> archive old offers
          * VoidOut -> empty db. IMPORTANT: it's broken in EF so do *NOT* use it
          */
 
         public List<TNode> Log { get; }
-
-        public void CleanUp();
-        public void VoidOut();
     }
 }

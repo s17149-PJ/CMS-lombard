@@ -60,7 +60,7 @@ namespace Lombard_00.Data.Db
          */
         public List<TItem> TItems { get; }
         public TItem AddTItem(TItem item, TUser owner, Decimal Value);
-        public bool RemoveTItem(TItem item);
+        public bool RemoveTItem(TItem item, bool saveAway);
         public bool ModifyTItem(TItem newData);
         public TItem FindTItem(int Id);
         public List<TItem> FindTItems(List<TTag> tags);

@@ -85,7 +85,7 @@ namespace Lombard_00.Controllers
                     return false;
                 }//must be owner or admin
 
-                if (!db.RemoveTItem(toDel))
+                if (!db.RemoveTItem(toDel,true))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Conflict;
                     return false;

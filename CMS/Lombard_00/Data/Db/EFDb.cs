@@ -263,7 +263,7 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public bool RemoveTItem(TItem item)
+        public bool RemoveTItem(TItem item, bool saveAway)
         {
             var found = FindTItem(item.Id);
             var tags = found.Tags.ToList();
@@ -279,7 +279,8 @@ namespace Lombard_00.Data.Db
 
             CTItems.Remove(item);
 
-            SaveChanges();
+            if(saveAway)
+                SaveChanges();
 
             return true;
         }//done
@@ -608,47 +609,27 @@ namespace Lombard_00.Data.Db
         private DateTime LastChek = DateTime.Now;//start class with default value now
         public void CleanUp()
         {
+
             if (DateTime.Compare(LastChek, DateTime.Now) > 0)
                 return;
+
             //delay next check untill tomorow
             LastChek = DateTime.Now.AddDays(1);
+
+            //try to finish deals
+            CTItems.ForEachAsync(e => TryToFinishDeal(e));
+
             //keep list of items to remove
             List<TItem> toRemove = new List<TItem>();
-            //async serach for items that are to  be removed
+
             //dunno if deleting during iteration will break it so I don't
-            CTItems
-                .Include(e => e.StartingBid)
-                .Include(e => e.WinningBid)
-                .Include(e => e.Tags)
-                .Where(item => item.WinningBid != null)
+            TItems
+                .Where(item => DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
                 .ToList()
-                .ForEach(item =>
-                {
-                    if (DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
-                        toRemove.Add(item);
-                });
+                .ForEach(item => toRemove.Add(item));
+
             //now having all refs del each item
-            toRemove.ForEach(item =>
-            {
-
-                var bids = CTUserItemBids
-                .Include(e => e.Item)
-                .Where(e => e.Item == item)
-                .ToList();
-
-                CTUserItemBids.RemoveRange(bids);
-
-                var comments = CTItemComments
-                .Include(e => e.Item)
-                .Where(e => e.Item == item)
-                .ToList();
-
-                CTItemComments.RemoveRange(comments);
-
-                item.Tags.ToList().ForEach(tag => tag.Items.Remove(item));
-
-                CTItems.Remove(item);
-            });
+            toRemove.ForEach(item =>RemoveTItem(item,false));
 
             SaveChanges();
         }// this method SHOULD be async. done

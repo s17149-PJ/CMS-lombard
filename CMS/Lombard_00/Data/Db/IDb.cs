@@ -1,4 +1,5 @@
 ﻿using Lombard_00.Data.Tables;
+using System;
 using System.Collections.Generic;
 
 namespace Lombard_00.Data.Db
@@ -28,14 +29,14 @@ namespace Lombard_00.Data.Db
         public TUser AddTUser(TUser user);
         public TUser FindTUser(int Id);
         public TUser FindTUser(string UniqueNick);
-        public bool ModifyTUser(TUser toBeModified, TUser newData);
+        public bool ModifyTUser(TUser newData);
         public void PokeDbLogin();
 
         /*
          * many to many implementation
          */
-        public bool AddTUserRole(TUser user, TRole role);
-        public bool RemoveTUserRole(TUser user, TRole role);
+        public bool AddTUserRole(TUser user, TRole role, bool saveAway);
+        public bool RemoveTUserRole(TUser user, TRole role, bool saveAway);
 
         /*
          * each service user can be associated with multiple roles
@@ -46,7 +47,7 @@ namespace Lombard_00.Data.Db
         public List<TRole> TRoles { get; }
         public bool AddTRole(TRole role);
         public TRole FindRole(int Id);
-        public bool ModifyTRole(TRole toBeModified, TRole newData);
+        public bool ModifyTRole(TRole newData);
 
         /*
          * IMPORTANT:
@@ -58,13 +59,11 @@ namespace Lombard_00.Data.Db
          * TryToFinishDeal zwraca TRUE JEŻELI aukcja się SKOŃCZYŁA i FALSE  jeżeli NIE. to nie świadczy o tym czy operacja zakończyła się sukcesem, z zasady jednak jeżeli nie, zwórcone zostanie FALSE.
          */
         public List<TItem> TItems { get; }
-        public TItem AddTItem(TItem item);
+        public TItem AddTItem(TItem item, TUser owner, Decimal Value);
         public bool RemoveTItem(TItem item);
-        public bool ModifyTItem(TItem toBeModified, TItem newData);
+        public bool ModifyTItem(TItem newData);
         public TItem FindTItem(int Id);
         public List<TItem> FindTItems(List<TTag> tags);
-        public TItem FindTItemBySeller(TUser who);
-        public TItem FindTItemByBuyer(TUser who);
         public bool TryToFinishDeal(TItem item);
 
         /*
@@ -74,8 +73,8 @@ namespace Lombard_00.Data.Db
          */
         public List<TItemComment> TItemComments { get; }
         public TItemComment AddTItemComment(TItemComment comment);
-        public bool RemoveTItemComment(TItemComment comment);
-        public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData);
+        public bool RemoveTItemComment(TItemComment comment, bool saveAway);
+        public bool ModifyTItemComment(TItemComment newData);
         public TItemComment FindTItemComment(int Id);
 
         /*
@@ -84,7 +83,7 @@ namespace Lombard_00.Data.Db
          */
         public List<TUserItemBid> TUserItemBids { get; }
         public TUserItemBid AddTUserItemBid(TUserItemBid bid);
-        public bool RemoveTUserItemBid(TUserItemBid bid);
+        public bool RemoveTUserItemBid(TUserItemBid bid, bool saveAway);
         public TUserItemBid FindTUserItemBid(int Id);
 
         /*
@@ -98,8 +97,8 @@ namespace Lombard_00.Data.Db
         public TTag HardFindTag(TTag tag);
 
 
-        public bool AddItemTag(TItem item, TTag tag);
-        public bool RemoveItemTag(TItem item, TTag tag);
+        public bool AddItemTag(TItem item, TTag tag, bool saveAway);
+        public bool RemoveItemTag(TItem item, TTag tag, bool saveAway);
 
         /*
          * CleanUp -> archive old offers

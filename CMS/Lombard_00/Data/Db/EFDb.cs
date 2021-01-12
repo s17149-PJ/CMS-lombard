@@ -14,13 +14,28 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTUsers.Include(e => e.Roles).ToList();
+                return CTUsers
+                    .Include(e => e.Roles)
+                    .Include(e => e.Comments)
+                    .Include(e => e.Bids)
+                    .Include(e => e.BroughtItems)
+                    .Include(e => e.TakenItems)
+                    .ToList();
             }
         }
         public TUser AddTUser(TUser user)
         {
             if (user.Roles == null)
                 user.Roles = new List<TRole>();
+            if (user.Comments == null)
+                user.Comments = new List<TItemComment>();
+            if (user.Bids == null)
+                user.Bids = new List<TUserItemBid>();
+            if (user.BroughtItems == null)
+                user.BroughtItems = new List<TItem>();
+            if (user.TakenItems == null)
+                user.TakenItems = new List<TItem>();
+
 
             if (user.Roles.Count == 0)
                 user.Roles.Add(TRoles[1]);
@@ -36,15 +51,29 @@ namespace Lombard_00.Data.Db
         }//done
         public TUser FindTUser(int Id)
         {
-            return CTUsers.Include(e => e.Roles).Where(e => e.Id == Id).FirstOrDefault();
+            return CTUsers
+                    .Include(e => e.Roles)
+                    .Include(e => e.Comments)
+                    .Include(e => e.Bids)
+                    .Include(e => e.BroughtItems)
+                    .Include(e => e.TakenItems)
+                    .Where(e => e.Id == Id).FirstOrDefault();
         }//done
         public TUser FindTUser(string UniqueNick)
         {
-            return CTUsers.Include(e => e.Roles).AsEnumerable().Where(user => user.Nick == UniqueNick).FirstOrDefault();
+            return CTUsers
+                    .Include(e => e.Roles)
+                    .Include(e => e.Comments)
+                    .Include(e => e.Bids)
+                    .Include(e => e.BroughtItems)
+                    .Include(e => e.TakenItems)
+                    .AsEnumerable()
+                    .Where(user => user.Nick == UniqueNick)
+                    .FirstOrDefault();
         }//done
-        public bool ModifyTUser(TUser toBeModified, TUser newData)
+        public bool ModifyTUser(TUser newData)
         {
-            var value = FindTUser(toBeModified.Id);
+            var value = CTUsers.Find(newData.Id);
             if (value == null)
             {
 
@@ -72,15 +101,15 @@ namespace Lombard_00.Data.Db
             SaveChanges();
         }
 
-        public bool AddTUserRole(TUser user, TRole role)
+        public bool AddTUserRole(TUser user, TRole role,bool saveAway)
         {
             //are incoming values nulls?
             if (user == null ||
                 role == null)
                 return false;
             //find and replace to avoid duplication
-            var fuser = FindTUser(user.Id);
-            var frole = FindRole(role.Id);
+            var fuser = CTUsers.Include(e=>e.Roles).Where(e=>e.Id==user.Id).FirstOrDefault();
+            var frole = CTRoles.Include(e => e.Users).Where(e=>e.Id==role.Id).FirstOrDefault();
             //are there duplicates?
             if (fuser.Roles.Contains(frole) ||
                 frole.Users.Contains(fuser))
@@ -88,26 +117,28 @@ namespace Lombard_00.Data.Db
             //add and save
             fuser.Roles.Add(frole);
             frole.Users.Add(fuser);
-            SaveChanges();
+            if(saveAway)
+                SaveChanges();
             //saved
             return true;
         }//done
-        public bool RemoveTUserRole(TUser user, TRole role)
+        public bool RemoveTUserRole(TUser user, TRole role, bool saveAway)
         {
             //are incoming values nulls?
             if (user == null ||
                 role == null)
                 return false;
             //find and replace to avoid duplication
-            var fuser = FindTUser(user.Id);
-            var frole = FindRole(role.Id);
+            var fuser = CTUsers.Include(e => e.Roles).Where(e => e.Id == user.Id).FirstOrDefault();
+            var frole = CTRoles.Include(e => e.Users).Where(e => e.Id == role.Id).FirstOrDefault();
             if (!fuser.Roles.Contains(frole) ||
                 !frole.Users.Contains(fuser))
                 return false;// missing or constraint error.
             //remove and save
             fuser.Roles.Remove(frole);
             frole.Users.Remove(fuser);
-            SaveChanges();
+            if (saveAway)
+                SaveChanges();
             //saved
             return true;
         }//done
@@ -125,6 +156,9 @@ namespace Lombard_00.Data.Db
             if (CTRoles.Where(rol => rol.Name == role.Name).Any())
                 return false;
 
+            if (role.Users == null)
+                role.Users = new List<TUser>();
+
             CTRoles.Add(role);
             SaveChanges();
 
@@ -134,9 +168,9 @@ namespace Lombard_00.Data.Db
         {
             return CTRoles.Include(e => e.Users).Where(e => e.Id == Id).FirstOrDefault();
         }//done
-        public bool ModifyTRole(TRole toBeModified, TRole newData)
+        public bool ModifyTRole(TRole newData)
         {
-            var value = CTRoles.FirstOrDefault(value => value.Id == toBeModified.Id);
+            var value = CTRoles.FirstOrDefault(value => value.Id == newData.Id);
             if (value == null)
             {
 
@@ -152,19 +186,49 @@ namespace Lombard_00.Data.Db
         {
             get
             {
-                return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Include(e => e.Tags).ToList();
+                return CTItems
+                        .Include(e => e.StartingBid)
+                        .Include(e => e.WinningBid)
+                        .Include(e => e.Bids)
+                        .Include(e => e.Tags)
+                        .Include(e => e.Comments)
+                        .ToList();
             }
         }//done
-        public TItem AddTItem(TItem item)
+        public TItem AddTItem(TItem item, TUser owner, Decimal value)
         {
-            var value = CTItems.Add(item);
-            SaveChanges();
+            if (item.Tags == null)
+                item.Tags = new List<TTag>();
+            item.Bids = new List<TUserItemBid>();
+            item.Comments = new List<TItemComment>();
 
-            return value;
+            if (owner == null)
+                return null;
+
+            item.StartingBid = null;
+            item.WinningBid = null;
+
+            var found = FindTUser(owner.Id);
+            var bid = new TUserItemBid() {
+                Item = item,
+                User = found,
+                CreatedOn = DateTime.Now,
+                Money = value,
+                IsRating = false
+            };
+
+            item.Bids.Add(bid);
+            found.Bids.Add(bid);
+            found.BroughtItems.Add(item);
+
+            var added = CTItems.Add(item);
+            TUserItemBids.Add(bid);
+            SaveChanges();
+            return added;
         }//done
-        public bool ModifyTItem(TItem toBeModified, TItem newData)
+        public bool ModifyTItem(TItem newData)
         {
-            var value = CTItems.FirstOrDefault(value => value.Id == toBeModified.Id);
+            var value = FindTItem(newData.Id);
             if (value == null)
                 return false;
 
@@ -182,6 +246,16 @@ namespace Lombard_00.Data.Db
                 value.WinningBid = newData.WinningBid;
             if (newData.FinallizationDateTime != null)
                 value.FinallizationDateTime = newData.FinallizationDateTime;
+            if (newData.Tags != null) {
+                //validate tags with db
+                newData.Tags = newData.Tags.Select(e => HardFindTag(e)).ToList();
+
+                var tagsToRemove = value.Tags.Except(newData.Tags).ToList();
+                var tagsToAdd = newData.Tags.Except(value.Tags).ToList();
+
+                tagsToRemove.ForEach(e => RemoveItemTag(value, e,false));
+                tagsToAdd.ForEach(e => AddItemTag(value, e,false));
+            }
 
             SaveChanges();
 
@@ -189,25 +263,34 @@ namespace Lombard_00.Data.Db
         }//done
         public bool RemoveTItem(TItem item)
         {
-            List<TItemComment> itemComments = TItemComments
-                .Where(comment => comment.Item == item)
-                .ToList();
-            List<TUserItemBid> userItemBids = TUserItemBids
-                .Where(bid => bid.Item == item)
-                .ToList();
+            var found = FindTItem(item.Id);
+            var tags = found.Tags.ToList();
+            var itemComments = found.Comments.ToList();
+            var userItemBids = found.Bids.ToList();
 
+            tags
+                .ForEach(e => RemoveItemTag(found,e,false));
             itemComments
-                .ForEach(comment => RemoveTItem(item));
+                .ForEach(e => RemoveTItemComment(e,false));
             userItemBids
-                .ForEach(bid => RemoveTUserItemBid(bid));
+                .ForEach(e => RemoveTUserItemBid(e,false));
+
             CTItems.Remove(item);
+
             SaveChanges();
 
             return true;
         }//done
         public TItem FindTItem(int Id)
         {
-            return CTItems.Include(e => e.StartingBid).Include(e => e.WinningBid).Include(e => e.Tags).Where(e => e.Id == Id).FirstOrDefault();
+            return CTItems
+                    .Include(e => e.StartingBid)
+                    .Include(e => e.WinningBid)
+                    .Include(e => e.Bids)
+                    .Include(e => e.Tags)
+                    .Where(e => e.Id == Id)
+                    .Include(e => e.Comments)
+                    .FirstOrDefault();
         }//done
 
         /*IMPORTANT: this function have a nice O(n^2) cost so do NOT abuse it
@@ -229,27 +312,6 @@ namespace Lombard_00.Data.Db
                 //.Where(e => e.Tags.Intersect(foundTags).Count() == count)
                 .Where(e => !foundTags.Except(e.Tags).Any())// *should* be automatically optimized and stop on first missing tag. faster.
                 .ToList();
-        }//done
-        public TItem FindTItemBySeller(TUser who)
-        {
-            return CTItems
-                .Include(e => e.StartingBid)
-                .Include(e => e.WinningBid)
-                .Include(e => e.Tags)
-                .Include(e => e.StartingBid.User)
-                .Where(e => e.StartingBid.User == who)
-                .FirstOrDefault();
-        }//done
-        public TItem FindTItemByBuyer(TUser who)
-        {
-            return CTItems
-                .Include(e => e.StartingBid)
-                .Include(e => e.WinningBid)
-                .Include(e => e.Tags)
-                .Include(e => e.WinningBid.User)
-                .Where(e => e.StartingBid != null)// null poiter exception <-
-                .Where(e => e.WinningBid.User == who)
-                .FirstOrDefault();
         }//done
 
         public bool TryToFinishDeal(TItem item)
@@ -281,7 +343,7 @@ namespace Lombard_00.Data.Db
             SaveChanges();
 
             return true;
-        }//NOPE <=======================
+        }//NOPE <=====================================================================
 
         public List<TItemComment> TItemComments
         {
@@ -296,19 +358,21 @@ namespace Lombard_00.Data.Db
             if (usr == null)
                 return null;
             comment.User = usr;
+            usr.Comments.Add(comment);
             var ite = FindTItem(comment.Item.Id);
             if (ite == null)
                 return null;
             comment.Item = ite;
+            ite.Comments.Add(comment);
 
             var value = CTItemComments.Add(comment);
             SaveChanges();
 
             return value;
         }//done
-        public bool ModifyTItemComment(TItemComment toBeModified, TItemComment newData)
+        public bool ModifyTItemComment(TItemComment newData)
         {
-            var value = CTItemComments.FirstOrDefault(value => value.Id == toBeModified.Id);
+            var value = CTItemComments.FirstOrDefault(value => value.Id == newData.Id);
 
             if (value == null)
                 return false;
@@ -318,7 +382,7 @@ namespace Lombard_00.Data.Db
 
             return true;
         }//done
-        public bool RemoveTItemComment(TItemComment comment)
+        public bool RemoveTItemComment(TItemComment comment, bool saveAway)
         {
             var usr = FindTUser(comment.User.Id);
             if (usr == null)
@@ -330,20 +394,28 @@ namespace Lombard_00.Data.Db
             comment.Item = ite;
 
             CTItemComments.Remove(comment);
-            SaveChanges();
+            if(saveAway)
+                SaveChanges();
 
             return true;
         }//done
         public TItemComment FindTItemComment(int Id)
         {
-            return CTItemComments.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
+            return CTItemComments
+                .Include(e => e.Item)
+                .Include(e => e.User)
+                .Where(e => e.Id == Id)
+                .FirstOrDefault();
         }//done
 
         public List<TUserItemBid> TUserItemBids
         {
             get
             {
-                return CTUserItemBids.Include(e => e.Item).Include(e => e.User).ToList();
+                return CTUserItemBids
+                    .Include(e => e.Item)
+                    .Include(e => e.User)
+                    .ToList();
             }
         }//done
         public TUserItemBid AddTUserItemBid(TUserItemBid bid)
@@ -352,10 +424,12 @@ namespace Lombard_00.Data.Db
             if (usr == null)
                 return null;
             bid.User = usr;
+            usr.Bids.Add(bid);
             var ite = FindTItem(bid.Item.Id);
             if (ite == null)
                 return null;
             bid.Item = ite;
+            ite.Bids.Add(bid);
 
             var value = CTUserItemBids.Add(bid);
 
@@ -372,18 +446,14 @@ namespace Lombard_00.Data.Db
 
             return value;
         }//done
-        public bool RemoveTUserItemBid(TUserItemBid bid)
+        public bool RemoveTUserItemBid(TUserItemBid bid, bool saveAway)
         {
             var bidfound = FindTUserItemBid(bid.Id);
             var usr = FindTUser(bidfound.User.Id);
-            if (usr == null)
-                return false;
-            bidfound.User = usr;
             var ite = FindTItem(bidfound.Item.Id);
-            if (ite == null)
-                return false;
-            bidfound.Item = ite;
 
+            usr.Bids.Remove(bidfound);
+            ite.Bids.Remove(bidfound);
             CTUserItemBids.Remove(bidfound);
 
             if (bidfound.IsRating)
@@ -402,21 +472,27 @@ namespace Lombard_00.Data.Db
                     bidfound.Item.NumberOfRatings = 0;
                 }
             }
-
-            SaveChanges();
+            if(saveAway)
+                SaveChanges();
 
             return true;
         }//done
         public TUserItemBid FindTUserItemBid(int Id)
         {
-            return CTUserItemBids.Include(e => e.Item).Include(e => e.User).Where(e => e.Id == Id).FirstOrDefault();
+            return CTUserItemBids
+                .Include(e => e.Item)
+                .Include(e => e.User)
+                .Where(e => e.Id == Id)
+                .FirstOrDefault();
         }//done
 
         public List<TTag> TTags
         {
             get
             {
-                return CTTag.Include(e => e.Items).ToList();
+                return CTTag
+                    .Include(e => e.Items)
+                    .ToList();
             }
         }//done
         public TTag AddTag(TTag tag)
@@ -424,6 +500,9 @@ namespace Lombard_00.Data.Db
             var value = CTTag.Where(e => e.Name == tag.Name).FirstOrDefault();
             if (value != null)
                 return value;
+
+            if (tag.Items == null)
+                tag.Items = new List<TItem>();
 
             value = CTTag.Add(tag);
             SaveChanges();
@@ -439,16 +518,19 @@ namespace Lombard_00.Data.Db
 
             foundTag.Items.ToList().ForEach(e => e.Tags.Remove(foundTag));
             foundTag.Items.Clear();
-            SaveChanges();
 
             CTTag.Remove(foundTag);
+
             SaveChanges();
 
             return true;
         }//done
         public TTag FindTag(int Id)
         {
-            return CTTag.Include(e => e.Items).Where(e => e.Id == Id).FirstOrDefault();
+            return CTTag
+                .Include(e => e.Items)
+                .Where(e => e.Id == Id)
+                .FirstOrDefault();
         }//done
         public TTag HardFindTag(TTag tag)
         {
@@ -457,45 +539,60 @@ namespace Lombard_00.Data.Db
                 .Where(e => e.Name == tag.Name || e.Id == tag.Id)
                 .FirstOrDefault();
 
+            if (value == null) 
+            {
+                value = AddTag(tag);
+            }
+
             return value;
         }
 
-        public bool AddItemTag(TItem item, TTag tag)
+        public bool AddItemTag(TItem item, TTag tag, bool saveAway)
         {
             //are incoming values nulls?
             if (item == null ||
                 tag == null)
                 return false;
+
             //find and replace to avoid duplication
             var fitem = FindTItem(item.Id);
             var ftag = FindTag(tag.Id);
+
             //are there duplicates?
             if (fitem.Tags.Contains(ftag) ||
                 ftag.Items.Contains(fitem))
                 return false;
+
             //add and save
             fitem.Tags.Add(ftag);
             ftag.Items.Add(fitem);
-            SaveChanges();
+
+            if(saveAway)
+                SaveChanges();
             //saved
             return true;
         }//done
-        public bool RemoveItemTag(TItem item, TTag tag)
+        public bool RemoveItemTag(TItem item, TTag tag, bool saveAway)
         {
             //are incoming values nulls?
             if (item == null ||
                 tag == null)
                 return false;
+
             //find and replace to avoid duplication
             var fitem = FindTItem(item.Id);
             var ftag = FindTag(tag.Id);
+
+            // missing or constraint error.
             if (!fitem.Tags.Contains(ftag) ||
                 !ftag.Items.Contains(fitem))
-                return false;// missing or constraint error.
+                return false;
+
             //remove and save
             fitem.Tags.Remove(ftag);
             ftag.Items.Remove(fitem);
             SaveChanges();
+
             //saved
             return true;
         }//done

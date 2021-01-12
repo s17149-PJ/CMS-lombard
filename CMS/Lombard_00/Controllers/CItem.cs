@@ -54,11 +54,12 @@ namespace Lombard_00.Controllers
                     {
                         Item = itemToAdd,
                         User = usr,
-                        CreatedOn = DateTime.Now
+                        CreatedOn = DateTime.Nows
                         //Money = pack.Item.StartingBid.Money
                     };
                 //add
                 itemToAdd = db.AddTItem(itemToAdd);
+                
                 //sucsess?
                 if (itemToAdd == null)
                 {

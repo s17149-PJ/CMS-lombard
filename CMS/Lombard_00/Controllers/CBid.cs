@@ -14,8 +14,13 @@ namespace Lombard_00.Controllers
     {
         public class LocalBidClass
         {
-            public TokenUser User { get; set; }
-            public TokenBid Bid { get; set; }
+            //public TokenUser User { get; set; }
+            //public TokenBid Bid { get; set; }
+            public int UserId { get; set; }
+            public string Token { get; set; }
+            public int SubjectId { get; set; }
+            public Decimal Money { get; set; }
+            public bool IsRating { get; set; }
         }
         [Route("api/bid/create")]
         [HttpPost]
@@ -24,13 +29,13 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.UserId, pack.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
                 //check if deal is already done
-                if (db.TryToFinishDeal(new TItem() { Id = pack.Bid.Item.Id }))
+                if (db.TryToFinishDeal(new TItem() { Id = pack.SubjectId }))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Conflict;
                     return null;
@@ -38,11 +43,11 @@ namespace Lombard_00.Controllers
                 //try to add item
                 var value = db.AddTUserItemBid(new TUserItemBid()
                 {
-                    Item = new TItem() { Id = pack.Bid.Item.Id },
-                    User = new TUser() { Id = pack.Bid.User.Id },
+                    Item = new TItem() { Id = pack.SubjectId },
+                    User = new TUser() { Id = pack.UserId },
                     CreatedOn = DateTime.Now,
-                    Money = pack.Bid.Money,
-                    IsRating = pack.Bid.IsRating
+                    Money = pack.Money,
+                    IsRating = pack.IsRating
                 });
                 //sucsess?
                 if (value == null)
@@ -62,14 +67,14 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
-                if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
+                if (!TokenUser.IsUsrStillValid(pack.UserId, pack.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
 
-                var usr = db.FindTUser(pack.User.Id);
-                var toDel = db.FindTUserItemBid(pack.Bid.Id);
+                var usr = db.FindTUser(pack.UserId);
+                var toDel = db.FindTUserItemBid(pack.SubjectId);
 
                 if (toDel == null)
                 {

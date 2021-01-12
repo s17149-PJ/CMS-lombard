@@ -8,8 +8,8 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import * as rx from 'rxjs/operators';
-import { AuthService } from './auth.service';
 import { isNullOrUndefined } from 'util';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-user-panel',
@@ -42,39 +42,39 @@ export class UserPanelComponent implements OnInit {
   }  
 
   onSubmitSave() {
-    //this.submitted = true;
+    this.submitted = true;
 
-    //// stop here if form is invalid
-    //if (this.userProfile.invalid) {
-    //  return;
-    //}
+    // stop here if form is invalid
+    if (this.userProfile.invalid) {
+      return;
+    }
 
-    //this.loading = true;
-    //const updatedUser: {
-    //  username: string;
-    //  name: string;
-    //  surname: string;
-    //  password: string
-    //} = {
-    //  ...this.userProfile.value,
-    //};
-    //this._subscription.add(
-    //  this.auth.edit(updatedUser.username, updatedUser.name,
-    //    updatedUser.surname, updatedUser.password).subscribe(
-    //      (user) => {
-    //        if (!isNullOrUndefined(user)) {
-    //          this.router.navigate(['/']);
-    //        } else {
-    //          this.error = 'Edit failed!';
-    //          this.loading = false;
-    //        }
-    //      },
-    //      (errors) => {
-    //        this.error = errors;
-    //        this.loading = false;
-    //      }
-    //    )
-    //);
+    this.loading = true;
+    const updatedUser: {
+      username: string;
+      name: string;
+      surname: string;
+      password: string
+    } = {
+      ...this.userProfile.value,
+    };
+    this._subscription.add(
+      this.auth.edit(updatedUser.username, updatedUser.name,
+        updatedUser.surname, updatedUser.password).subscribe(
+          (user) => {
+            if (!isNullOrUndefined(user)) {
+              this.router.navigate(['/']);
+            } else {
+              this.error = 'Edit failed!';
+              this.loading = false;
+            }
+          },
+          (errors) => {
+            this.error = errors;
+            this.loading = false;
+          }
+        )
+    );
   }
 
   ngOnDestroy() {

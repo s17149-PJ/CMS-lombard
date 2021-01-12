@@ -20,6 +20,8 @@ namespace Lombard_00.Data.Tables
 
         public TUserItemBid StartingBid { get; set; }//also holds ref to prev owner
         public TUserItemBid WinningBid { get; set; }//holds ref to current owner
+        public virtual ICollection<TUserItemBid> Bids { get; set; }//all bids
+
         [Column(TypeName = "datetime2")]
         public DateTime FinallizationDateTime { get; set; }
 
@@ -28,5 +30,6 @@ namespace Lombard_00.Data.Tables
         public int NumberOfRatings { get; set; }
 
         public virtual ICollection<TTag> Tags { get; set; }
+        public virtual ICollection<TItemComment> Comments { get; set; }
     }//done somethings. dunno how much do we want really
 }

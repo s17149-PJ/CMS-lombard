@@ -19,6 +19,7 @@ namespace Lombard_00.Data.Tables
         public string Surname { get; set; }
         [MaxLength(100)]
         public string Password { get; set; }
+
         // this is session part.
         [MaxLength(256)]
         public string Token { get; set; }
@@ -27,16 +28,14 @@ namespace Lombard_00.Data.Tables
         public DateTime ValidUnitl { get; set; }
         [Column(TypeName = "datetime2")]
         public DateTime JoinedOn { get; set; }
-        /*
-         * get 
-             {
-                if (validUnitl == null)
-                    return DateTime.Now.AddMinutes(-1);
-                return validUnitl;
-            } set {
-                validUnitl = value;
-            } }
-        */
+
+
+        //this data part
         public virtual ICollection<TRole> Roles { get; set; }
+        public virtual ICollection<TItemComment> Comments { get; set; }
+        public virtual ICollection<TUserItemBid> Bids { get; set; }//all bids
+        public virtual ICollection<TItem> BroughtItems { get; set; }
+        public virtual ICollection<TItem> TakenItems { get; set; }
+
     }//done
 }

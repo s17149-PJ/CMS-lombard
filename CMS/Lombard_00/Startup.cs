@@ -71,7 +71,7 @@ namespace Lombard_00
                     ImageMetaData = "test",
                     FinallizationDateTime = DateTime.Now
                 },
-                new TUser() { Id = 0 }, 
+                new TUser() { Id = 1 }, 
                 100);//pending
 
             }

@@ -209,6 +209,8 @@ namespace Lombard_00.Data.Db
             item.WinningBid = null;
 
             var found = FindTUser(owner.Id);
+            if (found == null)
+                return null;
             var bid = new TUserItemBid() {
                 Item = item,
                 User = found,

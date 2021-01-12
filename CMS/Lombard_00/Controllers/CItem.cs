@@ -25,6 +25,9 @@ namespace Lombard_00.Controllers
             IDb db = IDb.DbInstance;
             lock (db)
             {
+                //daily cleanup of old items
+                db.CleanUp();
+
                 if (!TokenUser.IsUsrStillValid(pack.User.Id, pack.User.Token))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
@@ -32,8 +35,6 @@ namespace Lombard_00.Controllers
                 }
 
                 var usr = db.FindTUser(pack.User.Id);
-                //daily cleanup of old items
-                db.CleanUp();
                 //add item
                 var itemToAdd = new TItem()
                 {

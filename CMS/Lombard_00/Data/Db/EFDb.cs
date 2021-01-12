@@ -328,18 +328,23 @@ namespace Lombard_00.Data.Db
                 return false;
 
             //get neccesary data
-            var bids = CTUserItemBids
-                .Include(e => e.Item)
-                .Include(e => e.User)
-                .Where(e => e.Item == foundItem)
-                .OrderBy(e => e.Money)
+            var bids = new List<TUserItemBid>(foundItem.Bids.ToList())
+                .OrderBy(e=>e.Money)
                 .ToList();
-            bids.Remove(item.StartingBid);
+
+            bids.Remove(foundItem.StartingBid);
+
             //was there any valid bid?
             if (bids.Count <= 0)
                 return false;
+
             //who won?
             var wbid = bids.ToArray()[bids.Count - 1];
+
+            //must be higher than starting bid
+            if (wbid.Money < foundItem.StartingBid.Money)
+                return false;
+
             //hurrah
             foundItem.WinningBid = wbid;
             SaveChanges();

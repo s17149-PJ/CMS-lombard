@@ -106,5 +106,7 @@ namespace Lombard_00.Data.Db
         public void CleanUp();
 
         public List<TNode> Log { get; }
+
+        public void UpdateDb();
     }
 }

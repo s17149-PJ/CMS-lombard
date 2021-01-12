@@ -47,7 +47,7 @@ namespace Lombard_00.Controllers
                 var token = GetNewToken();
                 usr.Token = token;
                 usr.ValidUnitl = DateTime.Now.AddMinutes(11);
-                db.ModifyTUser(usr, usr);
+                db.ModifyTUser(usr);
                 //send response
                 return new TokenUser()
                 {
@@ -91,7 +91,7 @@ namespace Lombard_00.Controllers
                 var newtoken = GetNewToken();
                 usr.Token = newtoken;
                 usr.ValidUnitl = DateTime.Now.AddMinutes(11);
-                db.ModifyTUser(usr, usr);
+                db.ModifyTUser(usr);
                 //send response
                 return new TokenUser()
                 {
@@ -185,7 +185,7 @@ namespace Lombard_00.Controllers
                 usr.Surname = edit.TokenUser.Surname;
                 usr.Password = edit.NewPassword;
 
-                if (!db.ModifyTUser(usr, usr))
+                if (!db.ModifyTUser(usr))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Conflict;
                     return false;

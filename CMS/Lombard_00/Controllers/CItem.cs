@@ -16,6 +16,7 @@ namespace Lombard_00.Controllers
         {
             public TokenUser User { get; set; }
             public TokenItem Item { get; set; }
+            public Decimal value { get; set; }
         }
         [Route("api/item/add")]
         [HttpPost]
@@ -31,12 +32,6 @@ namespace Lombard_00.Controllers
                 }
 
                 var usr = db.FindTUser(pack.User.Id);
-                //must have starting bid
-                if (pack.Item.StartingBid == null)
-                {
-                    Response.StatusCode = (int)HttpStatusCode.Forbidden;
-                    return null;
-                }
                 //daily cleanup of old items
                 db.CleanUp();
                 //add item
@@ -48,17 +43,8 @@ namespace Lombard_00.Controllers
                     Image = pack.Item.Image,
                     FinallizationDateTime = pack.Item.FinallizationDateTime
                 };
-                //!?SHOULD be automatically added to db
-                itemToAdd.StartingBid =
-                    new TUserItemBid()
-                    {
-                        Item = itemToAdd,
-                        User = usr,
-                        CreatedOn = DateTime.Nows
-                        //Money = pack.Item.StartingBid.Money
-                    };
                 //add
-                itemToAdd = db.AddTItem(itemToAdd);
+                itemToAdd = db.AddTItem(itemToAdd, new TUser() { Id = pack.User.Id },pack.value);
                 
                 //sucsess?
                 if (itemToAdd == null)
@@ -148,7 +134,7 @@ namespace Lombard_00.Controllers
                 if (pack.Item.FinallizationDateTime != null)
                     ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
                 //return
-                if (!db.ModifyTItem(ite, ite))
+                if (!db.ModifyTItem(ite))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Conflict;
                     return false;

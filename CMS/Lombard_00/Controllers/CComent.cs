@@ -60,7 +60,7 @@ namespace Lombard_00.Controllers
                 if (toDel.User.Id != usr.Id)
                     return false;//must be owner
 
-                if (!db.RemoveTItemComment(toDel))
+                if (!db.RemoveTItemComment(toDel,true))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
@@ -88,7 +88,7 @@ namespace Lombard_00.Controllers
                     Comment = pack.Comment.Comment
                 };
 
-                if (!db.ModifyTItemComment(com, com))
+                if (!db.ModifyTItemComment(com))
                 {
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;

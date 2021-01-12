@@ -647,6 +647,11 @@ namespace Lombard_00.Data.Db
         }// this method SHOULD be async. done
 
         public List<TNode> Log { get { return InternalData.ToList(); } }
+
+        public void UpdateDb() 
+        { 
+            SaveChanges(); 
+        }
         /*end of interface stuff*/
 
         /*start of EF stuff*/

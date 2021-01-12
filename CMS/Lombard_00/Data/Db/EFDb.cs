@@ -79,12 +79,18 @@ namespace Lombard_00.Data.Db
 
                 return false;
             }
-            if (newData.Nick != null) value.Nick = newData.Nick;
-            if (newData.Name != null) value.Name = newData.Name;
-            if (newData.Surname != null) value.Surname = newData.Surname;
-            if (newData.Password != null) value.Password = newData.Password;
-            if (newData.Token != null) value.Token = newData.Token;
-            if (newData.ValidUnitl != null) value.ValidUnitl = newData.ValidUnitl;
+            if (newData.Nick != null) 
+                value.Nick = newData.Nick;
+            if (newData.Name != null) 
+                value.Name = newData.Name;
+            if (newData.Surname != null) 
+                value.Surname = newData.Surname;
+            if (newData.Password != null) 
+                value.Password = newData.Password;
+            if (newData.Token != null) 
+                value.Token = newData.Token;
+            if (newData.ValidUnitl != null) 
+                value.ValidUnitl = newData.ValidUnitl;
             SaveChanges();
 
             return true;

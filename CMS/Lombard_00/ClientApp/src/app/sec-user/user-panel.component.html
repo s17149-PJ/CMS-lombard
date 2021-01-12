@@ -32,7 +32,8 @@
           </mat-form-field>
         </div>
 
-        <button mat-raised-button color="primary" [disabled]="userProfile.invalid()">
+        <!--[disabled]="userProfile.invalid()"-->
+        <button mat-raised-button color="primary">
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
           Save changes
         </button>

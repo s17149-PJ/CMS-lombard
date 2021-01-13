@@ -33,7 +33,7 @@
         </div>
 
         <!--[disabled]="userProfile.invalid()"-->
-        <button mat-raised-button color="primary">
+        <button mat-raised-button color="primary" [disabled]="userProfile.invalid">
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
           Save changes
         </button>

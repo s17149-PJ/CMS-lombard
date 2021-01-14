@@ -29,7 +29,7 @@ namespace Lombard_00.Controllers
                 Nick = user.Nick,
                 Name = user.Name,
                 Surname = user.Surname,
-                Roles = context.FindTUser.Roles.Select(e => new RoleToken(e))
+                Roles = context.FindTUser(user.Id).Roles.Select(e => new RoleToken(e)),
                 Token = null//NO leak!
             };
         }//done

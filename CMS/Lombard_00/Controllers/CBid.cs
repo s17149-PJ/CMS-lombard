@@ -24,7 +24,7 @@ namespace Lombard_00.Controllers
         }
         [Route("api/bid/create")]
         [HttpPost]
-        public TokenBid BidCreate(LocalBidClass pack)
+        public TokenItem BidCreate(LocalBidClass pack)
         {
             IDb db = IDb.DbInstance;
             lock (db)
@@ -56,7 +56,7 @@ namespace Lombard_00.Controllers
                     return null;
                 }
                 //yes
-                return new TokenBid(value, db);
+                return new TokenItem(db.FindTItem(pack.SubjectId), db);
             }
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -57,7 +57,8 @@ namespace Lombard_00.Data.Db
                     .Include(e => e.Bids)
                     .Include(e => e.BroughtItems)
                     .Include(e => e.TakenItems)
-                    .Where(e => e.Id == Id).FirstOrDefault();
+                    .Where(e => e.Id == Id)
+                    .FirstOrDefault();
         }//done
         public TUser FindTUser(string UniqueNick)
         {

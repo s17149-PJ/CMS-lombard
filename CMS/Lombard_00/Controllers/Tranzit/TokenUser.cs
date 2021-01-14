@@ -22,6 +22,7 @@ namespace Lombard_00.Controllers
         }//done
         public static TokenUser CallByToken(TUser user, IDb context)
         {
+            var usr = context.FindTUser(user.Id).Roles;
             return new TokenUser()
             {
                 Success = false,
@@ -29,7 +30,7 @@ namespace Lombard_00.Controllers
                 Nick = user.Nick,
                 Name = user.Name,
                 Surname = user.Surname,
-                Roles = context.FindTUser(user.Id).Roles.Select(e => new RoleToken(e)),
+                Roles = usr.Select(e => new RoleToken(e)),
                 Token = null//NO leak!
             };
         }//done

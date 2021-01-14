@@ -15,5 +15,6 @@ namespace Lombard_00.Controllers.Tranzit
             this.Id = role.Id;
             this.Name = role.Name;
         }
+        public RoleToken(){}
     }
 }

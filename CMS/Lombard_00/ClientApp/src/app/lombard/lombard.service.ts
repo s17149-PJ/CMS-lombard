@@ -53,8 +53,8 @@ export class LombardService {
     });
   }
 
-  createBid(bid: Bid): Observable<ItemBid> {
-    return this.http.post<ItemBid>('api/bid/create', {
+  createBid(bid: Bid): Observable<LombardProduct> {
+    return this.http.post<LombardProduct>('api/bid/create', {
       ...bid
     })
   }

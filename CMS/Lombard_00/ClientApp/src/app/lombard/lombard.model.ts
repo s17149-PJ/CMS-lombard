@@ -13,6 +13,7 @@ export interface LombardProduct {
   ratingAvarage?: number;
   startingBid?: ItemBid;
   winningBid?: ItemBid;
+  bids?: ItemBid[];
 }
 
 export interface ItemBid {

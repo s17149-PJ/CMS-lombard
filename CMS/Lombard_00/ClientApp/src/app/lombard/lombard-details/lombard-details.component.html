@@ -18,7 +18,8 @@
         </mdb-card-text>
         <mdb-card-text>
           <h5>Auction expires: {{p.finallizationDateTime}}</h5>
-          <h3>Current highest bid: {{p ? p.winningBid ? p.winningBid.money : p.startingBid.money : 0}}</h3>
+          <h3>Current highest bid: <b class="{{(ownHighestBid | async) ? 'own' : 'notOwn'}}">{{(currentBestPrice()
+              | async).money}}$</b></h3>
           <div *ngIf="isUserActive | async" class="container">
             <form class="row">
               <div class="def-number-input number-input safari_only">
@@ -26,7 +27,7 @@
                 <input class="quantity" min="0" name="quantity" value="1" type="number" [formControl]="bidAmount">
                 <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus"></button>
               </div>
-              <button mdbBtn color="primary" (click)="submitBid()">Bid!</button>
+              <button mdbBtn color="primary" (click)="submitBid()" [disabled]="ownHighestBid | async">Bid!</button>
             </form>
           </div>
         </mdb-card-text>

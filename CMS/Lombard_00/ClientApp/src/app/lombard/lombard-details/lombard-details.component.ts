@@ -1,6 +1,7 @@
+import { Bid } from './../lombard.model';
 import { isNil } from 'lodash';
 import { AuthService } from 'src/app/auth/auth.service';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LombardService } from '../lombard.service';
@@ -36,6 +37,24 @@ export class LombardDetailsComponent implements OnInit {
       rx.map(user => !isNil(user)),
       rx.shareReplay(1)
     )
+  }
+
+  submitBid() {
+    combineLatest([
+      this.auth.currentUser,
+      this.product
+    ]).pipe(
+      rx.switchMap(([user, product]) => {
+        const bid: Bid = {
+          userId: user.id,
+          token: user.token,
+          subjectId: product.id,
+          money: this.bidAmount.value,
+          isRating: false
+        }
+        return this.lombardService.createBid(bid);
+      })
+    ).subscribe(resp => console.log(resp));
   }
 
 }

@@ -12,3 +12,11 @@ export interface LombardProduct {
 export interface LompardProductCategory {
   name: string;
 }
+
+export interface Bid {
+  userId: number;
+  token: string;
+  subjectId: number;
+  money: number;
+  isRating: boolean;
+}

@@ -2,7 +2,7 @@ import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { of, Observable } from 'rxjs';
-import { LombardProduct } from './lombard.model';
+import { Bid, LombardProduct } from './lombard.model';
 import * as rx from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../model/auth.model';
@@ -14,9 +14,11 @@ export class LombardService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  get fetchProducts(): Observable<LombardProduct[]> {
+  fetchProducts(): Observable<LombardProduct[]> {
     return this.http
-      .post<LombardProduct[]>('api/item/Slist', null)
+      .post<any>('api/item/list', {
+        ...this.authService.currentUserValue
+      })
       .pipe(
         rx.map((products) => products),
         rx.shareReplay(1)
@@ -24,7 +26,7 @@ export class LombardService {
   }
 
   get lombardProducts(): Observable<LombardProduct[]> {
-    return this.fetchProducts;
+    return this.fetchProducts();
   }
 
   lombardProductById(id: number): Observable<LombardProduct> {
@@ -49,5 +51,11 @@ export class LombardService {
         ...product
       }
     });
+  }
+
+  createBid(bid: Bid) {
+    return this.http.post('api/bid/create', {
+      ...bid
+    })
   }
 }

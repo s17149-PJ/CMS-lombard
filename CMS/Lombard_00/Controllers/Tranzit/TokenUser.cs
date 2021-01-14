@@ -1,7 +1,9 @@
-﻿using Lombard_00.Data.Db;
+﻿using Lombard_00.Controllers.Tranzit;
+using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Lombard_00.Controllers
 {
@@ -15,7 +17,7 @@ namespace Lombard_00.Controllers
             Nick = user.Nick;
             Name = user.Name;
             Surname = user.Surname;
-            Roles = user.Roles;
+            Roles = user.Roles.Select(e => new RoleToken(e));
             Token = user.Token;
         }//done
         public static TokenUser CallByToken(TUser user, IDb context)
@@ -27,7 +29,7 @@ namespace Lombard_00.Controllers
                 Nick = user.Nick,
                 Name = user.Name,
                 Surname = user.Surname,
-                Roles = user.Roles,
+                Roles = context.FindTUser.Roles.Select(e => new RoleToken(e))
                 Token = null//NO leak!
             };
         }//done
@@ -37,7 +39,7 @@ namespace Lombard_00.Controllers
         public string Nick { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public IEnumerable<TRole> Roles { get; set; }
+        public IEnumerable<RoleToken> Roles { get; set; }
         public string Token { get; set; }
 
         public static bool IsUsrStillValid(int usr, string tokenOrPassword)

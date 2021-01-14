@@ -1,3 +1,4 @@
+using Lombard_00.Controllers.Tranzit;
 using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Builder;
@@ -86,6 +87,10 @@ namespace Lombard_00
 
                 //IDb.DbInstance.AddTUserItemBid()
             }
+
+            var db = IDb.DbInstance;
+            var tmp = (from item in db.TItems select new TokenItem(item, db)).ToList();
+            var tt = 2;
 
             int x = 2;
             //tests

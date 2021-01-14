@@ -225,12 +225,14 @@ namespace Lombard_00.Data.Db
                 IsRating = false
             };
 
+            var added = CTItems.Add(item);
+            SaveChanges();
+
             item.Bids.Add(bid);
             found.Bids.Add(bid);
             found.BroughtItems.Add(item);
             item.StartingBid = bid;
 
-            var added = CTItems.Add(item);
             TUserItemBids.Add(bid);
             SaveChanges();
             return added;

@@ -34,7 +34,6 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                var usr = db.FindTUser(pack.User.Id);
                 //add item
                 var itemToAdd = new TItem()
                 {

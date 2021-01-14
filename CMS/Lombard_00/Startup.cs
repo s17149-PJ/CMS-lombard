@@ -74,6 +74,17 @@ namespace Lombard_00
                 new TUser() { Id = 1 }, 
                 100);//pending
 
+                IDb.DbInstance.AddTItem(new TItem()
+                {
+                    Name = "test1",
+                    Description = "test1",
+                    ImageMetaData = "abc",
+                    FinallizationDateTime = DateTime.Now
+                },
+                new TUser() { Id = 2 },
+                100);//pending
+
+                //IDb.DbInstance.AddTUserItemBid()
             }
 
             int x = 2;

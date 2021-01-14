@@ -26,8 +26,8 @@ namespace Lombard_00.Controllers.Tranzit
             tbids.Remove(item.StartingBid);
             var tbid = tbids.OrderBy(e => e.Money).FirstOrDefault();
             if (tbid != null)
-                WinningBid = new TokenBid(tbid, context);
-            Bids = tbids.Select(e => new TokenBid(e, context));
+                WinningBid = TokenBid.CallByTokenItem(tbid, context);
+            Bids = tbids.Select(e => TokenBid.CallByTokenItem(e, context));
 
             //optional - rating
             RatingAvarage = item.RatingAvarage;

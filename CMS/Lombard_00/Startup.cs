@@ -89,13 +89,17 @@ namespace Lombard_00
             }
 
             var db = IDb.DbInstance;
-            var tmp = (from item in db.TItems select new TokenItem(item, db)).ToList();
+
+            //var usr = db.FindTUser(1);
+
+            
+            //var tmp = db.TItems.Select(e=> new TokenItem(e, db));
             var tt = 2;
 
             int x = 2;
             //tests
-            var users = IDb.DbInstance.TUsers;
-            var items = IDb.DbInstance.TItems;
+            //var users = IDb.DbInstance.TUsers;
+            //var items = IDb.DbInstance.TItems;
 
             x = 2;
         }

@@ -163,7 +163,7 @@ namespace Lombard_00.Controllers
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------   
         [Route("api/item/list")]
         [HttpPost]
-        public List<TokenItem> ItemList(TokenUser user)
+        public IEnumerable<TokenItem> ItemList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
             lock (db)
@@ -174,7 +174,7 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                return (from item in db.TItems select new TokenItem(item, db)).ToList();
+                return db.TItems.Select(e=>new TokenItem(e, db));
             }
         }//done
 

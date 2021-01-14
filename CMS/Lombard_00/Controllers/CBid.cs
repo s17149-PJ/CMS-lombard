@@ -56,7 +56,8 @@ namespace Lombard_00.Controllers
                     return null;
                 }
                 //yes
-                return new TokenItem(db.FindTItem(pack.SubjectId), db);
+                var tmp = new TokenItem(db.FindTItem(pack.SubjectId), db);
+                return tmp;
             }
         }//done
         //--------------------------------------------------------------------------------------------------------------------------------------------------------------------

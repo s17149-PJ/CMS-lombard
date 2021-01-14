@@ -51,7 +51,7 @@ namespace Lombard_00.Data.Db
         }//done
         public TUser FindTUser(int Id)
         {
-            return CTUsers
+             return CTUsers
                     .Include(e => e.Roles)
                     .Include(e => e.Comments)
                     .Include(e => e.Bids)
@@ -306,9 +306,6 @@ namespace Lombard_00.Data.Db
                     .FirstOrDefault();
         }//done
 
-        /*IMPORTANT: this function have a nice O(n^2) cost so do NOT abuse it
-         * at best use it to with few tags or uncommon tags. otherwise the serwer will die.
-         */
         public List<TItem> FindTItems(List<TTag> tags)
         {
             //find valid tags at all cost.
@@ -451,9 +448,10 @@ namespace Lombard_00.Data.Db
             if (ite == null)
                 return null;
             bid.Item = ite;
-            ite.Bids.Add(bid);
 
             var value = CTUserItemBids.Add(bid);
+
+            ite.Bids.Add(value);
 
             if (bid.IsRating)
             {

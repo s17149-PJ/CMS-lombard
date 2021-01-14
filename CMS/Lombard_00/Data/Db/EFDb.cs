@@ -355,6 +355,8 @@ namespace Lombard_00.Data.Db
 
             //hurrah
             foundItem.WinningBid = wbid;
+            wbid.User.TakenItems.Add(foundItem);
+
             SaveChanges();
 
             return true;

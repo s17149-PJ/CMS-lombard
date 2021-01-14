@@ -1,4 +1,5 @@
-﻿using Lombard_00.Data.Db;
+﻿using Lombard_00.Controllers.Tranzit;
+using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -55,10 +56,24 @@ namespace Lombard_00.Controllers
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
+                var usrRoles = usr
+                    .Roles
+                    .Select(e => db.FindRole(e.Id));
+                var targetRo =
+                    pack
+                    .Edited
+                    .Roles
+                    .Select(e => db.FindRole(e.Id));
 
-                usr.Roles.Except(pack.Edited.Roles).ToList().ForEach(e => db.RemoveTUserRole(usr, e,false));
+                usrRoles
+                    .Except(targetRo)
+                    .ToList()
+                    .ForEach(e => db.RemoveTUserRole(usr, e,false));
 
-                pack.Edited.Roles.Except(usr.Roles).ToList().ForEach(e => db.AddTUserRole(usr, e,false));
+                targetRo
+                    .Except(usrRoles)
+                    .ToList()
+                    .ForEach(e => db.AddTUserRole(usr, e,false));
 
                 db.UpdateDb();
 
@@ -104,7 +119,7 @@ namespace Lombard_00.Controllers
                                 Nick = e.Nick,
                                 Name = e.Name,
                                 Surname = e.Surname,
-                                Roles = e.Roles,
+                                Roles = e.Roles.Select(e=>new RoleToken(e)),
                                 Token = null
                             });
             }

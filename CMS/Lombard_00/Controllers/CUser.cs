@@ -1,4 +1,5 @@
-﻿using Lombard_00.Data.Db;
+﻿using Lombard_00.Controllers.Tranzit;
+using Lombard_00.Data.Db;
 using Lombard_00.Data.Tables;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -56,7 +57,7 @@ namespace Lombard_00.Controllers
                     Nick = usr.Nick,
                     Name = usr.Name,
                     Surname = usr.Surname,
-                    Roles = usr.Roles,
+                    Roles = usr.Roles.Select(e=>new Tranzit.RoleToken(e)),
                     Token = token
                 };
             }
@@ -100,7 +101,7 @@ namespace Lombard_00.Controllers
                     Nick = usr.Nick,
                     Name = usr.Name,
                     Surname = usr.Surname,
-                    Roles = usr.Roles,
+                    Roles = usr.Roles.Select(e=>new Tranzit.RoleToken(e)),
                     Token = newtoken
                 };
             }
@@ -153,7 +154,7 @@ namespace Lombard_00.Controllers
                     Nick = value.Nick,
                     Name = value.Name,
                     Surname = value.Surname,
-                    Roles = value.Roles,
+                    Roles = value.Roles.Select(e=>new RoleToken(e)),
                     Token = token
                 };
             }

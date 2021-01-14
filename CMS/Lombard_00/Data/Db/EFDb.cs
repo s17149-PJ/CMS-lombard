@@ -330,6 +330,8 @@ namespace Lombard_00.Data.Db
         {
             //find said item
             var foundItem = FindTItem(item.Id);
+            if (foundItem == null)
+                return false;
             //is there winnner already?
             if (foundItem.WinningBid != null)
                 return false;

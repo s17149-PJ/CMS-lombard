@@ -228,6 +228,7 @@ namespace Lombard_00.Data.Db
             item.Bids.Add(bid);
             found.Bids.Add(bid);
             found.BroughtItems.Add(item);
+            item.StartingBid = bid;
 
             var added = CTItems.Add(item);
             TUserItemBids.Add(bid);

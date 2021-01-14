@@ -125,7 +125,6 @@ namespace Lombard_00.Controllers
             }
         }//done
 
-
         public class AdminPanel
         {
             public decimal AllUsers { get; set; }

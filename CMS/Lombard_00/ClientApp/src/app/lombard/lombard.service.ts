@@ -2,7 +2,7 @@ import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { of, Observable } from 'rxjs';
-import { Bid, LombardProduct } from './lombard.model';
+import { Bid, ItemBid, LombardProduct } from './lombard.model';
 import * as rx from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../model/auth.model';
@@ -53,8 +53,8 @@ export class LombardService {
     });
   }
 
-  createBid(bid: Bid) {
-    return this.http.post('api/bid/create', {
+  createBid(bid: Bid): Observable<ItemBid> {
+    return this.http.post<ItemBid>('api/bid/create', {
       ...bid
     })
   }

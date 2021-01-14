@@ -18,7 +18,7 @@
         </mdb-card-text>
         <mdb-card-text>
           <h5>Auction expires: {{p.finallizationDateTime}}</h5>
-          <h3>Current highest bid: 0</h3>
+          <h3>Current highest bid: {{p ? p.winningBid ? p.winningBid.money : p.startingBid.money : 0}}</h3>
           <div *ngIf="isUserActive | async" class="container">
             <form class="row">
               <div class="def-number-input number-input safari_only">

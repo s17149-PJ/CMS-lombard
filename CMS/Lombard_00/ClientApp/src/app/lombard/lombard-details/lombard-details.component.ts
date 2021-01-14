@@ -1,8 +1,8 @@
 import { Bid } from './../lombard.model';
 import { isNil } from 'lodash';
 import { AuthService } from 'src/app/auth/auth.service';
-import { combineLatest, Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { combineLatest, Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LombardService } from '../lombard.service';
 import { LombardProduct } from '../lombard.model';
@@ -14,13 +14,15 @@ import { FormControl, Validators } from '@angular/forms';
   templateUrl: './lombard-details.component.html',
   styleUrls: ['./lombard-details.component.css']
 })
-export class LombardDetailsComponent implements OnInit {
+export class LombardDetailsComponent implements OnInit, OnDestroy {
 
-  product: Observable<LombardProduct>;
+  _product = new BehaviorSubject<LombardProduct>(null);
 
   bidAmount: FormControl;
 
   isUserActive: Observable<boolean>;
+
+  private _subscription = new Subscription();
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -29,9 +31,14 @@ export class LombardDetailsComponent implements OnInit {
 
   ngOnInit() {
     const productId = parseInt(this.route.snapshot.params.id, 10);
-    this.product = this.lombardService.lombardProductById(productId);
-
     this.bidAmount = new FormControl(0, Validators.required);
+
+    this._subscription.add(
+      this.lombardService.lombardProductById(productId).subscribe(p => {
+        this._product.next(p);
+        this.bidAmount.setValue(p ? p.winningBid ? (p.winningBid.money + 5) : (p.startingBid ? p.startingBid.money + 5 : 0) : 0)
+      })
+    );
 
     this.isUserActive = this.auth.currentUser.pipe(
       rx.map(user => !isNil(user)),
@@ -44,6 +51,7 @@ export class LombardDetailsComponent implements OnInit {
       this.auth.currentUser,
       this.product
     ]).pipe(
+      rx.first(),
       rx.switchMap(([user, product]) => {
         const bid: Bid = {
           userId: user.id,
@@ -54,7 +62,17 @@ export class LombardDetailsComponent implements OnInit {
         }
         return this.lombardService.createBid(bid);
       })
-    ).subscribe(resp => console.log(resp));
+    ).subscribe(p => {
+      this._product.next(p.item);
+      this.bidAmount.setValue(p ? p.item.winningBid ? (p.item.winningBid.money + 5) : (p.item.startingBid.money + 5) : 0)
+    });
   }
 
+  get product(): Observable<LombardProduct> {
+    return this._product.asObservable();
+  }
+
+  ngOnDestroy() {
+    this._subscription.unsubscribe();
+  }
 }

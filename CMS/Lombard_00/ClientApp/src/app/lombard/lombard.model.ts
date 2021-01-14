@@ -1,3 +1,4 @@
+import { User } from './../model/auth.model';
 export interface LombardProduct {
   id: number;
   name: string;
@@ -7,6 +8,20 @@ export interface LombardProduct {
   finallizationDateTimeDouble: number;
   description: string;
   image?: string;
+  imageMetaData?: string;
+  numberOfRatings?: number;
+  ratingAvarage?: number;
+  startingBid?: ItemBid;
+  winningBid?: ItemBid;
+}
+
+export interface ItemBid {
+  id: number;
+  item?: LombardProduct;
+  money: number;
+  createdOn?: number;
+  isRating: boolean;
+  user?: User;
 }
 
 export interface LompardProductCategory {

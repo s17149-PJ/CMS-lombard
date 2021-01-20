@@ -17,9 +17,9 @@
           {{p.description}}
         </mdb-card-text>
         <mdb-card-text>
-          <h5>Auction expires: {{p.finallizationDateTime}}</h5>
-          <h3>Current highest bid: <b class="{{(ownHighestBid | async) ? 'own' : 'notOwn'}}">{{(currentBestPrice()
-              | async).money}}$</b></h3>
+          <h5>Auction expires: {{p.finallizationDateTimeDouble | date}}</h5>
+          <h3>Current highest bid: <b class="{{(ownHighestBid | async) ? 'own' : 'notOwn'}}">{{(money() | async)}}$</b>
+          </h3>
           <div *ngIf="isUserActive | async" class="container">
             <form class="row">
               <div class="def-number-input number-input safari_only">

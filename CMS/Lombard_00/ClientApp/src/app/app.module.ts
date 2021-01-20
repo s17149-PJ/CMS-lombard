@@ -1,3 +1,4 @@
+import { UserItemsComponent } from './sec-user/user-items/user-items.component';
 import { UserPanelComponent } from './sec-user/user-panel.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -61,6 +62,7 @@ import { LombardNewComponent } from './lombard/lombard-new/lombard-new.component
     LombardComponent,
     LombardNewComponent,
     UserPanelComponent,
+    UserItemsComponent,
     LombardDetailsComponent,
     StatsCardComponent,
     StatsCard2Component,

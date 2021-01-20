@@ -1,3 +1,4 @@
+import { UserItemsComponent } from './sec-user/user-items/user-items.component';
 import { Route } from '@angular/router';
 import { AdminPanelDashboardComponent } from './sec-admin/admin-panel-dashboard/admin-panel-dashboard.component';
 import { AdminPanelUsersComponent } from './sec-admin/admin-panel-users/admin-panel-users.component';
@@ -25,6 +26,7 @@ export const routes: Route[] = [
   },
   { path: 'login', component: AuthorizationComponent },
   { path: 'userPanel', component: UserPanelComponent },
+  { path: 'userItems', component: UserItemsComponent },
   {
     path: 'admin',
     canActivate: [AuthGuard],

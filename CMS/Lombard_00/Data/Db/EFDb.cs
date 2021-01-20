@@ -632,16 +632,7 @@ namespace Lombard_00.Data.Db
             CTItems.ForEachAsync(e => TryToFinishDeal(e));
 
             //keep list of items to remove
-            List<TItem> toRemove = new List<TItem>();
-
-            //dunno if deleting during iteration will break it so I don't
-            TItems
-                .Where(item => DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
-                .ToList()
-                .ForEach(item => toRemove.Add(item));
-
-            //now having all refs del each item
-            toRemove.ForEach(item =>RemoveTItem(item,false));
+            
 
             SaveChanges();
         }// this method SHOULD be async. done

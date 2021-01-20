@@ -19,7 +19,7 @@ namespace Lombard_00.Controllers.Tranzit
             StartingBid = TokenBid.CallByTokenItem(item.StartingBid, context);
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid, context);
             FinallizationDateTime = item.FinallizationDateTime;
-            FinallizationDateTimeDouble = (new DateTime(1970, 1, 1) - FinallizationDateTime).TotalMilliseconds;
+            FinallizationDateTimeDouble = (FinallizationDateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
             Tags = item.Tags;
 
             var tbids = new List<TUserItemBid>(item.Bids);

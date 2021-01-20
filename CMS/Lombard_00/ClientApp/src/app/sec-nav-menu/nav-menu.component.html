@@ -42,7 +42,7 @@
               <button mat-menu-item (click)="myData()">
                 Moje dane
               </button>
-              <button mat-menu-item>
+              <button mat-menu-item [routerLink]="['userItems']">
                 Moje przedmioty
               </button>
               <button mat-menu-item [matMenuTriggerFor]="adminMenu" *ngIf="this.auth.getRole() === 'ADMIN'">

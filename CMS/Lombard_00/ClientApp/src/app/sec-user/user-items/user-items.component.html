@@ -1,0 +1,16 @@
+<mat-card>Currently ongoing:</mat-card>
+<div class="grid-container">
+  <mdb-card class="products" *ngFor="let item of lombardProducts | async">
+    <mdb-card-img src="{{item.image}}" width="200px" heigh="200px" alt="Item photo">
+    </mdb-card-img>
+    <mdb-card-body>
+      <mdb-card-title>
+        <h4>{{item.name}}</h4>
+      </mdb-card-title>
+      <mdb-card-text> Expires: {{item.finallizationDateTime}}
+      </mdb-card-text>
+      <a routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
+        more!</a>
+    </mdb-card-body>
+  </mdb-card>
+</div>

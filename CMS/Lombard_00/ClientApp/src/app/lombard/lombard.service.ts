@@ -1,3 +1,4 @@
+import { User } from './../model/auth.model';
 import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
@@ -5,7 +6,7 @@ import { of, Observable } from 'rxjs';
 import { Bid, ItemBid, LombardProduct } from './lombard.model';
 import * as rx from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../model/auth.model';
+import { isNil } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,16 @@ export class LombardService {
   }
 
   get lombardProducts(): Observable<LombardProduct[]> {
-    return this.fetchProducts();
+    return this.fetchProducts().pipe(
+      rx.map(products => products.filter(p => moment(p.finallizationDateTimeDouble).isAfter(moment.now())))
+    );
+  }
+
+  get finishedLombardProducts(): Observable<LombardProduct[]> {
+    return this.fetchProducts().pipe(
+      rx.map(products => products.filter(p => !isNil(p.winningBid) &&
+        moment(p.finallizationDateTimeDouble).isBefore(moment.now())))
+    );
   }
 
   lombardProductById(id: number): Observable<LombardProduct> {
@@ -57,5 +67,9 @@ export class LombardService {
     return this.http.post<LombardProduct>('api/bid/create', {
       ...bid
     })
+  }
+
+  isCurrentlyBidding(product: LombardProduct, user: User): boolean {
+    return product.bids.filter(bid => bid.user.id === user.id).length > 0;
   }
 }

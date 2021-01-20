@@ -41,7 +41,7 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
       this.lombardService.lombardProductById(productId).subscribe(p => {
         this._product.next(p);
         const bid = p.bids.sort((a, b) => b.id - a.id)[0];
-        this.bidAmount.setValue(bid ? (bid.money + 5) : (p.startingBid.money + 5))
+        this.bidAmount.setValue(bid ? (bid.money + 5) : (p.startingBid ? p.startingBid.money + 5 : 5))
       })
     );
 
@@ -93,7 +93,13 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
 
   currentBestPrice(): Observable<ItemBid> {
     return this.product.pipe(
-      rx.map(p => p.bids.sort((a, b) => b.id - a.id)[0])
+      rx.map(p => p.bids ? p.bids.sort((a, b) => b.id - a.id)[0] : null)
+    );
+  }
+
+  money(): Observable<number> {
+    return this.currentBestPrice().pipe(
+      rx.map(b => b ? b.money : 0)
     );
   }
 

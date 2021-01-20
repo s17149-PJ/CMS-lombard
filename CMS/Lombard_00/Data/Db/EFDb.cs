@@ -636,6 +636,7 @@ namespace Lombard_00.Data.Db
 
             //dunno if deleting during iteration will break it so I don't
             TItems
+                .Where(item => item.WinningBid != null)
                 .Where(item => DateTime.Compare(item.WinningBid.CreatedOn.AddYears(1), DateTime.Now) < 0)
                 .ToList()
                 .ForEach(item => toRemove.Add(item));

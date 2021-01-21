@@ -68,7 +68,7 @@ namespace Lombard_00
                 IDb.DbInstance.AddTItem(new TItem()
                 {
                     Name = "test0",
-                    Description = "test0",
+                    Description = "Nullam fringilla dignissim elementum. Pellentesque posuere ipsum metus. Nullam aliquet arcu eget luctus fermentum. Aenean sagittis consequat eros, et ullamcorper libero viverra nec. Vestibulum vel magna id mi pellentesque porttitor sed ac orci. Proin ut commodo ligula. Donec commodo, est hendrerit hendrerit cursus, neque purus ullamcorper tellus, quis rutrum ligula urna non lacus. Nulla at dictum dolor. Aenean non rutrum turpis. Maecenas ut erat metus. Sed eget egestas est, vel interdum enim. Aliquam nec eleifend dolor.",
                     ImageMetaData = "https://cutt.ly/ijDjtHh",
                     FinallizationDateTime = DateTime.Now.AddSeconds(86400)
                 },
@@ -78,7 +78,7 @@ namespace Lombard_00
                 IDb.DbInstance.AddTItem(new TItem()
                 {
                     Name = "test1",
-                    Description = "test1",
+                    Description = "Morbi vel ornare quam. Duis sodales gravida elit, at bibendum dolor mollis eget. Pellentesque hendrerit, felis id faucibus consectetur, nibh dolor iaculis sem, quis luctus mauris urna eget tortor. Nullam mattis vestibulum risus quis tristique. Proin non justo tempus, viverra nisl nec, vulputate nunc. Quisque sit amet ligula at velit posuere bibendum a ac elit. Sed venenatis eros a erat eleifend faucibus at id nunc. Phasellus massa orci, malesuada sed lacinia in, pellentesque vel mi. Nunc id leo a lectus ultricies sollicitudin at vel nisi. Integer mauris dolor, mollis at mi nec, fringilla bibendum nisi. Praesent felis nisi, facilisis sit amet ex quis, finibus aliquam tellus. In nec erat tincidunt, mollis mi non, aliquet libero. Etiam ullamcorper faucibus tortor quis dignissim. Nulla commodo tempor enim at suscipit. Nullam sit amet est quis turpis malesuada pharetra.",
                     ImageMetaData = "https://cutt.ly/3jDjiHm",
                     FinallizationDateTime = DateTime.Now.AddSeconds(86400)
                 },

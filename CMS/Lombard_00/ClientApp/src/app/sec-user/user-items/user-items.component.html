@@ -1,7 +1,9 @@
 <mat-card *ngIf="!(anyAuctions | async)">You don't have any auctions!</mat-card>
 <div *ngIf="lombardProducts | async as prod">
   <div *ngIf="prod.length > 0">
-    <mat-card>Currently ongoing:</mat-card>
+    <mat-card>
+      <h3>Currently ongoing:</h3>
+    </mat-card>
     <div class="grid-container">
       <mdb-card class="products" *ngFor="let item of prod">
         <mdb-card-img src="{{item.imageMetaData}}" width="200px" heigh="200px" alt="Item photo">
@@ -10,7 +12,13 @@
           <mdb-card-title>
             <h4>{{item.name}}</h4>
           </mdb-card-title>
-          <mdb-card-text> Expires: {{item.finallizationDateTime}}
+          <mdb-card-text> Expires: {{item.finallizationDateTimeDouble | date}}
+          </mdb-card-text>
+          <mdb-card-text>
+            <p class="{{(currentlyWinning(item) | async) ? 'winning' : 'losing'}}">Currently {{(currentlyWinning(item) |
+              async) ? 'winning!
+              Congratulations!' :
+              'losing! Bid again!'}}</p>
           </mdb-card-text>
           <a routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
             more!</a>
@@ -21,7 +29,9 @@
 </div>
 <div *ngIf="(wonProducts | async) as wonP">
   <div *ngIf="wonP.length > 0">
-    <mat-card>Won auctions:</mat-card>
+    <mat-card>
+      <h3>Won products:</h3>
+    </mat-card>
     <div class="grid-container">
       <mdb-card class="products" *ngFor="let item of wonP">
         <mdb-card-img src="{{item.imageMetaData}}" width="200px" heigh="200px" alt="Item photo">

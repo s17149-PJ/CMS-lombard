@@ -33,3 +33,13 @@ th.mat-sort-header-sorted {
   background-color: aquamarine;
   width: 100%;
 }
+
+.winning {
+  color: green;
+  font-weight: 600;
+}
+
+.losing {
+  color: red;
+  font-weight: 600;
+}

@@ -9,9 +9,6 @@
         </a>
       </div>
       <mdb-card-body cascade="true" class="text-center">
-        <h5 class="pink-text">
-          <!-- <mdb-icon *ngIf="p.category" fas icon="tag"></mdb-icon> {{p.category.name}} -->
-        </h5>
         <h4 class="card-title">{{p.name}}</h4>
         <mdb-card-text>
           {{p.description}}
@@ -20,15 +17,18 @@
           <h5>Auction expires: {{p.finallizationDateTimeDouble | date}}</h5>
           <h3>Current highest bid: <b class="{{(ownHighestBid | async) ? 'own' : 'notOwn'}}">{{(money() | async)}}$</b>
           </h3>
-          <div *ngIf="isUserActive | async" class="container">
-            <form class="row">
-              <div class="def-number-input number-input safari_only">
-                <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="minus"></button>
-                <input class="quantity" min="0" name="quantity" value="1" type="number" [formControl]="bidAmount">
-                <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus"></button>
-              </div>
-              <button mdbBtn color="primary" (click)="submitBid()" [disabled]="ownHighestBid | async">Bid!</button>
-            </form>
+          <div *ngIf="isUserActive | async" class="col-md-8 center center-form">
+            <div class="container">
+              <form class="row">
+                <div class="def-number-input number-input safari_only">
+                  <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                    class="minus"></button>
+                  <input class="quantity" min="0" name="quantity" value="1" type="number" [formControl]="bidAmount">
+                  <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus"></button>
+                </div>
+                <button mdbBtn color="primary" (click)="submitBid()" [disabled]="ownHighestBid | async">Bid!</button>
+              </form>
+            </div>
           </div>
         </mdb-card-text>
       </mdb-card-body>

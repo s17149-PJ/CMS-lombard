@@ -21,13 +21,12 @@
 
         <!--Card content-->
         <mdb-card-body>
-          <div class="progress">
-            <mat-progress-bar mode="determinate" bufferValue="{{calculateMaximum(adminStats.allUsers)}}"
-              value="{{adminStats.allUsers}}">
-            </mat-progress-bar>
-          </div>
+          <mat-progress-bar mode="determinate" bufferValue="{{calculateMaximum(adminStats.allUsers)}}"
+            value="{{adminStats.allUsers/calculateMaximum(adminStats.allUsers) * 100}}">
+          </mat-progress-bar>
           <!--Text-->
-          <p class="card-text">Better than last week (25%)</p>
+          <p class="card-text">Worse than last week
+            ({{adminStats.allUsers/calculateMaximum(adminStats.allUsers) * 100}}%)</p>
         </mdb-card-body>
         <!--/.Card content-->
 
@@ -55,11 +54,9 @@
 
         <!--Card content-->
         <mdb-card-body>
-          <div class="progress">
-            <mat-progress-bar mode="determinate" bufferValue="{{calculateMaximum(adminStats.activeItems)}}"
-              value="{{adminStats.activeItems}}">
-            </mat-progress-bar>
-          </div>
+          <mat-progress-bar mode="determinate" bufferValue="{{calculateMaximum(adminStats.activeItems)}}"
+            value="{{adminStats.activeItems}}">
+          </mat-progress-bar>
           <!--Text-->
           <p class="card-text">Worse than last week
             ({{adminStats.activeItems/calculateMaximum(adminStats.activeItems) * 100}}%)</p>
@@ -82,20 +79,20 @@
         <div class="admin-up">
           <mdb-icon fas icon="chart-pie" class="light-blue lighten-1"></mdb-icon>
           <div class="data">
-            <p>TRAFFIC</p>
-            <h4><strong>20000</strong></h4>
+            <p>COMPLETED ITEMS</p>
+            <h4><strong>{{adminStats.completedItems}}</strong></h4>
           </div>
         </div>
         <!--/.Card Data-->
 
         <!--Card content-->
         <mdb-card-body>
-          <div class="progress">
-            <div class="progress-bar grey darken-2" role="progressbar" style="width: 75%" aria-valuenow="75"
-              aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
+          <mat-progress-bar mode="determinate" bufferValue="{{calculateMaximum(adminStats.completedItems)}}"
+            value="{{adminStats.completedItems}}">
+          </mat-progress-bar>
           <!--Text-->
-          <p class="card-text">Worse than last week (75%)</p>
+          <p class="card-text">Worse than last week
+            ({{adminStats.completedItems/calculateMaximum(adminStats.completedItems) * 100}}%)</p>
         </mdb-card-body>
         <!--/.Card content-->
 
@@ -115,20 +112,20 @@
         <div class="admin-up">
           <mdb-icon fas icon="chart-bar" class="red accent-2"></mdb-icon>
           <div class="data">
-            <p>ORGANIC TRAFFIC</p>
-            <h4><strong>2000</strong></h4>
+            <p>CURRENTLY ONLINE</p>
+            <h4><strong>{{adminStats.currentlyOnline}}</strong></h4>
           </div>
         </div>
         <!--/.Card Data-->
 
         <!--Card content-->
         <mdb-card-body>
-          <div class="progress">
-            <div class="progress-bar bg-primary" role="progressbar" style="width: 25%" aria-valuenow="25"
-              aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
+          <mat-progress-bar mode="determinate" bufferValue="{{calculateMaximum(adminStats.currentlyOnline)}}"
+            value="{{adminStats.currentlyOnline/calculateMaximum(adminStats.currentlyOnline) * 100}}">
+          </mat-progress-bar>
           <!--Text-->
-          <p class="card-text">Better than last week (25%)</p>
+          <p class="card-text">Better than last week
+            ({{adminStats.currentlyOnline/calculateMaximum(adminStats.currentlyOnline) * 100}}%)</p>
         </mdb-card-body>
         <!--/.Card content-->
 

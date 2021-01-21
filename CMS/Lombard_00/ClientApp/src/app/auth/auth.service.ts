@@ -84,7 +84,7 @@ export class AuthService {
     var user = { id: this.currentUserValue.id, nick: nick.trim(), name: name.trim(), surname: surname.trim(), password: this.currentUserValue.token };
     var token = password.trim();
     return this.http.post<any>('api/user/edit',
-      { TokenUser: user, NewPassword: token})
+      { TokenUser: user, NewPassword: token })
       .pipe(
         rx.map((user: User) => {
           if (user.success) {
@@ -125,7 +125,7 @@ export class AuthService {
                 this.logout();
               }
             })
-          ); 
+          );
       }
     });
   }
@@ -149,13 +149,15 @@ export class AuthService {
   get fetchUsers(): Observable<User[]> {
     return this.http
       .post<User[]>('api/admin/users', {
-        success: this.currentUserValue.success,
-        id: this.currentUserValue.id,
-        nick: this.currentUserValue.nick,
-        name: this.currentUserValue.name,
-        surname: this.currentUserValue.surname,
-        roles: this.currentUserValue.roles,
-        token: this.currentUserValue.token
+        admin: {
+          success: this.currentUserValue.success,
+          id: this.currentUserValue.id,
+          nick: this.currentUserValue.nick,
+          name: this.currentUserValue.name,
+          surname: this.currentUserValue.surname,
+          roles: this.currentUserValue.roles,
+          token: this.currentUserValue.token
+        }
       })
       .pipe(rx.map((users) => users));
   }

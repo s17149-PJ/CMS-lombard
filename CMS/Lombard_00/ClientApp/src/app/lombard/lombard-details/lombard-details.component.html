@@ -3,7 +3,7 @@
   <div class="col-md-8 center" *ngIf="(product | async) as p">
     <mdb-card cascade="true" narrower="true">
       <div class="view view-cascade overlay waves-light" mdbWavesEffect>
-        <mdb-card-img src="{{p.image}}"></mdb-card-img>
+        <mdb-card-img src="{{p.imageMetaData}}"></mdb-card-img>
         <a>
           <div class="mask rgba-white-slight"></div>
         </a>

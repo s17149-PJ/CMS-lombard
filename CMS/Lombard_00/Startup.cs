@@ -69,8 +69,8 @@ namespace Lombard_00
                 {
                     Name = "test0",
                     Description = "test0",
-                    ImageMetaData = "test",
-                    FinallizationDateTime = DateTime.Now
+                    ImageMetaData = "https://cutt.ly/ijDjtHh",
+                    FinallizationDateTime = DateTime.Now.AddSeconds(86400)
                 },
                 new TUser() { Id = 1 }, 
                 100);//pending
@@ -79,8 +79,8 @@ namespace Lombard_00
                 {
                     Name = "test1",
                     Description = "test1",
-                    ImageMetaData = "abc",
-                    FinallizationDateTime = DateTime.Now
+                    ImageMetaData = "https://cutt.ly/3jDjiHm",
+                    FinallizationDateTime = DateTime.Now.AddSeconds(86400)
                 },
                 new TUser() { Id = 2 },
                 100);//pending

@@ -14,6 +14,8 @@ import * as rx from 'rxjs/operators';
 export class UserItemsComponent implements OnInit {
 
   lombardProducts: Observable<LombardProduct[]>;
+  wonProducts: Observable<LombardProduct[]>;
+  anyAuctions: Observable<boolean>;
 
   constructor(private auth: AuthService, private lombard: LombardService) { }
 
@@ -22,8 +24,17 @@ export class UserItemsComponent implements OnInit {
       this.lombard.lombardProducts,
       this.auth.currentUser
     ]).pipe(
-      rx.map(([products, user]) => products.filter(p => this.lombard.isCurrentlyBidding(p, user))),
-      rx.tap(x => console.log(x))
+      rx.map(([products, user]) => products.filter(p => this.lombard.isCurrentlyBidding(p, user)))
+    );
+
+    this.wonProducts = this.lombard.wonUserProducts();
+
+    this.anyAuctions = combineLatest([
+      this.lombardProducts,
+      this.wonProducts
+    ]).pipe(
+      rx.map(([currProd, wonProd]) => currProd.length > 0 && wonProd.length > 0),
+      rx.shareReplay(1)
     );
   }
 

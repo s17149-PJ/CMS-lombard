@@ -2,7 +2,7 @@ import { User } from './../model/auth.model';
 import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { of, Observable } from 'rxjs';
+import { of, Observable, combineLatest } from 'rxjs';
 import { Bid, ItemBid, LombardProduct } from './lombard.model';
 import * as rx from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -71,5 +71,14 @@ export class LombardService {
 
   isCurrentlyBidding(product: LombardProduct, user: User): boolean {
     return product.bids.filter(bid => bid.user.id === user.id).length > 0;
+  }
+
+  wonUserProducts(): Observable<LombardProduct[]> {
+    return combineLatest([
+      this.finishedLombardProducts,
+      this.authService.currentUser
+    ]).pipe(
+      rx.map(([products, user]) => products.filter(product => product.winningBid.user.id === user.id))
+    );
   }
 }

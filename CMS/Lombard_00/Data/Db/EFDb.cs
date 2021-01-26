@@ -313,7 +313,10 @@ namespace Lombard_00.Data.Db
         public Result FindTItems(List<TTag> tags)
         {
             //find valid tags at all cost.
-            var foundTags = tags.Select(e => HardFindTag(e,false)).Where(e => e != null).ToList();
+            var foundTags = tags
+                .Select(e => HardFindTag(e,false))
+                .Where(e => e != null)
+                .ToList();
             var count = foundTags.Count;
             //if found nothing ret error
             if (foundTags.Count() == 0)
@@ -327,6 +330,7 @@ namespace Lombard_00.Data.Db
                         .Include(e => e.StartingBid)
                         .Include(e => e.WinningBid)
                         .Include(e => e.Tags)
+                        .ToList()
                         //.Where(e => e.Tags.Intersect(foundTags).Count() == count)
                         .Where(e => !foundTags.Except(e.Tags).Any())// *should* be automatically optimized and stop on first missing tag. faster.
                         .ToList()

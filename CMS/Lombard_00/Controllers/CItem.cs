@@ -200,6 +200,15 @@ namespace Lombard_00.Controllers
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
+
+                if(pack.Tags==null || pack.Tags.Count == 0)
+                    return new FoundResult()
+                    {
+                        FoundItems = db.TItems.Select(e => new TokenItem(e, db)).ToList(),
+                        FoundTags = new List<TokenTag>()
+                    };
+
+
                 var TTags =
                         pack.Tags
                         .Select(e => new TTag() { Id = -1, Name = e })
@@ -209,6 +218,12 @@ namespace Lombard_00.Controllers
                 //        .Select(e => new TTag() { Id = e })
                 //        .ToList());
                 var result = db.FindTItems(TTags);
+                if (result == null)
+                    return new FoundResult()
+                    {
+                        FoundItems = new List<TokenItem>(),
+                        FoundTags = new List<TokenTag>()
+                    };
                 return new FoundResult()
                 {
                     FoundItems = result.Items.Select(e => new TokenItem(e,db)).ToList(),

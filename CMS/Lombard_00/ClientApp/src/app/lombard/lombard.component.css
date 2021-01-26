@@ -14,13 +14,14 @@ th.mat-sort-header-sorted {
 }
 
 .product {
+  grid-area: list;
   margin: 30px auto;
   max-height: 300px;
 }
 
 .container {
   display: grid;
-  grid-template-columns: 200px auto 300px 200px;
+  grid-template-columns: autr;
   grid-template-rows: auto;
   grid-template-areas: 'img main price btn';
 }
@@ -53,11 +54,37 @@ th.mat-sort-header-sorted {
 .filter-panel {
   background-color: aquamarine;
   width: 100%;
+
 }
 
-/* .img {
-  float: center;
+
+
+.column {
+  float: left;
+}
+
+.column.serach {
+  grid-area: panel;
   width: 200px;
-  height: 300px;
-  object-fit: cover;
-} */
+}
+
+.serach_panel {
+  margin: 30px 10px 0 10px;
+}
+
+/* Middle column */
+.column.list {
+  width: auto;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+@media screen and (max-width: 600px) {
+  .column.serach, .column.list {
+    width: 100%;
+  }
+}

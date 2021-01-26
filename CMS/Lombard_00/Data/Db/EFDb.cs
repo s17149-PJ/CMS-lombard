@@ -260,7 +260,7 @@ namespace Lombard_00.Data.Db
                 value.FinallizationDateTime = newData.FinallizationDateTime;
             if (newData.Tags != null) {
                 //validate tags with db
-                newData.Tags = newData.Tags.Select(e => HardFindTag(e)).ToList();
+                newData.Tags = newData.Tags.Select(e => HardFindTag(e,true)).ToList();
 
                 var tagsToRemove = value.Tags.Except(newData.Tags).ToList();
                 var tagsToAdd = newData.Tags.Except(value.Tags).ToList();
@@ -309,7 +309,7 @@ namespace Lombard_00.Data.Db
         public List<TItem> FindTItems(List<TTag> tags)
         {
             //find valid tags at all cost.
-            var foundTags = tags.Select(e => HardFindTag(e)).Where(e => e != null).ToList();
+            var foundTags = tags.Select(e => HardFindTag(e,false)).Where(e => e != null).ToList();
             var count = foundTags.Count;
             //if found nothing ret error
             if (foundTags.Count() == 0)
@@ -531,7 +531,7 @@ namespace Lombard_00.Data.Db
         }//done
         public bool SoftRemoveTag(TTag tag)
         {
-            var foundTag = HardFindTag(tag);
+            var foundTag = HardFindTag(tag,false);
 
             if (foundTag == null)
                 return false;
@@ -552,14 +552,14 @@ namespace Lombard_00.Data.Db
                 .Where(e => e.Id == Id)
                 .FirstOrDefault();
         }//done
-        public TTag HardFindTag(TTag tag)
+        public TTag HardFindTag(TTag tag, bool createOnMissing)
         {
             var value = CTTag
                 .Include(e => e.Items)
                 .Where(e => e.Name == tag.Name || e.Id == tag.Id)
                 .FirstOrDefault();
 
-            if (value == null) 
+            if (value == null && createOnMissing) 
             {
                 value = AddTag(tag);
             }

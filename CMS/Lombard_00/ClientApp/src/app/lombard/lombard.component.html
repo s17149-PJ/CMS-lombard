@@ -1,23 +1,49 @@
 <mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
-<mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async).length === 0">Out of stock! Check
-  later.</mat-card>
+<mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async).length === 0">
+  Out of stock! Check
+  later.
+</mat-card>
 <!-- <mat-list role="list">
   <mat-list-item class="product" role="listitem" *ngFor="let item of lombardProducts | async"> -->
-<mat-card class="container product" *ngFor="let item of lombardProducts | async">
-  <img class="item-img" mat-card-lg-image src="{{item.imageMetaData}}" width="150px" heigh="100px" alt="Item photo" />
-  <mat-card-content class="item-main">
-    <div>
-      <h4 matLine>{{item.name}}</h4>
-      <p matLine> Expires: {{item.finallizationDateTimeDouble | date}}
-      </p>
-      <p matLine>{{shortenDescription(item.description)}}</p>
-    </div>
-  </mat-card-content>
-  <mat-card-content class="item-price">
-    <h5>Current highest bid: <br> <b>{{(money(item) | async)}}$</b></h5>
-  </mat-card-content>
-  <a class="item-btn" routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
-    more!</a>
-</mat-card>
+
+<div class="row">
+  <div class="column serach">
+    <mat-card class="serach_panel">
+
+      <div class="form-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Serach:</mat-label>
+          <input matInput formControlName="tags" required />
+        </mat-form-field>
+      </div>
+
+      <div class="column list">
+        <mat-chip *ngFor="let tag of tags" [removable]="removable" (removed)="remove(tag)">
+          {{tag.name}}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+      </div>
+
+    </mat-card> 
+  </div>
+  <div class="column list">
+    <mat-card class="container product" *ngFor="let item of lombardProducts | async">
+      <img class="item-img" mat-card-lg-image src="{{item.imageMetaData}}" width="150px" heigh="100px" alt="Item photo" />
+      <mat-card-content class="item-main">
+        <div>
+          <h4 matLine>{{item.name}}</h4>
+          <p matLine>
+            Expires: {{item.finallizationDateTimeDouble | date}}
+          </p>
+          <p matLine>{{shortenDescription(item.description)}}</p>
+        </div>
+      </mat-card-content>
+      <mat-card-content class="item-price">
+        <h5>Current highest bid: <br> <b>{{(money(item) | async)}}$</b></h5>
+      </mat-card-content>
+      <a class="item-btn" routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check more!</a>
+    </mat-card>
+  </div>
+</div>
 <!-- </mat-list-item>
 </mat-list> -->

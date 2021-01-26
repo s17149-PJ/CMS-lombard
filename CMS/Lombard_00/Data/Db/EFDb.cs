@@ -207,6 +207,8 @@ namespace Lombard_00.Data.Db
         {
             if (item.Tags == null)
                 item.Tags = new List<TTag>();
+            item.Tags = item.Tags.Select(e=>HardFindTag(e,true)).ToList();
+
             item.Bids = new List<TUserItemBid>();
             item.Comments = new List<TItemComment>();
 

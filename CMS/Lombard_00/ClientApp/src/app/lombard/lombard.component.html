@@ -20,10 +20,12 @@
       </div>
 
       <div class="column list">
-        <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)">
-          {{tag.name}}
-          <mat-icon matChipRemove>cancel</mat-icon>
-        </mat-chip>
+        <mat-chip-list #chipList>
+          <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)">
+            {{tag.name}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
       </div>
 
     </mat-card>

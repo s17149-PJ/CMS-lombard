@@ -1,36 +1,28 @@
-<mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
-<mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async)?.length === 0">
-  Out of stock! Check
-  later.
-</mat-card>
-<!-- <mat-list role="list">
-  <mat-list-item class="product" role="listitem" *ngFor="let item of lombardProducts | async"> -->
-
 <div class="row">
   <div class="column serach">
     <mat-card class="serach_panel">
-
       <div class="form-group">
         <form [formGroup]="tagForm" (ngSubmit)="addTag()">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
             <mat-label>Serach:</mat-label>
             <input matInput formControlName="tag" />
           </mat-form-field>
         </form>
       </div>
-
-      <div class="column list">
-        <mat-chip-list #chipList>
-          <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)">
-            {{tag.name}}
-            <mat-icon matChipRemove>cancel</mat-icon>
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)">
+          {{tag.name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
     </mat-card>
   </div>
   <div class="column list">
+    <mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
+    <mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async)?.length === 0">
+      Out of stock! Check
+      later.
+    </mat-card>
     <mat-card class="container product" *ngFor="let item of lombardProducts | async">
       <img class="item-img" mat-card-lg-image src="{{item.imageMetaData}}" width="150px" heigh="100px"
         alt="Item photo" />

@@ -6,7 +6,6 @@ import { FoundResult, ItemBid, LombardProduct, LompardProductCategory, Tag } fro
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
 import * as moment from 'moment';
-import { merge } from 'lodash';
 
 @Component({
   selector: 'app-lombard',
@@ -35,7 +34,8 @@ export class LombardComponent implements OnInit {
     this.lombardProducts = this.tagsSubject.pipe(
       rx.switchMap(t => this.lombard.findItems(t).pipe(
         rx.map(item => item.foundItems)
-      ))
+      )),
+      rx.shareReplay(1)
     );
 
     this.lombardProductCategories = this.lombard.lombardProducts.pipe(
@@ -79,10 +79,13 @@ export class LombardComponent implements OnInit {
 
   remove(tag: Tag): void {
     const index = this.tags.indexOf(tag);
-
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
     this.tagsSubject.next(this.tags);
+  }
+
+  checkIfFound(tag: Tag): boolean {
+    return
   }
 }

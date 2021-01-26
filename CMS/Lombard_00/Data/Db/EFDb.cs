@@ -321,6 +321,15 @@ namespace Lombard_00.Data.Db
             //if found nothing ret error
             if (foundTags.Count() == 0)
                 return null;
+
+            if(tags.Count!= foundTags.Count)
+                return
+                    new Result()
+                    {
+                        Tags = foundTags,
+                        Items = new List<TItem>()
+                    };
+
             //now it works better.
             return
                 new Result()

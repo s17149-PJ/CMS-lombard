@@ -64,7 +64,7 @@
         <textarea formControlName="description" class="form-control" aria-label="Description"></textarea>
       </div>
       <button mdbBtn color="info" outline="true" rounded="true" block="true" class="z-depth-0 my-4 waves-effect"
-        mdbWavesEffect type="submit">
+        mdbWavesEffect type="submit" [disabled]="productForm.invalid">
         Create
       </button>
     </form>

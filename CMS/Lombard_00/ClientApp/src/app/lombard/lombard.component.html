@@ -1,18 +1,23 @@
 <mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
 <mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async).length === 0">Out of stock! Check
   later.</mat-card>
-<div class="grid-container">
-  <mdb-card class="products" *ngFor="let item of lombardProducts | async">
-    <mdb-card-img src="{{item.imageMetaData}}" width="200px" heigh="200px" alt="Item photo">
-    </mdb-card-img>
-    <mdb-card-body>
-      <mdb-card-title>
-        <h4>{{item.name}}</h4>
-      </mdb-card-title>
-      <mdb-card-text> Expires: {{item.finallizationDateTimeDouble | date}}
-      </mdb-card-text>
-      <a routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
-        more!</a>
-    </mdb-card-body>
-  </mdb-card>
-</div>
+<!-- <mat-list role="list">
+  <mat-list-item class="product" role="listitem" *ngFor="let item of lombardProducts | async"> -->
+<mat-card class="container product" *ngFor="let item of lombardProducts | async">
+  <img class="item-img" mat-card-lg-image src="{{item.imageMetaData}}" width="150px" heigh="100px" alt="Item photo" />
+  <mat-card-content class="item-main">
+    <div>
+      <h4 matLine>{{item.name}}</h4>
+      <p matLine> Expires: {{item.finallizationDateTimeDouble | date}}
+      </p>
+      <p matLine>{{shortenDescription(item.description)}}</p>
+    </div>
+  </mat-card-content>
+  <mat-card-content class="item-price">
+    <h5>Current highest bid: <br> <b>{{(money(item) | async)}}$</b></h5>
+  </mat-card-content>
+  <a class="item-btn" routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
+    more!</a>
+</mat-card>
+<!-- </mat-list-item>
+</mat-list> -->

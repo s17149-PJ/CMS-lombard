@@ -1,10 +1,11 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { LombardProduct, LompardProductCategory } from './lombard.model';
+import { Observable, of, Subscription } from 'rxjs';
+import { ItemBid, LombardProduct, LompardProductCategory } from './lombard.model';
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
 import * as moment from 'moment';
+import { map } from 'lodash';
 
 @Component({
   selector: 'app-lombard',
@@ -44,14 +45,23 @@ export class LombardComponent implements OnInit {
     // });
   }
 
-  bid(item: LombardProduct, bid: number) {
-
-  }
-
   getDate(date: string): string {
     console.log(date);
     const d = moment(date).format('DD/MM/YYYY').valueOf();
     console.log(d);
     return d;
+  }
+
+  shortenDescription(text: string): string {
+    return text.substring(0, 50) + '...';
+  }
+
+  currentBestPrice(product: LombardProduct): ItemBid {
+    return product.bids.sort((a, b) => b.id - a.id)[0];
+  }
+
+  money(product: LombardProduct): Observable<number> {
+    const price = this.currentBestPrice(product);
+    return of(price ? price.money : 0);
   }
 }

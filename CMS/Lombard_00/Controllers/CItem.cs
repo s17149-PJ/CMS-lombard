@@ -181,7 +181,8 @@ namespace Lombard_00.Controllers
         public class LocalItemFindClass
         {
             public TokenUser User { get; set; }
-            public List<String> Tags { get; set; }
+            public List<string> Tags { get; set; }
+            public List<int> TagsId { get; set; }
         }
         [Route("api/item/find")]
         [HttpPost]
@@ -195,13 +196,17 @@ namespace Lombard_00.Controllers
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return null;
                 }
+                var TTags =
+                        pack.Tags
+                        .Select(e => new TTag() { Id = -1, Name = e })
+                        .ToList();
+                TTags.AddRange(
+                        pack.TagsId
+                        .Select(e => new TTag() { Id = e })
+                        .ToList());
 
                 return db
-                    .FindTItems(
-                        pack
-                            .Tags
-                            .Select(e => new TTag() { Id = -1, Name = e })
-                            .ToList())
+                    .FindTItems(TTags)
                     .Select(e => new TokenItem(e, db))
                     .ToList();
             }
@@ -209,7 +214,7 @@ namespace Lombard_00.Controllers
 
         [Route("api/item/tags")]
         [HttpPost]
-        public List<TTag> TagList(TokenUser user)
+        public List<TagToken> TagList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
             lock (db)
@@ -220,7 +225,7 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                return db.TTags;
+                return db.TTags.Select(e=>new TagToken(e)).ToList();
             }
         }//done
 

@@ -20,7 +20,7 @@ namespace Lombard_00.Controllers.Tranzit
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid, context);
             FinallizationDateTime = item.FinallizationDateTime;
             FinallizationDateTimeDouble = (FinallizationDateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
-            Tags = item.Tags;
+            Tags = item.Tags.Select(e=>new TagToken(e));
 
             var tbids = new List<TUserItemBid>(item.Bids);
             tbids.Remove(item.StartingBid);
@@ -68,7 +68,7 @@ namespace Lombard_00.Controllers.Tranzit
         public double FinallizationDateTimeDouble { get; set; }
 
         //tag system
-        public IEnumerable<TTag> Tags { get; set; }
+        public IEnumerable<TagToken> Tags { get; set; }
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }

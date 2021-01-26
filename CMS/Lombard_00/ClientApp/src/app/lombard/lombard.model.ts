@@ -36,3 +36,17 @@ export interface Bid {
   money: number;
   isRating: boolean;
 }
+
+export interface Bid {
+  userId: number;
+  token: string;
+  subjectId: number;
+  money: number;
+  isRating: boolean;
+}
+
+
+export interface Tag {
+  id: number;
+  name: string
+}

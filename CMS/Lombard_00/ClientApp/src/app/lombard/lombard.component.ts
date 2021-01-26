@@ -1,7 +1,7 @@
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
-import { ItemBid, LombardProduct, LompardProductCategory } from './lombard.model';
+import { ItemBid, LombardProduct, LompardProductCategory, Tag } from './lombard.model';
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
 import * as moment from 'moment';
@@ -22,6 +22,7 @@ export class LombardComponent implements OnInit {
 
   lombardProducts: Observable<LombardProduct[]>;
   lombardProductCategories: Observable<LompardProductCategory[]>;
+  tags: Observable<Tag[]>;
 
   panelOpenState = false;
 

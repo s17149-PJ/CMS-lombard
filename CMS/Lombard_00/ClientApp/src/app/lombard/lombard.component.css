@@ -65,7 +65,7 @@ th.mat-sort-header-sorted {
 
 .column.serach {
   grid-area: panel;
-  width: 200px;
+  width: 20%;
 }
 
 .serach_panel {

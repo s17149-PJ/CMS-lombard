@@ -45,8 +45,12 @@ export interface Bid {
   isRating: boolean;
 }
 
-
 export interface Tag {
-  id: number;
-  name: string
+  id?: number;
+  name: string;
+}
+
+export interface FoundResult {
+  foundItems: LombardProduct[];
+  foundTags: Tag[];
 }

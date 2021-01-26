@@ -3,7 +3,7 @@ import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { of, Observable, combineLatest } from 'rxjs';
-import { Bid, ItemBid, LombardProduct } from './lombard.model';
+import { Bid, FoundResult, ItemBid, LombardProduct, Tag } from './lombard.model';
 import * as rx from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { isNil } from 'lodash';
@@ -80,5 +80,15 @@ export class LombardService {
     ]).pipe(
       rx.map(([products, user]) => products.filter(product => product.winningBid.user.id === user.id))
     );
+  }
+
+  findItems(tags: Tag[]): Observable<FoundResult> {
+    const stringTags = tags.map(tag => tag.name);
+    return this.http.post<FoundResult>('api/item/find', {
+      user: {
+        ...this.authService.currentUserValue
+      },
+      tags: stringTags
+    });
   }
 }

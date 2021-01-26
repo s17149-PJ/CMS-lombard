@@ -34,12 +34,18 @@ export class UserPanelComponent implements OnInit {
 
   ngOnInit() {
     this.userProfile = new FormGroup({
-      username: new FormControl('', [Validators.required]),
+      nick: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
       surname: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
     });
-  }  
+
+    this._subscription.add(
+      this.auth.currentUser.subscribe(user => {
+        this.userProfile.patchValue(user);
+      })
+    )
+  }
 
   onSubmitSave() {
     this.submitted = true;

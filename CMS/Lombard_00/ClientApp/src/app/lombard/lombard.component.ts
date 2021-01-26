@@ -1,7 +1,8 @@
+import { FormControl, FormGroup } from '@angular/forms';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { Observable, of, Subscription } from 'rxjs';
-import { ItemBid, LombardProduct, LompardProductCategory, Tag } from './lombard.model';
+import { FoundResult, ItemBid, LombardProduct, LompardProductCategory, Tag } from './lombard.model';
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
 import * as moment from 'moment';
@@ -22,7 +23,8 @@ export class LombardComponent implements OnInit {
 
   lombardProducts: Observable<LombardProduct[]>;
   lombardProductCategories: Observable<LompardProductCategory[]>;
-  tags: Observable<Tag[]>;
+  tags: Tag[] = [];
+  tagForm: FormGroup;
 
   panelOpenState = false;
 
@@ -31,6 +33,10 @@ export class LombardComponent implements OnInit {
   constructor(public lombard: LombardService) { }
 
   ngOnInit() {
+    this.tagForm = new FormGroup({
+      tag: new FormControl(''),
+    });
+
     this.lombardProducts = this.lombard.lombardProducts.pipe(
       rx.map(items => items)
     );
@@ -64,5 +70,21 @@ export class LombardComponent implements OnInit {
   money(product: LombardProduct): Observable<number> {
     const price = this.currentBestPrice(product);
     return of(price ? price.money : 0);
+  }
+
+  addTag(): void {
+    const t = this.tagForm.value;
+    const newTag: Tag = { name: t.tag };
+    this.tags.push(newTag);
+    this.tagForm.reset();
+    this.lombard.findItems(this.tags).subscribe(x => console.log(x));
+  }
+
+  remove(tag: Tag): void {
+    const index = this.tags.indexOf(tag);
+
+    if (index >= 0) {
+      this.tags.splice(index, 1);
+    }
   }
 }

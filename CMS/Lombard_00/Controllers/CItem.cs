@@ -182,7 +182,7 @@ namespace Lombard_00.Controllers
         {
             public TokenUser User { get; set; }
             public List<string> Tags { get; set; }
-            public List<int> TagsId { get; set; }
+            //public List<int> TagsId { get; set; }
         }
         public class FoundResult {
             public List<TokenItem> FoundItems { get; set; }
@@ -204,10 +204,10 @@ namespace Lombard_00.Controllers
                         pack.Tags
                         .Select(e => new TTag() { Id = -1, Name = e })
                         .ToList();
-                TTags.AddRange(
-                        pack.TagsId
-                        .Select(e => new TTag() { Id = e })
-                        .ToList());
+                //TTags.AddRange(
+                //        pack.TagsId
+                //        .Select(e => new TTag() { Id = e })
+                //        .ToList());
                 var result = db.FindTItems(TTags);
                 return new FoundResult()
                 {

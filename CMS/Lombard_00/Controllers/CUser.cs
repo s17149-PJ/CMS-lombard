@@ -57,7 +57,7 @@ namespace Lombard_00.Controllers
                     Nick = usr.Nick,
                     Name = usr.Name,
                     Surname = usr.Surname,
-                    Roles = usr.Roles.Select(e=>new Tranzit.RoleToken(e)),
+                    Roles = usr.Roles.Select(e=>new Tranzit.TokenRole(e)),
                     Token = token
                 };
             }
@@ -101,7 +101,7 @@ namespace Lombard_00.Controllers
                     Nick = usr.Nick,
                     Name = usr.Name,
                     Surname = usr.Surname,
-                    Roles = usr.Roles.Select(e=>new Tranzit.RoleToken(e)),
+                    Roles = usr.Roles.Select(e=>new Tranzit.TokenRole(e)),
                     Token = newtoken
                 };
             }
@@ -154,7 +154,7 @@ namespace Lombard_00.Controllers
                     Nick = value.Nick,
                     Name = value.Name,
                     Surname = value.Surname,
-                    Roles = value.Roles.Select(e=>new RoleToken(e)),
+                    Roles = value.Roles.Select(e=>new TokenRole(e)),
                     Token = token
                 };
             }

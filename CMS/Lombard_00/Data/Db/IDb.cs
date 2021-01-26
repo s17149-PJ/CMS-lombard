@@ -63,7 +63,12 @@ namespace Lombard_00.Data.Db
         public bool RemoveTItem(TItem item, bool saveAway);
         public bool ModifyTItem(TItem newData);
         public TItem FindTItem(int Id);
-        public List<TItem> FindTItems(List<TTag> tags);
+        public class Result
+        {
+            public List<TItem> Items { get; set; }
+            public List<TTag> Tags { get; set; }
+        }
+        public Result FindTItems(List<TTag> tags);
         public bool TryToFinishDeal(TItem item);
 
         /*
@@ -94,7 +99,7 @@ namespace Lombard_00.Data.Db
         public TTag AddTag(TTag tag);
         public bool SoftRemoveTag(TTag tag);
         public TTag FindTag(int Id);
-        public TTag HardFindTag(TTag tag);
+        public TTag HardFindTag(TTag tag, bool createOnMissing);
 
 
         public bool AddItemTag(TItem item, TTag tag, bool saveAway);

@@ -184,9 +184,13 @@ namespace Lombard_00.Controllers
             public List<string> Tags { get; set; }
             public List<int> TagsId { get; set; }
         }
+        public class FoundResult {
+            public List<TokenItem> FoundItems { get; set; }
+            public List<TokenTag> FoundTags { get; set; }
+        }
         [Route("api/item/find")]
         [HttpPost]
-        public List<TokenItem> ItemFind(LocalItemFindClass pack)
+        public FoundResult ItemFind(LocalItemFindClass pack)
         {
             IDb db = IDb.DbInstance;
             lock (db)
@@ -204,17 +208,18 @@ namespace Lombard_00.Controllers
                         pack.TagsId
                         .Select(e => new TTag() { Id = e })
                         .ToList());
-
-                return db
-                    .FindTItems(TTags)
-                    .Select(e => new TokenItem(e, db))
-                    .ToList();
+                var result = db.FindTItems(TTags);
+                return new FoundResult()
+                {
+                    FoundItems = result.Items.Select(e => new TokenItem(e,db)).ToList(),
+                    FoundTags = result.Tags.Select(e=>new TokenTag(e)).ToList()
+                };
             }
         }//done
 
         [Route("api/item/tags")]
         [HttpPost]
-        public List<TagToken> TagList(TokenUser user)
+        public List<TokenTag> TagList(TokenUser user)
         {
             IDb db = IDb.DbInstance;
             lock (db)
@@ -225,7 +230,7 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                return db.TTags.Select(e=>new TagToken(e)).ToList();
+                return db.TTags.Select(e=>new TokenTag(e)).ToList();
             }
         }//done
 
@@ -233,7 +238,7 @@ namespace Lombard_00.Controllers
 
         [Route("api/item/Slist")]
         [HttpPost]
-        public List<SimpleTokenItem> SItemList()
+        public List<TokenSimpleItem> SItemList()
         {
             IDb db = IDb.DbInstance;
             lock (db)

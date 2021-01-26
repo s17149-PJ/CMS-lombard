@@ -17,7 +17,7 @@ namespace Lombard_00.Controllers
             Nick = user.Nick;
             Name = user.Name;
             Surname = user.Surname;
-            Roles = user.Roles.Select(e => new RoleToken(e));
+            Roles = user.Roles.Select(e => new TokenRole(e));
             Token = user.Token;
         }//done
         public static TokenUser CallByToken(TUser user, IDb context)
@@ -31,7 +31,7 @@ namespace Lombard_00.Controllers
                 Nick = user.Nick,
                 Name = user.Name,
                 Surname = user.Surname,
-                Roles = test.Select(e => new RoleToken(e)),
+                Roles = test.Select(e => new TokenRole(e)),
                 Token = null//NO leak!
             };
         }//done
@@ -41,7 +41,7 @@ namespace Lombard_00.Controllers
         public string Nick { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
-        public IEnumerable<RoleToken> Roles { get; set; }
+        public IEnumerable<TokenRole> Roles { get; set; }
         public string Token { get; set; }
 
         public static bool IsUsrStillValid(int usr, string tokenOrPassword)

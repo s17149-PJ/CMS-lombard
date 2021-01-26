@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace Lombard_00.Controllers.Tranzit
 {
-    public class TagToken
+    public class TokenRole
     {
-        public TagToken(TTag tag) {
-            Id = tag.Id;
-            Name = tag.Name;
-        }
         public int Id { get; set; }
         public string Name { get; set; }
+        public TokenRole(TRole role) 
+        {
+            this.Id = role.Id;
+            this.Name = role.Name;
+        }
+        public TokenRole(){}
     }
 }

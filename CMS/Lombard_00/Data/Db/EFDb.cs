@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using static Lombard_00.Data.Db.IDb;
 
 namespace Lombard_00.Data.Db
 {
@@ -51,14 +52,14 @@ namespace Lombard_00.Data.Db
         }//done
         public TUser FindTUser(int Id)
         {
-             return CTUsers
-                    .Include(e => e.Roles)
-                    .Include(e => e.Comments)
-                    .Include(e => e.Bids)
-                    .Include(e => e.BroughtItems)
-                    .Include(e => e.TakenItems)
-                    .Where(e => e.Id == Id)
-                    .FirstOrDefault();
+            return CTUsers
+                   .Include(e => e.Roles)
+                   .Include(e => e.Comments)
+                   .Include(e => e.Bids)
+                   .Include(e => e.BroughtItems)
+                   .Include(e => e.TakenItems)
+                   .Where(e => e.Id == Id)
+                   .FirstOrDefault();
         }//done
         public TUser FindTUser(string UniqueNick)
         {
@@ -80,17 +81,17 @@ namespace Lombard_00.Data.Db
 
                 return false;
             }
-            if (newData.Nick != null) 
+            if (newData.Nick != null)
                 value.Nick = newData.Nick;
-            if (newData.Name != null) 
+            if (newData.Name != null)
                 value.Name = newData.Name;
-            if (newData.Surname != null) 
+            if (newData.Surname != null)
                 value.Surname = newData.Surname;
-            if (newData.Password != null) 
+            if (newData.Password != null)
                 value.Password = newData.Password;
-            if (newData.Token != null) 
+            if (newData.Token != null)
                 value.Token = newData.Token;
-            if (newData.ValidUnitl != null) 
+            if (newData.ValidUnitl != null)
                 value.ValidUnitl = newData.ValidUnitl;
             SaveChanges();
 
@@ -108,15 +109,15 @@ namespace Lombard_00.Data.Db
             SaveChanges();
         }
 
-        public bool AddTUserRole(TUser user, TRole role,bool saveAway)
+        public bool AddTUserRole(TUser user, TRole role, bool saveAway)
         {
             //are incoming values nulls?
             if (user == null ||
                 role == null)
                 return false;
             //find and replace to avoid duplication
-            var fuser = CTUsers.Include(e=>e.Roles).Where(e=>e.Id==user.Id).FirstOrDefault();
-            var frole = CTRoles.Include(e => e.Users).Where(e=>e.Id==role.Id).FirstOrDefault();
+            var fuser = CTUsers.Include(e => e.Roles).Where(e => e.Id == user.Id).FirstOrDefault();
+            var frole = CTRoles.Include(e => e.Users).Where(e => e.Id == role.Id).FirstOrDefault();
             //are there duplicates?
             if (fuser.Roles.Contains(frole) ||
                 frole.Users.Contains(fuser))
@@ -124,7 +125,7 @@ namespace Lombard_00.Data.Db
             //add and save
             fuser.Roles.Add(frole);
             frole.Users.Add(fuser);
-            if(saveAway)
+            if (saveAway)
                 SaveChanges();
             //saved
             return true;
@@ -260,13 +261,13 @@ namespace Lombard_00.Data.Db
                 value.FinallizationDateTime = newData.FinallizationDateTime;
             if (newData.Tags != null) {
                 //validate tags with db
-                newData.Tags = newData.Tags.Select(e => HardFindTag(e,true)).ToList();
+                newData.Tags = newData.Tags.Select(e => HardFindTag(e, true)).ToList();
 
                 var tagsToRemove = value.Tags.Except(newData.Tags).ToList();
                 var tagsToAdd = newData.Tags.Except(value.Tags).ToList();
 
-                tagsToRemove.ForEach(e => RemoveItemTag(value, e,false));
-                tagsToAdd.ForEach(e => AddItemTag(value, e,false));
+                tagsToRemove.ForEach(e => RemoveItemTag(value, e, false));
+                tagsToAdd.ForEach(e => AddItemTag(value, e, false));
             }
 
             SaveChanges();
@@ -281,15 +282,15 @@ namespace Lombard_00.Data.Db
             var userItemBids = found.Bids.ToList();
 
             tags
-                .ForEach(e => RemoveItemTag(found,e,false));
+                .ForEach(e => RemoveItemTag(found, e, false));
             itemComments
-                .ForEach(e => RemoveTItemComment(e,false));
+                .ForEach(e => RemoveTItemComment(e, false));
             userItemBids
-                .ForEach(e => RemoveTUserItemBid(e,false));
+                .ForEach(e => RemoveTUserItemBid(e, false));
 
             CTItems.Remove(item);
 
-            if(saveAway)
+            if (saveAway)
                 SaveChanges();
 
             return true;
@@ -306,7 +307,8 @@ namespace Lombard_00.Data.Db
                     .FirstOrDefault();
         }//done
 
-        public List<TItem> FindTItems(List<TTag> tags)
+        
+        public Result FindTItems(List<TTag> tags)
         {
             //find valid tags at all cost.
             var foundTags = tags.Select(e => HardFindTag(e,false)).Where(e => e != null).ToList();
@@ -315,13 +317,19 @@ namespace Lombard_00.Data.Db
             if (foundTags.Count() == 0)
                 return null;
             //now it works better.
-            return CTItems
-                .Include(e => e.StartingBid)
-                .Include(e => e.WinningBid)
-                .Include(e => e.Tags)
-                //.Where(e => e.Tags.Intersect(foundTags).Count() == count)
-                .Where(e => !foundTags.Except(e.Tags).Any())// *should* be automatically optimized and stop on first missing tag. faster.
-                .ToList();
+            return
+                new Result()
+                {
+                    Tags = foundTags,
+                    Items = CTItems
+                        .Include(e => e.StartingBid)
+                        .Include(e => e.WinningBid)
+                        .Include(e => e.Tags)
+                        //.Where(e => e.Tags.Intersect(foundTags).Count() == count)
+                        .Where(e => !foundTags.Except(e.Tags).Any())// *should* be automatically optimized and stop on first missing tag. faster.
+                        .ToList()
+                };
+                
         }//done
 
         public bool TryToFinishDeal(TItem item)

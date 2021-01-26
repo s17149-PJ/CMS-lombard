@@ -119,7 +119,7 @@ namespace Lombard_00.Controllers
                                 Nick = e.Nick,
                                 Name = e.Name,
                                 Surname = e.Surname,
-                                Roles = e.Roles.Select(e=>new RoleToken(e)),
+                                Roles = e.Roles.Select(e=>new TokenRole(e)),
                                 Token = null
                             });
             }

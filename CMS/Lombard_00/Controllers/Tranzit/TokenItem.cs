@@ -20,7 +20,7 @@ namespace Lombard_00.Controllers.Tranzit
             WinningBid = TokenBid.CallByTokenItem(item.WinningBid, context);
             FinallizationDateTime = item.FinallizationDateTime;
             FinallizationDateTimeDouble = (FinallizationDateTime - new DateTime(1970, 1, 1)).TotalMilliseconds;
-            Tags = item.Tags.Select(e=>new TagToken(e));
+            Tags = item.Tags.Select(e=>new TokenTag(e));
 
             var tbids = new List<TUserItemBid>(item.Bids);
             tbids.Remove(item.StartingBid);
@@ -34,9 +34,9 @@ namespace Lombard_00.Controllers.Tranzit
             NumberOfRatings = item.NumberOfRatings;
         }//done
 
-        public SimpleTokenItem Simplify()
+        public TokenSimpleItem Simplify()
         {
-            return new SimpleTokenItem()
+            return new TokenSimpleItem()
             {
                 Id = Id,
                 Name = Name,
@@ -49,7 +49,7 @@ namespace Lombard_00.Controllers.Tranzit
                 NumberOfRatings = NumberOfRatings.ToString()
             };
         }
-        public TokenItem(SimpleTokenItem token)
+        public TokenItem(TokenSimpleItem token)
         {
 
         }
@@ -68,7 +68,7 @@ namespace Lombard_00.Controllers.Tranzit
         public double FinallizationDateTimeDouble { get; set; }
 
         //tag system
-        public IEnumerable<TagToken> Tags { get; set; }
+        public IEnumerable<TokenTag> Tags { get; set; }
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }

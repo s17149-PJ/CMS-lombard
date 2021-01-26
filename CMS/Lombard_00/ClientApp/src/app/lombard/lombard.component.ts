@@ -14,7 +14,7 @@ import * as moment from 'moment';
 })
 export class LombardComponent implements OnInit {
 
-  lombardProducts: Observable<LombardProduct[]>;
+  lombardProducts: Observable<FoundResult>;
   lombardProductCategories: Observable<LompardProductCategory[]>;
   tags: Tag[] = [];
   tagsSubject = new BehaviorSubject<Tag[]>([]);
@@ -33,7 +33,7 @@ export class LombardComponent implements OnInit {
 
     this.lombardProducts = this.tagsSubject.pipe(
       rx.switchMap(t => this.lombard.findItems(t).pipe(
-        rx.map(item => item.foundItems)
+        rx.map(item => item)
       )),
       rx.shareReplay(1)
     );
@@ -41,12 +41,6 @@ export class LombardComponent implements OnInit {
     this.lombardProductCategories = this.lombard.lombardProducts.pipe(
       rx.map(products => products.map(p => p.category))
     );
-    // this.lombard.lombardProducts.pipe(
-    //   rx.map(products => products)
-    // ).subscribe(p => {
-    //   this.products.data = p;
-    //   this.products.sort = this.sort;
-    // });
   }
 
   getDate(date: string): string {
@@ -85,7 +79,9 @@ export class LombardComponent implements OnInit {
     this.tagsSubject.next(this.tags);
   }
 
-  checkIfFound(tag: Tag): boolean {
-    return
+  checkIfFound(tag: Tag): Observable<boolean> {
+    return this.lombardProducts.pipe(
+      rx.map(i => i.foundTags.filter(t => t.name === tag.name).length > 0)
+    );
   }
 }

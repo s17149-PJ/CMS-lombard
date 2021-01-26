@@ -10,7 +10,8 @@
         </form>
       </div>
       <mat-chip-list #chipList>
-        <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)">
+        <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)" selected
+          [color]="(checkIfFound(tag) | async) ? 'primary' : 'warn'">
           {{tag.name}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
@@ -19,11 +20,12 @@
   </div>
   <div class="column list">
     <mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
-    <mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async)?.length === 0">
+    <mat-card
+      *ngIf="(lombardProducts | async)?.foundItems !== null &&  (lombardProducts | async)?.foundItems.length === 0">
       Out of stock! Check
       later.
     </mat-card>
-    <mat-card class="container product" *ngFor="let item of lombardProducts | async">
+    <mat-card class="container product" *ngFor="let item of (lombardProducts | async)?.foundItems">
       <img class="item-img" mat-card-lg-image src="{{item.imageMetaData}}" width="150px" heigh="100px"
         alt="Item photo" />
       <mat-card-content class="item-main">

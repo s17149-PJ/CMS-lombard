@@ -54,10 +54,15 @@ th.mat-sort-header-sorted {
 .filter-panel {
   background-color: aquamarine;
   width: 100%;
-
 }
 
+.found {
+  background-color: green;
+}
 
+.notFound {
+  background-color: red;
+}
 
 .column {
   float: left;
@@ -78,13 +83,14 @@ th.mat-sort-header-sorted {
 }
 
 .row:after {
-  content: "";
+  content: '';
   display: table;
   clear: both;
 }
 
 @media screen and (max-width: 600px) {
-  .column.serach, .column.list {
+  .column.serach,
+  .column.list {
     width: 100%;
   }
 }

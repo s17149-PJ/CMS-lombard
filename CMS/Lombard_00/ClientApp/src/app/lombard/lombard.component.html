@@ -1,5 +1,5 @@
 <mat-card *ngIf="(lombardProducts | async) === null">Loading...</mat-card>
-<mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async).length === 0">
+<mat-card *ngIf="(lombardProducts | async) !== null &&  (lombardProducts | async)?.length === 0">
   Out of stock! Check
   later.
 </mat-card>

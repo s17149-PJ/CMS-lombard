@@ -1,12 +1,12 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, of, Subscription, combineLatest, BehaviorSubject } from 'rxjs';
 import { FoundResult, ItemBid, LombardProduct, LompardProductCategory, Tag } from './lombard.model';
 import { LombardService } from './lombard.service';
 import * as rx from 'rxjs/operators';
 import * as moment from 'moment';
-import { map } from 'lodash';
+import { merge } from 'lodash';
 
 @Component({
   selector: 'app-lombard',
@@ -15,15 +15,10 @@ import { map } from 'lodash';
 })
 export class LombardComponent implements OnInit {
 
-  // @ViewChild(MatSort, null) sort: MatSort;
-
-  // displayedColumns: string[] = ['name', 'category', 'publishDate', 'expirationDate'];
-  // // _products: Observable<LombardProduct[]>;
-  // // products = new MatTableDataSource(null);
-
   lombardProducts: Observable<LombardProduct[]>;
   lombardProductCategories: Observable<LompardProductCategory[]>;
   tags: Tag[] = [];
+  tagsSubject = new BehaviorSubject<Tag[]>([]);
   tagForm: FormGroup;
 
   panelOpenState = false;
@@ -37,8 +32,10 @@ export class LombardComponent implements OnInit {
       tag: new FormControl(''),
     });
 
-    this.lombardProducts = this.lombard.lombardProducts.pipe(
-      rx.map(items => items)
+    this.lombardProducts = this.tagsSubject.pipe(
+      rx.switchMap(t => this.lombard.findItems(t).pipe(
+        rx.map(item => item.foundItems)
+      ))
     );
 
     this.lombardProductCategories = this.lombard.lombardProducts.pipe(
@@ -77,7 +74,7 @@ export class LombardComponent implements OnInit {
     const newTag: Tag = { name: t.tag };
     this.tags.push(newTag);
     this.tagForm.reset();
-    this.lombard.findItems(this.tags).subscribe(x => console.log(x));
+    this.tagsSubject.next(this.tags);
   }
 
   remove(tag: Tag): void {
@@ -86,5 +83,6 @@ export class LombardComponent implements OnInit {
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
+    this.tagsSubject.next(this.tags);
   }
 }

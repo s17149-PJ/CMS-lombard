@@ -19,7 +19,7 @@ export class LombardNewComponent implements OnInit {
   ngOnInit() {
     this.productForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      category: new FormControl('', Validators.required),
+      tags: new FormControl('', Validators.required),
       finallizationDateTime: new FormControl(moment.now(), Validators.required),
       imageMetaData: new FormControl('', Validators.required),
       // startingBid: new FormControl('', Validators.required),

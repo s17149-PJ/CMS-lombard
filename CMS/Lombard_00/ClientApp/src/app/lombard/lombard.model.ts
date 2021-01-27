@@ -14,6 +14,7 @@ export interface LombardProduct {
   startingBid?: ItemBid;
   winningBid?: ItemBid;
   bids?: ItemBid[];
+  tags?: string;
 }
 
 export interface ItemBid {

@@ -29,7 +29,7 @@ export class LombardEditComponent implements OnInit {
 
     this.productForm = new FormGroup({
       name: new FormControl('', Validators.required),
-      category: new FormControl('', Validators.required),
+      tagsString: new FormControl('', Validators.required),
       finallizationDateTime: new FormControl(moment.now(), Validators.required),
       imageMetaData: new FormControl('', Validators.required),
       // startingBid: new FormControl('', Validators.required),

@@ -20,7 +20,7 @@
           <h5>Auction expires: {{p.finallizationDateTimeDouble | date}}</h5>
           <h3>Current highest bid: <b class="{{(ownHighestBid | async) ? 'own' : 'notOwn'}}">{{(money() | async)}}$</b>
           </h3>
-          <div *ngIf="isUserActive | async" class="col-md-8 center center-form">
+          <div *ngIf="canBid(p) | async" class="col-md-8 center center-form">
             <div class="container">
               <form class="row">
                 <div class="def-number-input number-input safari_only">

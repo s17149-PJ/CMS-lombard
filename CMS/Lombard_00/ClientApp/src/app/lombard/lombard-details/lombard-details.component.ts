@@ -1,4 +1,4 @@
-import { Bid, ItemBid } from './../lombard.model';
+import { Bid, ItemBid, LombardProduct } from './../lombard.model';
 import { isNil, max } from 'lodash';
 import { AuthService } from 'src/app/auth/auth.service';
 import { combineLatest, Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -21,8 +21,6 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
 
   bidAmount: FormControl;
 
-  isUserActive: Observable<boolean>;
-
   ownHighestBid: Observable<boolean>;
 
   private _subscription = new Subscription();
@@ -44,11 +42,6 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
         this.bidAmount.setValue(bid ? (bid.money + 5) : (p.startingBid ? p.startingBid.money + 5 : 5))
       })
     );
-
-    this.isUserActive = this.auth.currentUser.pipe(
-      rx.map(user => !isNil(user)),
-      rx.shareReplay(1)
-    )
 
     this.ownHighestBid = combineLatest([
       this.currentBestPrice(),
@@ -113,5 +106,12 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
     return this.auth.currentUser.pipe(
       rx.map(user => (user.id === item.startingBid.user.id) || (user.roles.filter(r => r.id === 1).length > 0))
     );
+  }
+
+  canBid(item: LombardProduct): Observable<boolean> {
+    return this.auth.currentUser.pipe(
+      rx.map(user => !isNil(user) && item.startingBid.user.id !== user.id),
+      rx.shareReplay(1)
+    )
   }
 }

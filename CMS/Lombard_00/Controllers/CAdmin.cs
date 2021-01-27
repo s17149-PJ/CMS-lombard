@@ -56,27 +56,28 @@ namespace Lombard_00.Controllers
                     Response.StatusCode = (int)HttpStatusCode.Forbidden;
                     return false;
                 }
-                var usrRoles = usr
-                    .Roles
-                    .Select(e => db.FindRole(e.Id));
-                var targetRo =
-                    pack
-                    .Edited
-                    .Roles
-                    .Select(e => db.FindRole(e.Id));
 
-                usrRoles
-                    .Except(targetRo)
-                    .ToList()
-                    .ForEach(e => db.RemoveTUserRole(usr, e,false));
+                { 
+                    var usrRoles = usr
+                        .Roles
+                        .Select(e => db.FindRole(e.Id));
+                    var targetRo =
+                        pack
+                        .Edited
+                        .Roles
+                        .Select(e => db.FindRole(e.Id));
 
-                targetRo
-                    .Except(usrRoles)
-                    .ToList()
-                    .ForEach(e => db.AddTUserRole(usr, e,false));
+                    usrRoles
+                        .Except(targetRo)
+                        .ToList()
+                        .ForEach(e => db.RemoveTUserRole(usr, e,false));
 
+                    targetRo
+                        .Except(usrRoles)
+                        .ToList()
+                        .ForEach(e => db.AddTUserRole(usr, e,false));
+                }
                 db.UpdateDb();
-
                 return true;
             }
         }//done

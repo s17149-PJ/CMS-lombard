@@ -97,4 +97,13 @@ export class LombardService {
       sortBy: Number(sortBy)
     });
   }
+
+  myOwnProducts(): Observable<LombardProduct[]> {
+    return combineLatest([
+      this.authService.currentUser,
+      this.lombardProducts
+    ]).pipe(
+      rx.map(([user, products]) => products.filter(p => p.startingBid.user.id === user.id))
+    );
+  }
 }

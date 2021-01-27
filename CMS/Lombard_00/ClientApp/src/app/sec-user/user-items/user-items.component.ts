@@ -5,6 +5,7 @@ import { LombardService } from './../../lombard/lombard.service';
 import { AuthService } from 'src/app/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import * as rx from 'rxjs/operators';
+import { LombardComponent } from 'src/app/lombard/lombard.component';
 
 @Component({
   selector: 'app-user-items',
@@ -16,6 +17,7 @@ export class UserItemsComponent implements OnInit {
   lombardProducts: Observable<LombardProduct[]>;
   wonProducts: Observable<LombardProduct[]>;
   anyAuctions: Observable<boolean>;
+  ownProducts: Observable<LombardProduct[]>;
 
   constructor(private auth: AuthService, private lombard: LombardService) { }
 
@@ -36,6 +38,8 @@ export class UserItemsComponent implements OnInit {
       rx.map(([currProd, wonProd]) => currProd.length > 0 || wonProd.length > 0),
       rx.shareReplay(1)
     );
+
+    this.ownProducts = this.lombard.myOwnProducts();
   }
 
   currentlyWinning(product: LombardProduct): Observable<boolean> {

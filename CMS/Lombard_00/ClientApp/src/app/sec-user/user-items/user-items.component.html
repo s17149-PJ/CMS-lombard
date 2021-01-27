@@ -48,3 +48,26 @@
     </div>
   </div>
 </div>
+<div *ngIf="ownProducts | async as own">
+  <div *ngIf="own.length > 0">
+    <mat-card>
+      <h3>Created auctions:</h3>
+    </mat-card>
+    <div class="grid-container">
+      <mdb-card class="products" *ngFor="let item of own">
+        <mdb-card-img src="{{item.imageMetaData}}" width="200px" heigh="200px" alt="Item photo">
+        </mdb-card-img>
+        <mdb-card-body>
+          <mdb-card-title>
+            <h4>{{item.name}}</h4>
+          </mdb-card-title>
+          <mdb-card-text> Auction won: {{item.finallizationDateTimeDouble | date}}
+          </mdb-card-text>
+          <mdb-card-text>Cost: {{item.winningBid ? item.winningBid?.money : 0}}$</mdb-card-text>
+          <a routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
+            details</a>
+        </mdb-card-body>
+      </mdb-card>
+    </div>
+  </div>
+</div>

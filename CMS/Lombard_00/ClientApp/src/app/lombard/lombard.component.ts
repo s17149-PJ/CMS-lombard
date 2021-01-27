@@ -19,7 +19,9 @@ export class LombardComponent implements OnInit {
   lombardProductCategories: Observable<LompardProductCategory[]>;
   tags: Tag[] = [];
   tagsSubject = new BehaviorSubject<Tag[]>([]);
+  sortBySubject = new BehaviorSubject<number>(0);
   tagForm: FormGroup;
+  sortBy: number;
 
   panelOpenState = false;
 
@@ -32,12 +34,16 @@ export class LombardComponent implements OnInit {
       tag: new FormControl(''),
     });
 
-    this.lombardProducts = this.tagsSubject.pipe(
-      rx.switchMap(t => this.lombard.findItems(t).pipe(
-        rx.map(item => item)
-      )),
-      rx.shareReplay(1)
-    );
+    this.lombardProducts = combineLatest([
+      this.tagsSubject,
+      this.sortBySubject
+    ])
+      .pipe(
+        rx.switchMap(([t, sort]) => this.lombard.findItems(t, sort).pipe(
+          rx.map(item => item)
+        )),
+        rx.shareReplay(1)
+      );
 
     this.lombardProductCategories = this.lombard.lombardProducts.pipe(
       rx.map(products => products.map(p => p.category))
@@ -81,8 +87,9 @@ export class LombardComponent implements OnInit {
     this.tagsSubject.next(this.tags);
   }
 
-  updateSort(value: string): void{
-
+  updateSort(value: number): void {
+    console.log(value);
+    this.sortBySubject.next(value);
   }
 
   checkIfFound(tag: Tag): Observable<boolean> {

@@ -87,13 +87,14 @@ export class LombardService {
     );
   }
 
-  findItems(tags: Tag[]): Observable<FoundResult> {
+  findItems(tags: Tag[], sortBy: number): Observable<FoundResult> {
     const stringTags = tags.map(tag => tag.name);
     return this.http.post<FoundResult>('api/item/find', {
       user: {
         ...this.authService.currentUserValue
       },
-      tags: stringTags
+      tags: stringTags,
+      sortBy: Number(sortBy)
     });
   }
 }

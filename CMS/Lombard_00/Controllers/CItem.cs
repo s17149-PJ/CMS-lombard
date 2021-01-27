@@ -42,7 +42,7 @@ namespace Lombard_00.Controllers
                     ImageMetaData = pack.Item.ImageMetaData,
                     Image = pack.Item.Image,
                     FinallizationDateTime = pack.Item.FinallizationDateTime,
-                    Tags = pack.Item.TagsString.Split(((char)('c'))).Select(e => new TTag() { Name = e.Trim() }).ToList()
+                    Tags = pack.Item.TagsString.Split(((char)(','))).Select(e => new TTag() { Name = e.Trim() }).ToList()
                 };
                 //add
                 itemToAdd = db.AddTItem(itemToAdd, new TUser() { Id = pack.User.Id },pack.value);
@@ -136,7 +136,7 @@ namespace Lombard_00.Controllers
                 if (pack.Item.FinallizationDateTime != null)
                     ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
                 if (pack.Item.TagsString != null && pack.Item.TagsString != "")
-                    ite.Tags = pack.Item.TagsString.Split(((char)('c'))).Select(e => new TTag() { Name = e.Trim() }).ToList();
+                    ite.Tags = pack.Item.TagsString.Split(((char)(','))).Select(e => new TTag() { Name = e.Trim() }).ToList();
                 //return
                 if (!db.ModifyTItem(ite))
                 {

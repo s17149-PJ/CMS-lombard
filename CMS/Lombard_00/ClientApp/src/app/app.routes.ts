@@ -13,6 +13,7 @@ import { LombardDetailsComponent } from './lombard/lombard-details/lombard-detai
 import { LombardComponent } from './lombard/lombard.component';
 import { UserPanelComponent } from './sec-user/user-panel.component';
 import { LombardNewComponent } from './lombard/lombard-new/lombard-new.component';
+import { AdminUserEditComponent } from './sec-admin/admin-panel-users/admin-user-edit/admin-user-edit.component';
 
 export const routes: Route[] = [
   {
@@ -37,7 +38,7 @@ export const routes: Route[] = [
     },
     children: [
       { path: 'panel', component: AdminPanelDashboardComponent },
-      { path: 'users', component: AdminPanelUsersComponent },
+      { path: 'user-edit/:id', component: AdminUserEditComponent }
     ],
   },
   {

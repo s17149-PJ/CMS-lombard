@@ -10,7 +10,7 @@ import { RoleDefinition, User } from 'src/app/model/auth.model';
   styleUrls: ['./admin-panel-users.component.css'],
 })
 export class AdminPanelUsersComponent implements OnInit {
-  displayedColumns: string[] = ['role', 'name', 'surname', 'nick'];
+  displayedColumns: string[] = ['role', 'name', 'surname', 'nick', 'edit'];
   tableData = new MatTableDataSource<User>();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

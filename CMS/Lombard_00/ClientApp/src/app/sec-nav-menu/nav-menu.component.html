@@ -25,14 +25,14 @@
           <li *ngIf="currentUser | async" class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link waves-light" mdbWavesEffect [routerLink]="['/lombard/new']">Wystaw</a>
           </li>
-          <mat-menu #adminMenu="matMenu">
+          <!-- <mat-menu #adminMenu="matMenu">
             <button mat-menu-item [routerLink]="['admin/panel']">
               Panel
             </button>
             <button mat-menu-item [routerLink]="['admin/users']">
               Users
             </button>
-          </mat-menu>
+          </mat-menu> -->
           <li *ngIf="currentUser | async" class="nav-item" [routerLinkActive]="['link-active']">
             <button mat-icon-button class="nav-link waves-light" mdbWavesEffect [matMenuTriggerFor]="userMenu">
               <mat-icon>person</mat-icon>
@@ -45,7 +45,7 @@
               <button mat-menu-item [routerLink]="['userItems']">
                 Moje przedmioty
               </button>
-              <button mat-menu-item [matMenuTriggerFor]="adminMenu" *ngIf="this.auth.getRole() === 'ADMIN'">
+              <button mat-menu-item [routerLink]="['admin/panel']" *ngIf="this.auth.getRole() === 'ADMIN'">
                 Admin panel
               </button>
               <button mat-menu-item (click)="logout()">

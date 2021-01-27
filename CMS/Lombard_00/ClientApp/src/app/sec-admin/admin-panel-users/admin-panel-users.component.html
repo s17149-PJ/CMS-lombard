@@ -2,7 +2,7 @@
   <table mat-table [dataSource]="tableData" matSort>
     <!-- Position Column -->
     <ng-container matColumnDef="role">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+      <th mat-header-cell *matHeaderCellDef>Role</th>
       <td mat-cell *matCellDef="let element">{{ getRoleName(element) }}</td>
     </ng-container>
 
@@ -22,6 +22,17 @@
     <ng-container matColumnDef="nick">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Nick</th>
       <td mat-cell *matCellDef="let element">{{ element.nick }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <th mat-header-cell *matHeaderCellDef justify="end">Edit</th>
+      <td mat-cell *matCellDef="let element" justify="end">
+        <button mat-icon-button routerLink="/admin/user-edit/{{element.id}}">
+          <mat-icon>
+            edit
+          </mat-icon>
+        </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

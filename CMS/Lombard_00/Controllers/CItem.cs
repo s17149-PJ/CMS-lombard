@@ -42,7 +42,8 @@ namespace Lombard_00.Controllers
                     Description = pack.Item.Description,
                     ImageMetaData = pack.Item.ImageMetaData,
                     Image = pack.Item.Image,
-                    FinallizationDateTime = pack.Item.FinallizationDateTime
+                    FinallizationDateTime = pack.Item.FinallizationDateTime,
+                    Tags = pack.Tags.Split(((char)('c'))).Select(e => new TTag() { Name = e }).ToList()
                 };
                 //add
                 itemToAdd = db.AddTItem(itemToAdd, new TUser() { Id = pack.User.Id },pack.value);
@@ -124,6 +125,7 @@ namespace Lombard_00.Controllers
                     return false;
                 }//must be owner or admin
                  //update
+                ite = new TItem() { Id = ite.Id };
                 if (pack.Item.Name != null)
                     ite.Name = pack.Item.Name;
                 if (pack.Item.Description != null)
@@ -134,6 +136,8 @@ namespace Lombard_00.Controllers
                     ite.Image = pack.Item.Image;
                 if (pack.Item.FinallizationDateTime != null)
                     ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
+                if (pack.Tags != null && pack.Tags != "")
+                    ite.Tags = pack.Tags.Split(((char)('c'))).Select(e => new TTag() { Name = e }).ToList();
                 //return
                 if (!db.ModifyTItem(ite))
                 {

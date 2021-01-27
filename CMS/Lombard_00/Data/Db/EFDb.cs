@@ -196,6 +196,7 @@ namespace Lombard_00.Data.Db
             {
                 return CTItems
                         .Include(e => e.StartingBid)
+                        .Include(e => e.StartingBid.User)
                         .Include(e => e.WinningBid)
                         .Include(e => e.Bids)
                         .Include(e => e.Tags)
@@ -304,8 +305,8 @@ namespace Lombard_00.Data.Db
                     .Include(e => e.WinningBid)
                     .Include(e => e.Bids)
                     .Include(e => e.Tags)
-                    .Where(e => e.Id == Id)
                     .Include(e => e.Comments)
+                    .Where(e => e.Id == Id)
                     .FirstOrDefault();
         }//done
 
@@ -322,7 +323,7 @@ namespace Lombard_00.Data.Db
             if (foundTags.Count() == 0)
                 return null;
 
-            if(tags.Count!= foundTags.Count)
+            if (tags.Count != foundTags.Count)
                 return
                     new Result()
                     {

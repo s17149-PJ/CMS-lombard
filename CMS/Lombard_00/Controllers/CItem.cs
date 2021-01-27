@@ -183,6 +183,7 @@ namespace Lombard_00.Controllers
             public TokenUser User { get; set; }
             public List<string> Tags { get; set; }
             //public List<int> TagsId { get; set; }
+            public int SortBy { get; set; }
         }
         public class FoundResult {
             public List<TokenItem> FoundItems { get; set; }
@@ -201,12 +202,13 @@ namespace Lombard_00.Controllers
                     return null;
                 }
 
-                if(pack.Tags==null || pack.Tags.Count == 0)
+                if (pack.Tags == null || pack.Tags.Count == 0)
                     return new FoundResult()
                     {
-                        FoundItems = db.TItems.Select(e => new TokenItem(e, db)).ToList(),
+                        FoundItems = Sort(db.TItems.Select(e => new TokenItem(e, db)).ToList(),pack.SortBy),
                         FoundTags = new List<TokenTag>()
                     };
+                    
 
 
                 var TTags =
@@ -226,11 +228,24 @@ namespace Lombard_00.Controllers
                     };
                 return new FoundResult()
                 {
-                    FoundItems = result.Items.Select(e => new TokenItem(e,db)).ToList(),
+                    FoundItems = Sort(result.Items.Select(e => new TokenItem(e,db)).ToList(),pack.SortBy),
                     FoundTags = result.Tags.Select(e=>new TokenTag(e)).ToList()
                 };
             }
         }//done
+
+        private List<TokenItem> Sort(List<TokenItem> what, int how) {
+            switch (how){
+                case 1: return what.OrderBy(e => e.Name).ToList();
+                case 2: return what.OrderByDescending(e => e.Name).ToList();
+                case 3: return what.OrderBy(e => e.FinallizationDateTime).ToList();
+                case 4: return what.OrderByDescending(e => e.FinallizationDateTime).ToList();
+                case 5: return what.OrderBy(e => e.WinningBid.Money).ToList();
+                case 6: return what.OrderByDescending(e => e.WinningBid.Money).ToList();
+                default: return what;
+            }
+
+        }
 
         [Route("api/item/tags")]
         [HttpPost]

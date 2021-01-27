@@ -81,6 +81,10 @@ export class LombardComponent implements OnInit {
     this.tagsSubject.next(this.tags);
   }
 
+  updateSort(value: string): void{
+
+  }
+
   checkIfFound(tag: Tag): Observable<boolean> {
     return this.lombardProducts.pipe(
       rx.map(i => i.foundTags.filter(t => t.name === tag.name).length > 0)

@@ -11,11 +11,24 @@
       </div>
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let tag of tags" [removable]="true" (removed)="remove(tag)" selected
-          [color]="(checkIfFound(tag) | async) ? 'primary' : 'warn'">
+                  [color]="(checkIfFound(tag) | async) ? 'primary' : 'warn'">
           {{tag.name}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
       </mat-chip-list>
+
+      <!-- mat-form-field appearance="fill">
+        <mat-label>Sort by</mat-label>
+        <mat-select (change)="updateSort($event.target.value)">
+          <mat-option value="1">Name</mat-option>
+          <mat-option value="2">Name - reversed</mat-option>
+          <mat-option value="3">Date till finish</mat-option>
+          <mat-option value="4">Date till finish - reversed</mat-option>
+          <mat-option value="5">Cost</mat-option>
+          <mat-option value="6">Cost - reversed</mat-option>
+        </mat-select>
+      </--mat-form-field -->
+
     </mat-card>
   </div>
   <div class="column list">

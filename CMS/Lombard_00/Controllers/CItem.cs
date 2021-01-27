@@ -244,7 +244,11 @@ namespace Lombard_00.Controllers
                 case 2: return what.OrderByDescending(e => e.Name).ToList();
                 case 3: return what.OrderBy(e => e.FinallizationDateTime).ToList();
                 case 4: return what.OrderByDescending(e => e.FinallizationDateTime).ToList();
-                case 5: return what.OrderBy(e => e.WinningBid.Money).ToList();
+                case 5: return what
+                        .Select(e => new { value = e, money = (e.WinningBid == null) ? (e.StartingBid.Money) : (e.WinningBid.Money) })
+                        .OrderBy(e => e.money)
+                        .Select(e => e.value)
+                        .ToList();
                 case 6: return what
                         .Select(e => new { value = e, money = (e.WinningBid==null)?(e.StartingBid.Money):(e.WinningBid.Money) })
                         .OrderByDescending(e => e.money)

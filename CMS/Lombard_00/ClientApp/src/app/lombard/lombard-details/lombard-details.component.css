@@ -99,6 +99,7 @@
 
 .edit {
   float: right;
+  z-index: 7;
 }
 
 @media not all and (min-resolution: 0.001dpcm) {

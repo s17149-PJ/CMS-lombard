@@ -16,6 +16,7 @@ namespace Lombard_00.Controllers
         {
             public TokenUser User { get; set; }
             public TokenItem Item { get; set; }
+            public string Tags { get; set; }
             public Decimal value { get; set; }
         }
         [Route("api/item/add")]

@@ -66,9 +66,9 @@ namespace Lombard_00.Controllers.Tranzit
 
         public DateTime FinallizationDateTime { get; set; }
         public double FinallizationDateTimeDouble { get; set; }
-
         //tag system
         public IEnumerable<TokenTag> Tags { get; set; }
+        public string TagsString{ get; set; }
         //optional - rating
         public Decimal RatingAvarage { get; set; }
         public int NumberOfRatings { get; set; }

@@ -16,7 +16,6 @@ namespace Lombard_00.Controllers
         {
             public TokenUser User { get; set; }
             public TokenItem Item { get; set; }
-            public string Tags { get; set; }
             public Decimal value { get; set; }
         }
         [Route("api/item/add")]
@@ -43,7 +42,7 @@ namespace Lombard_00.Controllers
                     ImageMetaData = pack.Item.ImageMetaData,
                     Image = pack.Item.Image,
                     FinallizationDateTime = pack.Item.FinallizationDateTime,
-                    Tags = pack.Tags.Split(((char)('c'))).Select(e => new TTag() { Name = e }).ToList()
+                    Tags = pack.Item.TagsString.Split(((char)('c'))).Select(e => new TTag() { Name = e }).ToList()
                 };
                 //add
                 itemToAdd = db.AddTItem(itemToAdd, new TUser() { Id = pack.User.Id },pack.value);
@@ -136,8 +135,8 @@ namespace Lombard_00.Controllers
                     ite.Image = pack.Item.Image;
                 if (pack.Item.FinallizationDateTime != null)
                     ite.FinallizationDateTime = pack.Item.FinallizationDateTime;
-                if (pack.Tags != null && pack.Tags != "")
-                    ite.Tags = pack.Tags.Split(((char)('c'))).Select(e => new TTag() { Name = e }).ToList();
+                if (pack.Item.TagsString != null && pack.Item.TagsString != "")
+                    ite.Tags = pack.Item.TagsString.Split(((char)('c'))).Select(e => new TTag() { Name = e }).ToList();
                 //return
                 if (!db.ModifyTItem(ite))
                 {

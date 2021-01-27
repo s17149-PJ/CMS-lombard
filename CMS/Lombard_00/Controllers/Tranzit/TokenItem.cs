@@ -32,6 +32,8 @@ namespace Lombard_00.Controllers.Tranzit
             //optional - rating
             RatingAvarage = item.RatingAvarage;
             NumberOfRatings = item.NumberOfRatings;
+
+            TagsString = String.Join(", ", Tags.Select(e=>e.Name).ToArray());
         }//done
 
         public TokenSimpleItem Simplify()

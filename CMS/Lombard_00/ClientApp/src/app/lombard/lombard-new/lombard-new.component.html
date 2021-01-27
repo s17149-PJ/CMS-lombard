@@ -17,17 +17,11 @@
       </div>
 
       <div class="input-group mb-3">
-        <select formControlName="category" class="browser-default custom-select">
-          <option value="" selected>Choose product category</option>
-          <option value="javelery">Jawelery</option>
-          <option value="furniture">Furniture</option>
-          <option value="clock">Clock</option>
-          <option value="painting">Painting</option>
-          <option value="cloth">Cloth</option>
-        </select>
-        <div class="input-group-append">
-          <span class="input-group-text" id="basic-addon2">Category</span>
+        <div class="input-group-prepend">
+          <span class="input-group-text">Tags</span>
         </div>
+        <input formControlName="tags" type="text" class="form-control" placeholder="pretty, cheap, stylish"
+          aria-label="Tags" aria-describedby="basic-addon1">
       </div>
 
       <div class="input-group mb-3">

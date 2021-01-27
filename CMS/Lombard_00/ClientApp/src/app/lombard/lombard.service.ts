@@ -52,8 +52,12 @@ export class LombardService {
         ...this.authService.currentUserValue
       },
       item: {
-        ...product
-      }
+        name: product.name,
+        finallizationDateTime: product.finallizationDateTime,
+        imageMetaData: product.imageMetaData,
+        description: product.description
+      },
+      tags: product.tags
     });
   }
 

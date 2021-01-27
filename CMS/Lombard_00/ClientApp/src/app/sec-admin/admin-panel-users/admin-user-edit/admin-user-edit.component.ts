@@ -1,27 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import * as rx from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 import { isNullOrUndefined } from 'util';
-import { AuthService } from '../auth/auth.service';
+import * as rx from 'rxjs/operators';
 
 @Component({
-  selector: 'app-user-panel',
-  templateUrl: './user-panel.component.html',
-  styleUrls: ['./user-panel.component.css']
+  selector: 'app-admin-user-edit',
+  templateUrl: './admin-user-edit.component.html',
+  styleUrls: ['./admin-user-edit.component.css']
 })
-export class UserPanelComponent implements OnInit {
+export class AdminUserEditComponent implements OnInit {
+
   userProfile: FormGroup;
   loading = false;
   submitted = false;
   returnUrl: string;
   error: string;
+
+  userId: number;
 
   private _subscription = new Subscription();
 
@@ -33,6 +31,8 @@ export class UserPanelComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.userId = parseInt(this.route.snapshot.params.id, 10);
+
     this.userProfile = new FormGroup({
       nick: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
@@ -41,7 +41,10 @@ export class UserPanelComponent implements OnInit {
     });
 
     this._subscription.add(
-      this.auth.currentUser.subscribe(user => {
+      this.auth.fetchUsers.pipe(
+        rx.map(users => users.filter(u => u.id === this.userId)),
+        rx.map(u => u.length > 0 ? u[0] : null)
+      ).subscribe(user => {
         this.userProfile.patchValue(user);
       })
     )
@@ -56,7 +59,6 @@ export class UserPanelComponent implements OnInit {
     }
 
     this.loading = true;
-
     this._subscription.add(
       this.auth.edit(this.userProfile.value).subscribe(
         (user) => {

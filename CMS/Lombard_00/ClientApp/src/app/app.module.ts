@@ -49,6 +49,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StatsCardComponent } from './sec-admin/common/stats-card/stats-card.component';
 import { StatsCard2Component } from './sec-admin/common/stats-card2/stats-card2.component';
 import { LombardNewComponent } from './lombard/lombard-new/lombard-new.component';
+import { AdminUserEditComponent } from './sec-admin/admin-panel-users/admin-user-edit/admin-user-edit.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { LombardNewComponent } from './lombard/lombard-new/lombard-new.component
     AdminPanelComponent,
     AdminPanelUsersComponent,
     AdminPanelDashboardComponent,
+    AdminUserEditComponent,
     LombardComponent,
     LombardNewComponent,
     LombardEditComponent,

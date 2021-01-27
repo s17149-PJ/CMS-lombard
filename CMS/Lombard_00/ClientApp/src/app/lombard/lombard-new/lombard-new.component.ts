@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { LombardProduct } from './../lombard.model';
+import { LombardProduct } from '../lombard.model';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LombardService } from '../lombard.service';

@@ -1,3 +1,4 @@
+import { AuthService } from 'src/app/auth/auth.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
@@ -24,7 +25,7 @@ export class LombardComponent implements OnInit {
 
   private _subscription = new Subscription();
 
-  constructor(public lombard: LombardService) { }
+  constructor(public auth: AuthService, public lombard: LombardService) { }
 
   ngOnInit() {
     this.tagForm = new FormGroup({
@@ -41,6 +42,7 @@ export class LombardComponent implements OnInit {
     this.lombardProductCategories = this.lombard.lombardProducts.pipe(
       rx.map(products => products.map(p => p.category))
     );
+
   }
 
   getDate(date: string): string {

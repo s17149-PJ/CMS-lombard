@@ -1,3 +1,5 @@
+import { LombardEditComponent } from './lombard/lombard-edit/lombard-edit.component';
+import { Component } from '@angular/core';
 import { UserItemsComponent } from './sec-user/user-items/user-items.component';
 import { Route } from '@angular/router';
 import { AdminPanelDashboardComponent } from './sec-admin/admin-panel-dashboard/admin-panel-dashboard.component';
@@ -52,4 +54,8 @@ export const routes: Route[] = [
     path: 'product-details/:id',
     component: LombardDetailsComponent,
   },
+  {
+    path: 'product-edit/:id',
+    component: LombardEditComponent
+  }
 ];

@@ -108,4 +108,10 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
       duration: 3000,
     });
   }
+
+  editEnable(item: LombardProduct): Observable<boolean> {
+    return this.auth.currentUser.pipe(
+      rx.map(user => (user.id === item.startingBid.user.id) || (user.roles.filter(r => r.id === 1).length > 0))
+    );
+  }
 }

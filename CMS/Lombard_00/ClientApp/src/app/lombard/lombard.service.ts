@@ -49,13 +49,18 @@ export class LombardService {
   createNewAuction(product: LombardProduct) {
     return this.http.post('api/item/add', {
       user: {
-        success: this.authService.currentUserValue.success,
-        id: this.authService.currentUserValue.id,
-        nick: this.authService.currentUserValue.nick,
-        name: this.authService.currentUserValue.name,
-        surname: this.authService.currentUserValue.surname,
-        roles: this.authService.currentUserValue.roles,
-        token: this.authService.currentUserValue.token
+        ...this.authService.currentUserValue
+      },
+      item: {
+        ...product
+      }
+    });
+  }
+
+  updateAuction(product: LombardProduct) {
+    return this.http.post('api/item/edit', {
+      user: {
+        ...this.authService.currentUserValue
       },
       item: {
         ...product

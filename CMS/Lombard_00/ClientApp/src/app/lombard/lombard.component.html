@@ -40,10 +40,10 @@
       <mat-card-content class="item-price">
         <h5>Current highest bid: <br> <b>{{(money(item) | async)}}$</b></h5>
       </mat-card-content>
-      <a class="item-btn" routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
-        more!</a>
+      <div class="item-btn">
+        <a class="item-btn" routerLink="/product-details/{{item.id}}" mdbBtn color="primary" mdbWavesEffect>Check
+          more!</a>
+      </div>
     </mat-card>
   </div>
 </div>
-<!-- </mat-list-item>
-</mat-list> -->

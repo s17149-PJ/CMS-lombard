@@ -60,7 +60,7 @@ export class AdminUserEditComponent implements OnInit {
 
     this.loading = true;
     this._subscription.add(
-      this.auth.edit(this.userProfile.value).subscribe(
+      this.auth.edit(this.userProfile.value, this.userId).subscribe(
         (user) => {
           if (!isNullOrUndefined(user)) {
             this.router.navigate(['/']);

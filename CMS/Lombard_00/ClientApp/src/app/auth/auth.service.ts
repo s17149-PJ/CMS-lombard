@@ -80,9 +80,9 @@ export class AuthService {
       );
   }
 
-  edit(user: User): Observable<User> {
+  edit(user: User, id: number): Observable<User> {
     return this.http.post<any>('api/user/edit',
-      { TokenUser: user, NewPassword: user.password })
+      { TokenUser: { ...user, id: id }, NewPassword: user.password })
       .pipe();
   }
 

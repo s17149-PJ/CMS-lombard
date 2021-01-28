@@ -37,7 +37,7 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
     this._subscription.add(
       this.lombardService.lombardProductById(productId).subscribe(p => {
         this._product.next(p);
-        const bid = p.bids.sort((a, b) => b.id - a.id)[0];
+        const bid = p ? p.bids.sort((a, b) => b.id - a.id)[0] : null;
         this.bidAmount.setValue(bid ? (bid.money + 5) : (p.startingBid ? p.startingBid.money + 5 : 5))
       })
     );
@@ -69,7 +69,7 @@ export class LombardDetailsComponent implements OnInit, OnDestroy {
       })
     ).subscribe(p => {
       this._product.next(p);
-      const bid = p.bids.sort((a, b) => b.id - a.id)[0];
+      const bid = p.bids ? p.bids.sort((a, b) => b.id - a.id)[0] : null;
       this.bidAmount.setValue(bid ? (bid.money + 5) : (p.startingBid.money + 5));
       this.openSnackBar('Congratulations! You have sucesfully bid an item for ' + bid.money + '$!', 'OK');
     });

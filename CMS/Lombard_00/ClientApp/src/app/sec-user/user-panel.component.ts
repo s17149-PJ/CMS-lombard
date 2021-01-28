@@ -58,7 +58,7 @@ export class UserPanelComponent implements OnInit {
     this.loading = true;
 
     this._subscription.add(
-      this.auth.edit(this.userProfile.value).subscribe(
+      this.auth.edit(this.userProfile.value, this.auth.currentUserValue.id).subscribe(
         (user) => {
           if (!isNullOrUndefined(user)) {
             this.router.navigate(['/']);

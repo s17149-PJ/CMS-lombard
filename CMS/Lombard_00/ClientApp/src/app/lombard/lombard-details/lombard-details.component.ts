@@ -5,7 +5,6 @@ import { combineLatest, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LombardService } from '../lombard.service';
-import { LombardProduct } from '../lombard.model';
 import * as rx from 'rxjs/operators';
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';

@@ -180,6 +180,11 @@ namespace Lombard_00.Controllers
                 }
 
                 var usr = db.FindTUser(edit.TokenUser.Id);
+                if(usr == null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.Ambiguous;
+                    return false;
+                }
                 //update
                 usr.Nick = edit.TokenUser.Nick;
                 usr.Name = edit.TokenUser.Name;
